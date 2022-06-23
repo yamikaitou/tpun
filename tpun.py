@@ -484,7 +484,7 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
-                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, stream=False, use_voice_activation=False, speak=False, connect=False, reason="{0} kicked {1} from their vc {2}".format(ctx.author.name, user.name, self.bot.get_channel(int(vcNameList)).name))
+                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, stream=False, use_voice_activation=True, speak=False, connect=False, reason="{0} kicked {1} from their vc {2}".format(ctx.author.name, user.name, self.bot.get_channel(int(vcNameList)).name))
                                    if user.voice.channel.id == vcNameList:
                                         await user.move_to(None)
                                    await ctx.send("{0} was kicked from your voice channel {1}".format(user.name, self.bot.get_channel(int(vcNameList)).name))
