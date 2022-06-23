@@ -499,7 +499,7 @@ class tpun(commands.Cog):
                     x = json.load(vcOwners)
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
-                              await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, use_voice_activation=False, stream=True, connect=True, speak=False, reason="{0} muted {1} in their vc".format(ctx.author.name, user.name))
+                              await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=False, reason="{0} muted {1} in their vc".format(ctx.author.name, user.name))
                               if user.voice.channel.id == vcNameList:
                                    await user.move_to(self.bot.get_channel(vcNameList))
                               await ctx.send("{0} was muted in your vc".format(user.name))
