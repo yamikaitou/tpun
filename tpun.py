@@ -38,7 +38,7 @@ class tpun(commands.Cog):
           else:
                await tpun.checks(self, id, empty, ctx)
 
-     def pred(self, emojis, mess1, user: discord.User):
+     def pred(self, emojis, mess1, user: discord.Member):
           return ReactionPredicate.with_emojis(emojis, mess1, user)
 
      async def emojiSorter(self, ctx, emoji, mess1):
@@ -60,7 +60,7 @@ class tpun(commands.Cog):
                await self.lock(ctx)
                await mess1.delete()
 
-     async def emojiRequest(self, ctx, emoji, mess1, user: discord.User):
+     async def emojiRequest(self, ctx, emoji, mess1, user: discord.Member):
           if emoji == "✅":
                with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
                     try:
@@ -68,6 +68,8 @@ class tpun(commands.Cog):
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(user.id):
                                    await self.bot.get_channel(int(vcNameList)).set_permissions(ctx.author, read_messages=True, send_messages=True, read_message_history=True, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=True, reason="{0} accepted {1}'s request to join their vc: {2}".format(user.name, ctx.author.name, self.bot.get_channel(int(vcNameList)).name))
+                                   if ctx.author.voice.channel.id != vcNameList and ctx.author.voice.channel != None:
+                                        await ctx.author.move_to(self.bot.get_channel(int(vcNameList)))
                                    await ctx.send("{0} accepted {1}'s vc request to join: {2}".format(user, ctx.author.name, self.bot.get_channel(int(vcNameList)).mention))
                     except ValueError:
                          await ctx.send("{0} does not own a vc.".format(user.name))
@@ -105,7 +107,7 @@ class tpun(commands.Cog):
                server = "Nyx's"
           elif server == "uni":
                server = "FTB University"
-               ip =  "tpun.serverminecraft.net"
+               ip =  "localhost"
           else:
                await ctx.send("This server is invalid check available servers using t!minecraft help")
                invalid = True
@@ -211,6 +213,8 @@ class tpun(commands.Cog):
                               channel = await ctx.guild.create_voice_channel(vcName, category=category)
                               await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                               await channel.set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                              if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel != None:
+                                        await ctx.author.move_to(channel)
                               #create json object nC
                               vcId = channel.id
                               nC = {owner : vcId}
