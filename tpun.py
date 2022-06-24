@@ -483,6 +483,9 @@ class tpun(commands.Cog):
                          except asyncio.TimeoutError:
                               await channel.send('This request timed out.')
                               await mess1.delete()
+                         except 404:
+                              await channel.send("This request timed out")
+                              await mess1.delete()
                     else:
                          pass
 
