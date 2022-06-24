@@ -179,10 +179,6 @@ class tpun(commands.Cog):
                await ctx.send("t!vc unmute <@user> Unmutes a user inside your vc")
           elif arg == 'mute':
                await ctx.send("t!vc mute <@user> Mutes a user inside your vc")
-          elif arg == 'streamon':
-               await ctx.send("t!vc streamon <@user> Allows a user to stream/use camera inside your vc")
-          elif arg == 'streamoff':
-               await ctx.send("t!vc streamoff <@user> Removes a user's ability to stream/use camera inside your vc")
           else:
                await ctx.send("That is not a valid command. Use t!vc to see a list of available commands")
 
@@ -323,7 +319,7 @@ class tpun(commands.Cog):
 
      @vc.command(name="rename", usage=" <'new name'> Name must be in quotes", help="Renames your personal vc")
      async def rename(self, ctx, rename = None):
-          if rename = None:
+          if rename == None:
                await ctx.send("{0} Please enter a new name for your vc.".format(ctx.author.name))
           else:
                owner = ctx.author.id
@@ -446,7 +442,7 @@ class tpun(commands.Cog):
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
                               await self.bot.get_channel(vcNameList).edit(user_limit=limit)
-                              await ctx.send("The user limit in your vc {0} was changed to {1}".format(self.bot.get_channel(vcNameList).mention, limit))
+                              await ctx.send("{2} The user limit in your vc {0} was changed to {1}".format(self.bot.get_channel(vcNameList).mention, limit, ctx.author.name))
                except ValueError:
                     await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
@@ -463,7 +459,7 @@ class tpun(commands.Cog):
                     channel = self.bot.get_channel(dsChannel)
                     if ctx.message.channel.id == dsChannel:
 
-                         embed = discord.Embed(color=0xe02522, title='Voice Channel Request', description= '{0}: {1} is requesting to join your channel: {2}'.format(user.mention, ctx.author.name, self.bot.get_channel(vcNameList).mention))
+                         embed = discord.Embed(color=0xe02522, title='Voice Channel Request', description= '{0}: {1} is requesting to join your channel'.format(user.mention, ctx.author.name))
                          embed.set_footer(text='React with ✅ below to accept this request')
                          embed.timestamp = datetime.datetime.utcnow()
 
@@ -531,41 +527,5 @@ class tpun(commands.Cog):
                                    if user.voice.channel.id == vcNameList:
                                         await user.move_to(self.bot.get_channel(vcNameList))
                                    await ctx.send("{0} was unmuted in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
-                    except ValueError:
-                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
-
-     @vc.command(name="streamon", usage="<@user>", help="Allow a user to stream/use camera inside your vc")
-     async def streamon(self, ctx, user: discord.Member = None):
-          if user == None:
-               await ctx.send("{0} Please mention a user to enable streaming/camera for.".format(ctx.author.name))
-          else:
-               owner = ctx.author.id
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
-                    try:
-                         x = json.load(vcOwners)
-                         for vcOwnList, vcNameList in x.items():
-                              if vcOwnList == str(owner):
-                                   await self.bot.get_channel(vcNameList).set_permissions(user, stream=True, reason="{0} unmuted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
-                                   if user.voice.channel.id == vcNameList:
-                                        await user.move_to(self.bot.get_channel(vcNameList))
-                                   await ctx.send("{0} is now allowed to stream/use camera in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
-                    except ValueError:
-                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
-     
-     @vc.command(name="streamoff", usage="<@user>", help="Disallows a user to stream/use camera inside your vc")
-     async def streamoff(self, ctx, user: discord.Member = None):
-          if user == None:
-               await ctx.send("{0} Please mention a user to disable streaming/camera for.".format(ctx.author.name))
-          else:
-               owner = ctx.author.id
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
-                    try:
-                         x = json.load(vcOwners)
-                         for vcOwnList, vcNameList in x.items():
-                              if vcOwnList == str(owner):
-                                   await self.bot.get_channel(vcNameList).set_permissions(user, stream=False, reason="{0} unmuted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
-                                   if user.voice.channel.id == vcNameList:
-                                        await user.move_to(self.bot.get_channel(vcNameList))
-                                   await ctx.send("{0} is no longer allowed to stream/use camera in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
                     except ValueError:
                          await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
