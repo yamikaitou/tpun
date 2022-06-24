@@ -150,8 +150,8 @@ class tpun(commands.Cog):
           pass
      @vc.command(name='help', help="Shows all the commands for t!vc")
      async def help(self, ctx, arg):
-          if arg == 'That is not a valid command. Use t!vc to see a list of available commands':
-               pass
+          if arg == None:
+               await ctx.send('That is not a valid command. Use t!vc to see a list of available commands')
           elif arg == 'create':
                await ctx.send("Creates a voice channel with <'name'> t!vc create <'Name'>. You can only have 1 vc. VC deletes after 1 minute of inactivity. You must join your vc within 1 minute or it will be deleted.")
           elif arg == 'delete':
