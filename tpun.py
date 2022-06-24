@@ -67,7 +67,7 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(user.id):
-                                   await self.bot.get_channel(int(vcNameList)).set_permissions(ctx.author, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=True, reason="{0} accepted {1}'s request to join their vc: {2}".format(user.name, ctx.author.name, self.bot.get_channel(int(vcNameList)).name))
+                                   await self.bot.get_channel(int(vcNameList)).set_permissions(ctx.author, read_messages=True, send_messages=True, read_message_history=True, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=True, reason="{0} accepted {1}'s request to join their vc: {2}".format(user.name, ctx.author.name, self.bot.get_channel(int(vcNameList)).name))
                                    await ctx.send("{0} accepted {1}'s vc request to join: {2}".format(user, ctx.author.name, self.bot.get_channel(int(vcNameList)).mention))
                     except ValueError:
                          await ctx.send("{0} does not own a vc.".format(user.name))
@@ -209,8 +209,8 @@ class tpun(commands.Cog):
                          if run:
                               #create vc with arg as name
                               channel = await ctx.guild.create_voice_channel(vcName, category=category)
-                              await channel.set_permissions(ctx.author, view_channel=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                              await channel.set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                              await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                              await channel.set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                               #create json object nC
                               vcId = channel.id
                               nC = {owner : vcId}
@@ -399,7 +399,7 @@ class tpun(commands.Cog):
                     x = json.load(vcOwners)
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
-                              await self.bot.get_channel(vcNameList).set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, use_voice_activation=True, stream=True, speak=True, connect=False, reason="{0} locked their vc: {1}".format(ctx.author.name, self.bot.get_channel(vcNameList).name))
+                              await self.bot.get_channel(vcNameList).set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, read_messages=True, send_messages=False, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=False, reason="{0} locked their vc: {1}".format(ctx.author.name, self.bot.get_channel(vcNameList).name))
                               await ctx.send("{0} Your vc: {1} was locked".format(ctx.author.name, self.bot.get_channel(vcNameList).mention))
                except ValueError:
                     await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
@@ -412,7 +412,7 @@ class tpun(commands.Cog):
                     x = json.load(vcOwners)
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
-                              await self.bot.get_channel(vcNameList).set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, use_voice_activation=True, stream=True, speak=True, connect=True, reason="{0} unlocked their vc: {1}".format(owner, self.bot.get_channel(vcNameList).name))
+                              await self.bot.get_channel(vcNameList).set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True, reason="{0} unlocked their vc: {1}".format(owner, self.bot.get_channel(vcNameList).name))
                               await ctx.send("{0} Your vc: {1} was unlocked".format(ctx.author.name, self.bot.get_channel(vcNameList).mention))
                except ValueError:
                     await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
@@ -428,7 +428,7 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
-                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, stream=True, use_voice_activation=True, speak=True, connect=True, reason="{0} invited {1} to their vc: {2}".format(user.name, ctx.author.name, self.bot.get_channel(int(vcNameList)).name))
+                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, stream=True, use_voice_activation=True, speak=True, connect=True, reason="{0} invited {1} to their vc: {2}".format(user.name, ctx.author.name, self.bot.get_channel(int(vcNameList)).name))
                                    await ctx.send("{0} {1} invited you to their vc: {2}".format(user.mention, ctx.author.name, self.bot.get_channel(vcNameList).mention))
                     except ValueError:
                          await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
@@ -487,7 +487,7 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
-                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, stream=False, use_voice_activation=True, speak=False, connect=False, reason="{0} kicked {1} from their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
+                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, read_messages=False, send_messages=True, read_message_history=True, stream=False, use_voice_activation=True, speak=False, connect=False, reason="{0} kicked {1} from their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
                                    if user.voice.channel.id == vcNameList:
                                         await user.move_to(None)
                                    await ctx.send("{0} was kicked from your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
@@ -505,7 +505,7 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
-                                   await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=False, reason="{0} muted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
+                                   await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, read_messages=True, send_messages=False, read_message_history=True, use_voice_activation=True, stream=True, connect=True, speak=False, reason="{0} muted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
                                    if user.voice.channel.id == vcNameList:
                                         await user.move_to(self.bot.get_channel(vcNameList))
                                    await ctx.send("{0} was muted in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
@@ -523,7 +523,7 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
-                                   await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, stream=True, use_voice_activation=True, connect=True, speak=True, reason="{0} unmuted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
+                                   await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, stream=True, use_voice_activation=True, connect=True, speak=True, reason="{0} unmuted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
                                    if user.voice.channel.id == vcNameList:
                                         await user.move_to(self.bot.get_channel(vcNameList))
                                    await ctx.send("{0} was unmuted in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
