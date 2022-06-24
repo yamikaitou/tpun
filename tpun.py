@@ -384,14 +384,14 @@ class tpun(commands.Cog):
           else:
                await ctx.send("Something went wrong, please contact Nado#6969")
           
-          owner = ctx.author.name
+          owner = ctx.author.id
           with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
                try:
                     x = json.load(vcOwners)
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
                               await self.bot.get_channel(vcNameList).edit(rtc_region=region)
-                              await ctx.send("{0} Your vc: {1}'s region was set to {2}".format(ctx.author.name, self.bot.get_channel(vcNameList).mention, text))
+                              await ctx.send("{0} Your vc: {1} was set to region {2}".format(ctx.author.name, self.bot.get_channel(vcNameList).mention, text))
                except ValueError:
                     await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
