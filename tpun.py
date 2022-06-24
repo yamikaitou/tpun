@@ -334,8 +334,8 @@ class tpun(commands.Cog):
                          await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
                
 
-     @vc.command(name="region", usage=" region <region number>", help="Changes the region of your vc. The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
-     async def region(self, ctx, region = 0):
+     @vc.command(name="region", usage="<region number>", help="Changes the region of your vc. The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
+     async def region(self, ctx, region):
           if region == "0":
                region = None
                await ctx.send("{0} Your channel's region was set to Auto".format(ctx.author.name))
@@ -378,6 +378,9 @@ class tpun(commands.Cog):
           elif region == "13":
                region = "south-korea"
                await ctx.send("{0} Your channel's region was set to South Korea".format(ctx.author.name))
+          elif region == "":
+               region = None
+               await ctx.send("{0} Your channel's region was set to Auto".format(ctx.author.name))
           else:
                await ctx.send("Something went wrong, please contact Nado#6969")
           
