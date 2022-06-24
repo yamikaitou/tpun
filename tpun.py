@@ -53,10 +53,11 @@ class tpun(commands.Cog):
                     await self.create(ctx, "no activity")
                await mess1.delete()
           elif emoji == "📱":
-               await self.create(ctx, str(ctx.author.name) + "'s social channel")
+               await self.create(ctx, ctx.author.name + "'s social channel")
                await mess1.delete()
           elif emoji == "❓":
-               await self.create(ctx, str(ctx.author.name) + "'s pvc")
+               await self.create(ctx, ctx.author.name + "'s private vc")
+               await self.lock(ctx)
                await mess1.delete()
 
      async def emojiRequest(self, ctx, emoji, mess1, user: discord.User):
@@ -67,7 +68,7 @@ class tpun(commands.Cog):
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(user.id):
                                    await self.bot.get_channel(int(vcNameList)).set_permissions(ctx.author, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=True, reason="{0} accepted {1}'s request to join their vc: {2}".format(user.name, ctx.author.name, self.bot.get_channel(int(vcNameList)).name))
-                                   await ctx.send("{0} accepted {1} vc request".format(user, ctx.author.name))
+                                   await ctx.send("{0} accepted {1}'s vc request to join: {2}".format(user, ctx.author.name, self.bot.get_channel(int(vcNameList)).mention))
                     except ValueError:
                          await ctx.send("{0} does not own a vc.".format(user.name))
                await mess1.delete()
@@ -146,7 +147,7 @@ class tpun(commands.Cog):
           pass
      @vc.command(name='help', help="Shows all the commands for t!vc")
      async def help(self, ctx, arg):
-          if arg == '':
+          if arg == 'That is not a valid command. Use t!vc to see a list of available commands':
                pass
           elif arg == 'create':
                await ctx.send("Creates a voice channel with <'name'> t!vc create <'Name'>. You can only have 1 vc. VC deletes after 1 minute of inactivity. You must join your vc within 1 minute or it will be deleted.")
@@ -178,6 +179,10 @@ class tpun(commands.Cog):
                await ctx.send("t!vc unmute <@user> Unmutes a user inside your vc")
           elif arg == 'mute':
                await ctx.send("t!vc mute <@user> Mutes a user inside your vc")
+          elif arg == 'streamon':
+               await ctx.send("t!vc streamon <@user> Allows a user to stream/use camera inside your vc")
+          elif arg == 'streamoff':
+               await ctx.send("t!vc streamoff <@user> Removes a user's ability to stream/use camera inside your vc")
           else:
                await ctx.send("That is not a valid command. Use t!vc to see a list of available commands")
 
@@ -187,7 +192,7 @@ class tpun(commands.Cog):
           jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json"
           run : bool = True
           if vcName == "":
-               await ctx.send("You need to type a voice channel name t!vc create ['Name']")
+               await ctx.send("{0} You need to type a voice channel name t!vc create ['Name']".format(ctx.author.name))
           else:
                #finds out who called the command, saves author as owner
                owner = ctx.author.id
@@ -203,7 +208,7 @@ class tpun(commands.Cog):
                          for vcOwnList, vcId in x.items():
                               #check if user has a vc by going through vcOwners
                               if vcOwnList == str(owner):
-                                   await ctx.send("You already have a vc created named {0}".format(str(self.bot.get_channel(vcId).name)))
+                                   await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(vcId).name)))
                                    run = False
                          if run:
                               #create vc with arg as name
@@ -215,7 +220,7 @@ class tpun(commands.Cog):
                               nC = {owner : vcId}
                               x.update(nC)
                               #add vcOwner and vcId to json
-                              await ctx.send("VC created by {0} with name {1}".format(ctx.author.name, str(channel.name)))
+                              await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
                               empty = asyncio.Future()
                               tpun.futureList[str(vcId)] = empty
                               asyncio.ensure_future(self.checks(vcId, empty, ctx))
@@ -246,7 +251,7 @@ class tpun(commands.Cog):
                               run = "true"
                               vcId = idList
                except ValueError:
-                    await ctx.send("Failed to load vc Owners.")
+                    await ctx.send("Failed to load vc Owners. Please contact Nado#6969")
           if run == "true":
                with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'w') as vcWrite:
                     try:
@@ -269,7 +274,7 @@ class tpun(commands.Cog):
                          await ctx.send("Failed to delete your vc.")
           else:
                if noVC == "true":
-                    await ctx.send("You can't delete a VC if you don't have one.")
+                    await ctx.send("{0} You can't delete a VC if you don't have one.".format(ctx.author.name))
 
      @vc.command(name='name', help="Returns the name of your vc")
      async def name(self, ctx):
@@ -280,11 +285,11 @@ class tpun(commands.Cog):
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
                              vcName = self.bot.get_channel(vcNameList).name
-                             await ctx.send("Your personal vc is named {0}.".format(vcName))
+                             await ctx.send("{0} Your personal vc is named {1}.".format(ctx.author.name, self.bot.get_channel(vcNameList).mention))
                          else:
                              pass
                except ValueError:
-                    await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+                    await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name="gui", help="Opens the vc creation gui")
      async def gui(self, ctx):
@@ -317,66 +322,68 @@ class tpun(commands.Cog):
                          pass
 
      @vc.command(name="rename", usage=" <'new name'> Name must be in quotes", help="Renames your personal vc")
-     async def rename(self, ctx, rename):
-          owner = ctx.author.id
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
-               try:
-                    x = json.load(vcOwners)
-                    for vcOwnList, vcNameList in x.items():
-                         if vcOwnList == str(owner):
-                              await self.bot.get_channel(vcNameList).edit(name=rename)
-                              await ctx.send("Your channel's name was changed to {0}".format(rename))
-               except ValueError:
-                    await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+     async def rename(self, ctx, rename = None):
+          if rename = None:
+               await ctx.send("{0} Please enter a new name for your vc.".format(ctx.author.name))
+          else:
+               owner = ctx.author.id
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+                    try:
+                         x = json.load(vcOwners)
+                         for vcOwnList, vcNameList in x.items():
+                              if vcOwnList == str(owner):
+                                   await self.bot.get_channel(vcNameList).edit(name=rename)
+                                   await ctx.send("{0} Your channel's name was changed to {1}".format(ctx.author.name, rename))
+                    except ValueError:
+                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
                
 
      @vc.command(name="region", usage=" region <region number>", help="Changes the region of your vc. The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
-     async def region(self, ctx, region):
+     async def region(self, ctx, region = 0):
           if region == "0":
                region = None
-               await ctx.send("Your channel's region was set to Auto")
+               await ctx.send("{0} Your channel's region was set to Auto".format(ctx.author.name))
           elif region == "1":
                region = "us-west"
-               await ctx.send("Your channel's region was set to US West")
+               await ctx.send("{0} Your channel's region was set to US West".format(ctx.author.name))
           elif region == "2":
                region = "us-east"
-               await ctx.send("Your channel's region was set to US East")
+               await ctx.send("{0} Your channel's region was set to US East".format(ctx.author.name))
           elif region == "3":
                region = "us-south"
-               await ctx.send("Your channel's region was set to US South")
+               await ctx.send("{0} Your channel's region was set to US South".format(ctx.author.name))
           elif region == "4":
                region = "rotterdam"
-               await ctx.send("Your channel's region was set to Rotterdam")
+               await ctx.send("{0} Your channel's region was set to Rotterdam".format(ctx.author.name))
           elif region == "5":
                region = "singapore"
-               await ctx.send("Your channel's region was set to Singapore")
+               await ctx.send("{0} Your channel's region was set to Singapore".format(ctx.author.name))
           elif region == "6":
                region = "brazil"
-               await ctx.send("Your channel's region was set to Brazil")
+               await ctx.send("{0} Your channel's region was set to Brazil".format(ctx.author.name))
           elif region == "7":
                region = "hongkong"
-               await ctx.send("Your channel's region was set to Hong Kong")
+               await ctx.send("{0} Your channel's region was set to Hong Kong".format(ctx.author.name))
           elif region == "8":
                region = "india"
-               await ctx.send("Your channel's region was set to India")
+               await ctx.send("{0} Your channel's region was set to India".format(ctx.author.name))
           elif region == "9":
                region = "japan"
-               await ctx.send("Your channel's region was set to Japan")
+               await ctx.send("{0} Your channel's region was set to Japan".format(ctx.author.name))
           elif region == "10":
                region = "russia"
-               await ctx.send("Your channel's region was set to Russia")
+               await ctx.send("{0} Your channel's region was set to Russia".format(ctx.author.name))
           elif region == "11":
                region = "sydney"
-               await ctx.send("Your channel's region was set to Sydney")
+               await ctx.send("{0} Your channel's region was set to Sydney".format(ctx.author.name))
           elif region == "12":
                region = "southafrica"
-               await ctx.send("Your channel's region was set to South Africa")
+               await ctx.send("{0} Your channel's region was set to South Africa".format(ctx.author.name))
           elif region == "13":
                region = "south-korea"
-               await ctx.send("Your channel's region was set to South Korea")
+               await ctx.send("{0} Your channel's region was set to South Korea".format(ctx.author.name))
           else:
-               region = None
-               await ctx.send("VC region set to auto, The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=Rotterdam, 5=Singapore, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa, 13=South Korea")
+               await ctx.send("Something went wrong, please contact Nado#6969")
           
           owner = ctx.author.name
           with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
@@ -386,7 +393,7 @@ class tpun(commands.Cog):
                          if vcOwnList == str(owner):
                               await self.bot.get_channel(vcNameList).edit(rtc_region=region)
                except ValueError:
-                    await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+                    await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name="lock", help="Locks your vc", description="Changes your vc to invite only members can join use t!vc invite <@user> to invite someone")
      async def lock(self, ctx):
@@ -396,10 +403,10 @@ class tpun(commands.Cog):
                     x = json.load(vcOwners)
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
-                              await self.bot.get_channel(vcNameList).set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, use_voice_activation=True, stream=True, speak=True, connect=False, reason="{0} locked their vc: {1}".format(owner, self.bot.get_channel(vcNameList).name))
-                              await ctx.send("Your vc: {0} was locked".format(self.bot.get_channel(vcNameList).name))
+                              await self.bot.get_channel(vcNameList).set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, use_voice_activation=True, stream=True, speak=True, connect=False, reason="{0} locked their vc: {1}".format(ctx.author.name, self.bot.get_channel(vcNameList).name))
+                              await ctx.send("{0} Your vc: {1} was locked".format(ctx.author.name, self.bot.get_channel(vcNameList).mention))
                except ValueError:
-                    await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+                    await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name="unlock", help="Unlocks your vc", description="All verified members can join your vc if unlocked")
      async def unlock(self, ctx):
@@ -410,12 +417,12 @@ class tpun(commands.Cog):
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
                               await self.bot.get_channel(vcNameList).set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, use_voice_activation=True, stream=True, speak=True, connect=True, reason="{0} unlocked their vc: {1}".format(owner, self.bot.get_channel(vcNameList).name))
-                              await ctx.send("Your vc: {0} was unlocked".format(self.bot.get_channel(vcNameList).name))
+                              await ctx.send("{0} Your vc: {1} was unlocked".format(ctx.author.name, self.bot.get_channel(vcNameList).mention))
                except ValueError:
-                    await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+                    await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name="invite", usage=" <@user>", help="Invites a user to your vc", description="Allow specified user to join your vc")
-     async def invite(self, ctx, user: discord.User=None):
+     async def invite(self, ctx, user: discord.Member=None):
           if user == None:
                await ctx.send("Please mention a user to invite.")
           else:
@@ -425,13 +432,13 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
-                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, stream=True, use_voice_activation=True, speak=True, connect=True, reason="{0} invited {1} to their vc {2}".format(user, owner, self.bot.get_channel(int(vcNameList)).name))
-                                   await ctx.send("{0} was invite to your voice channel {1}".format(user.mention, self.bot.get_channel(int(vcNameList)).name))
+                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, stream=True, use_voice_activation=True, speak=True, connect=True, reason="{0} invited {1} to their vc: {2}".format(user.name, ctx.author.name, self.bot.get_channel(int(vcNameList)).name))
+                                   await ctx.send("{0} {1} invited you to their vc: {2}".format(user.mention, ctx.author.name, self.bot.get_channel(vcNameList).mention))
                     except ValueError:
-                         await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name="limit", usage=" <number of users>", help="Sets the limit for how many spots are in vc, use 0 to remove limit")
-     async def limit(self, ctx, limit: int):
+     async def limit(self, ctx, limit: int = 0):
           owner = ctx.author.id
           with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
                try:
@@ -439,24 +446,24 @@ class tpun(commands.Cog):
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
                               await self.bot.get_channel(vcNameList).edit(user_limit=limit)
-                              await ctx.send("The user limit in your vc {0} was changed to {1}".format(self.bot.get_channel(vcNameList).name, limit))
+                              await ctx.send("The user limit in your vc {0} was changed to {1}".format(self.bot.get_channel(vcNameList).mention, limit))
                except ValueError:
-                    await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+                    await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name="request", usage="<@user>", help="Sends a user a request to join their vc, request last 5 minutes")
-     async def request(self, ctx, user: discord.User=None):
+     async def request(self, ctx, user: discord.Member=None):
           #gets channel for bot message
           if user == None:
-               await ctx.send("Please mention a user to request to join")
+               await ctx.send("{0} Please mention a user to request to join".format(ctx.author.name))
           else:
                if user.id == ctx.author.id:
-                                        await ctx.send("Silly goose! You can't request to join your own vc.")
+                    await ctx.send("{0} you silly goose! You can't request to join your own vc.".format(ctx.author.name))
                else:
                     dsChannel = 989226756399566919
                     channel = self.bot.get_channel(dsChannel)
                     if ctx.message.channel.id == dsChannel:
 
-                         embed = discord.Embed(color=0xe02522, title='Voice Channel Request', description= '{0}: {1} is requesting to join your channel'.format(user.mention, ctx.author.name))
+                         embed = discord.Embed(color=0xe02522, title='Voice Channel Request', description= '{0}: {1} is requesting to join your channel: {2}'.format(user.mention, ctx.author.name, self.bot.get_channel(vcNameList).mention))
                          embed.set_footer(text='React with ✅ below to accept this request')
                          embed.timestamp = datetime.datetime.utcnow()
 
@@ -476,7 +483,7 @@ class tpun(commands.Cog):
      @vc.command(name="kick", usage="<@user>", help="Kicks a user from your vc")
      async def kick(self, ctx, user: discord.Member=None):
           if user == None:
-               await ctx.send("Please mention a user to kick.")
+               await ctx.send("{0} Please mention a user to kick.".format(ctx.author.name))
           else:
                owner = ctx.author.id
                with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
@@ -484,39 +491,81 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
-                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, stream=False, use_voice_activation=True, speak=False, connect=False, reason="{0} kicked {1} from their vc {2}".format(ctx.author.name, user.name, self.bot.get_channel(int(vcNameList)).name))
+                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, stream=False, use_voice_activation=True, speak=False, connect=False, reason="{0} kicked {1} from their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
                                    if user.voice.channel.id == vcNameList:
                                         await user.move_to(None)
-                                   await ctx.send("{0} was kicked from your voice channel {1}".format(user.name, self.bot.get_channel(int(vcNameList)).name))
+                                   await ctx.send("{0} was kicked from your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
                     except ValueError:
-                         await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name="mute", usage="<@user>", help="Mutes a user inside your vc")
-     async def mute(self, ctx, user: discord.Member):
-          owner = ctx.author.id
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
-               try:
-                    x = json.load(vcOwners)
-                    for vcOwnList, vcNameList in x.items():
-                         if vcOwnList == str(owner):
-                              await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=False, reason="{0} muted {1} in their vc".format(ctx.author.name, user.name))
-                              if user.voice.channel.id == vcNameList:
-                                   await user.move_to(self.bot.get_channel(vcNameList))
-                              await ctx.send("{0} was muted in your vc".format(user.name))
-               except ValueError:
-                    await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+     async def mute(self, ctx, user: discord.Member = None):
+          if user == None:
+               await ctx.send("{0} Please mention a user to mute.".format(ctx.author.name))
+          else:
+               owner = ctx.author.id
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+                    try:
+                         x = json.load(vcOwners)
+                         for vcOwnList, vcNameList in x.items():
+                              if vcOwnList == str(owner):
+                                   await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=False, reason="{0} muted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
+                                   if user.voice.channel.id == vcNameList:
+                                        await user.move_to(self.bot.get_channel(vcNameList))
+                                   await ctx.send("{0} was muted in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
+                    except ValueError:
+                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name="unmute", usage="<@user>", help="Unmutes a user inside your vc")
-     async def unmute(self, ctx, user: discord.Member):
-          owner = ctx.author.id
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
-               try:
-                    x = json.load(vcOwners)
-                    for vcOwnList, vcNameList in x.items():
-                         if vcOwnList == str(owner):
-                              await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, stream=True, use_voice_activation=True, connect=True, speak=True, reason="{0} unmuted {1} in their vc".format(ctx.author.name, user.name))
-                              if user.voice.channel.id == vcNameList:
-                                   await user.move_to(self.bot.get_channel(vcNameList))
-                              await ctx.send("{0} was unmuted in your vc".format(user.name))
-               except ValueError:
-                    await ctx.send("You have no vc created use t!vc create [Name] to create one.")
+     async def unmute(self, ctx, user: discord.Member = None):
+          if user == None:
+               await ctx.send("{0} Please mention a user to unmute.".format(ctx.author.name))
+          else:
+               owner = ctx.author.id
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+                    try:
+                         x = json.load(vcOwners)
+                         for vcOwnList, vcNameList in x.items():
+                              if vcOwnList == str(owner):
+                                   await self.bot.get_channel(vcNameList).set_permissions(user, view_channel=True, stream=True, use_voice_activation=True, connect=True, speak=True, reason="{0} unmuted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
+                                   if user.voice.channel.id == vcNameList:
+                                        await user.move_to(self.bot.get_channel(vcNameList))
+                                   await ctx.send("{0} was unmuted in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
+                    except ValueError:
+                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
+
+     @vc.command(name="streamon", usage="<@user>", help="Allow a user to stream/use camera inside your vc")
+     async def streamon(self, ctx, user: discord.Member = None):
+          if user == None:
+               await ctx.send("{0} Please mention a user to enable streaming/camera for.".format(ctx.author.name))
+          else:
+               owner = ctx.author.id
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+                    try:
+                         x = json.load(vcOwners)
+                         for vcOwnList, vcNameList in x.items():
+                              if vcOwnList == str(owner):
+                                   await self.bot.get_channel(vcNameList).set_permissions(user, stream=True, reason="{0} unmuted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
+                                   if user.voice.channel.id == vcNameList:
+                                        await user.move_to(self.bot.get_channel(vcNameList))
+                                   await ctx.send("{0} is now allowed to stream/use camera in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
+                    except ValueError:
+                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
+     
+     @vc.command(name="streamoff", usage="<@user>", help="Disallows a user to stream/use camera inside your vc")
+     async def streamoff(self, ctx, user: discord.Member = None):
+          if user == None:
+               await ctx.send("{0} Please mention a user to disable streaming/camera for.".format(ctx.author.name))
+          else:
+               owner = ctx.author.id
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+                    try:
+                         x = json.load(vcOwners)
+                         for vcOwnList, vcNameList in x.items():
+                              if vcOwnList == str(owner):
+                                   await self.bot.get_channel(vcNameList).set_permissions(user, stream=False, reason="{0} unmuted {1} in their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
+                                   if user.voice.channel.id == vcNameList:
+                                        await user.move_to(self.bot.get_channel(vcNameList))
+                                   await ctx.send("{0} is no longer allowed to stream/use camera in your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
+                    except ValueError:
+                         await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
