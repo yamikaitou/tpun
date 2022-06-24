@@ -68,8 +68,9 @@ class tpun(commands.Cog):
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(user.id):
                                    await self.bot.get_channel(int(vcNameList)).set_permissions(ctx.author, read_messages=True, send_messages=True, read_message_history=True, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=True, reason="{0} accepted {1}'s request to join their vc: {2}".format(user.name, ctx.author.name, self.bot.get_channel(int(vcNameList)).name))
-                                   if ctx.author.voice.channel.id != vcNameList and ctx.author.voice.channel != None:
-                                        await ctx.author.move_to(self.bot.get_channel(int(vcNameList)))
+                                   if ctx.author.voice != None:
+                                        if ctx.author.voice.channel.id != vcNameList and ctx.author.voice.channel != None:
+                                             await ctx.author.move_to(self.bot.get_channel(int(vcNameList)))
                                    await ctx.send("{0} accepted {1}'s vc request to join: {2}".format(user, ctx.author.name, self.bot.get_channel(int(vcNameList)).mention))
                     except ValueError:
                          await ctx.send("{0} does not own a vc.".format(user.name))
@@ -213,7 +214,8 @@ class tpun(commands.Cog):
                               channel = await ctx.guild.create_voice_channel(vcName, category=category)
                               await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                               await channel.set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                              if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel != None:
+                              if ctx.author.voice != None:
+                                   if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel != None:
                                         await ctx.author.move_to(channel)
                               #create json object nC
                               vcId = channel.id
@@ -495,9 +497,10 @@ class tpun(commands.Cog):
                          x = json.load(vcOwners)
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
-                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, read_messages=False, send_messages=True, read_message_history=True, stream=False, use_voice_activation=True, speak=False, connect=False, reason="{0} kicked {1} from their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
-                                   if user.voice.channel.id == vcNameList:
-                                        await user.move_to(None)
+                                   await self.bot.get_channel(int(vcNameList)).set_permissions(user, view_channel=True, read_messages=True, send_messages=False, read_message_history=True, stream=False, use_voice_activation=True, speak=False, connect=False, reason="{0} kicked {1} from their vc: {2}".format(ctx.author.name, user.name, self.bot.get_channel(vcNameList).name))
+                                   if user.voice != None:
+                                        if user.voice.channel.id == vcNameList:
+                                             await user.move_to(None)
                                    await ctx.send("{0} was kicked from your vc: {1}".format(user.name, self.bot.get_channel(vcNameList).mention))
                     except ValueError:
                          await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
