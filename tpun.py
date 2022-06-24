@@ -329,7 +329,7 @@ class tpun(commands.Cog):
                          for vcOwnList, vcNameList in x.items():
                               if vcOwnList == str(owner):
                                    await self.bot.get_channel(vcNameList).edit(name=rename)
-                                   await ctx.send("{0} Your channel's name was changed to {1}".format(ctx.author.name, rename))
+                                   await ctx.send("{0} Your channel's name was changed to {1}".format(ctx.author.name, self.bot.get_channel(vcNameList).mention))
                     except ValueError:
                          await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
                
@@ -338,49 +338,49 @@ class tpun(commands.Cog):
      async def region(self, ctx, region):
           if region == "0":
                region = None
-               await ctx.send("{0} Your channel's region was set to Auto".format(ctx.author.name))
+               text = "Auto"
           elif region == "1":
                region = "us-west"
-               await ctx.send("{0} Your channel's region was set to US West".format(ctx.author.name))
+               text = "US West"
           elif region == "2":
                region = "us-east"
-               await ctx.send("{0} Your channel's region was set to US East".format(ctx.author.name))
+               text = "US East"
           elif region == "3":
                region = "us-south"
-               await ctx.send("{0} Your channel's region was set to US South".format(ctx.author.name))
+               text = "US South"
           elif region == "4":
                region = "rotterdam"
-               await ctx.send("{0} Your channel's region was set to Rotterdam".format(ctx.author.name))
+               text = "Rotterdam"
           elif region == "5":
                region = "singapore"
-               await ctx.send("{0} Your channel's region was set to Singapore".format(ctx.author.name))
+               text = "Singapore"
           elif region == "6":
                region = "brazil"
-               await ctx.send("{0} Your channel's region was set to Brazil".format(ctx.author.name))
+               text = "Brazil"
           elif region == "7":
                region = "hongkong"
-               await ctx.send("{0} Your channel's region was set to Hong Kong".format(ctx.author.name))
+               text = "Hong Kong"
           elif region == "8":
                region = "india"
-               await ctx.send("{0} Your channel's region was set to India".format(ctx.author.name))
+               text = "India"
           elif region == "9":
                region = "japan"
-               await ctx.send("{0} Your channel's region was set to Japan".format(ctx.author.name))
+               text = "Japan"
           elif region == "10":
                region = "russia"
-               await ctx.send("{0} Your channel's region was set to Russia".format(ctx.author.name))
+               text = "Russia"
           elif region == "11":
                region = "sydney"
-               await ctx.send("{0} Your channel's region was set to Sydney".format(ctx.author.name))
+               text = "Sydney"
           elif region == "12":
                region = "southafrica"
-               await ctx.send("{0} Your channel's region was set to South Africa".format(ctx.author.name))
+               text = "South Africa"
           elif region == "13":
                region = "south-korea"
-               await ctx.send("{0} Your channel's region was set to South Korea".format(ctx.author.name))
+               text = "South Korea"
           elif region == "":
                region = None
-               await ctx.send("{0} Your channel's region was set to Auto".format(ctx.author.name))
+               text = "Auto"
           else:
                await ctx.send("Something went wrong, please contact Nado#6969")
           
@@ -391,6 +391,7 @@ class tpun(commands.Cog):
                     for vcOwnList, vcNameList in x.items():
                          if vcOwnList == str(owner):
                               await self.bot.get_channel(vcNameList).edit(rtc_region=region)
+                              await ctx.send("{0} Your vc: {1}'s region was set to {2}".format(ctx.author.name, self.bot.get_channel(vcNameList).mention, text))
                except ValueError:
                     await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
