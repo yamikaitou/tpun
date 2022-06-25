@@ -187,54 +187,59 @@ class tpun(commands.Cog):
 
      @vc.command(name='create', usage=" <'name'> name must be in quotes", help="Creates a voice channel with <'name'>. You can only have 1 vc. VC deletes after 1 minute of inactivity. You must join your vc within 1 minute or it will be deleted.")
      async def create(self, ctx, vcName):
-          category = ctx.channel.category
-          jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json"
-          run : bool = True
-          if vcName == "":
-               await ctx.send("{0} You need to type a voice channel name t!vc create ['Name']".format(ctx.author.name))
-          else:
-               #finds out who called the command, saves author as owner
-               owner = ctx.author.id
-               if vcName == "no activity":
-                    await ctx.send("You can't create a game vc if you're not playing a game.")
-                    run = False
-               #opens json file for read
-               with open(jsonPath, 'r') as vcOwners:
-               #load vcOwners
-                    try:
-                         x = json.load(vcOwners)
-                         #closes json file from read
-                         for vcOwnList, vcId in x.items():
-                              #check if user has a vc by going through vcOwners
-                              if vcOwnList == str(owner):
-                                   await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(vcId).name)))
-                                   run = False
-                         if run:
-                              #create vc with arg as name
-                              channel = await ctx.guild.create_voice_channel(vcName, category=category)
-                              await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                              await channel.set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                              if ctx.author.voice != None:
-                                   if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel != None:
-                                        await ctx.author.move_to(channel)
-                              #create json object nC
-                              vcId = channel.id
-                              nC = {owner : vcId}
-                              x.update(nC)
-                              #add vcOwner and vcId to json
-                              await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
-                              empty = asyncio.Future()
-                              tpun.futureList[str(vcId)] = empty
-                              asyncio.ensure_future(self.checks(vcId, empty, ctx))
+          #gets channel for bot message
+          dsChannel = 989226756399566919
+          channel = self.bot.get_channel(dsChannel)
+          #vcrole1 = get(creator.guild.roles, id=703562188224331777)
+          if ctx.message.channel.id == dsChannel:
+                    category = ctx.channel.category
+               jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json"
+               run : bool = True
+               if vcName == "":
+                    await ctx.send("{0} You need to type a voice channel name t!vc create ['Name']".format(ctx.author.name))
+               else:
+                    #finds out who called the command, saves author as owner
+                    owner = ctx.author.id
+                    if vcName == "no activity":
+                         await ctx.send("You can't create a game vc if you're not playing a game.")
+                         run = False
+                    #opens json file for read
+                    with open(jsonPath, 'r') as vcOwners:
+                    #load vcOwners
+                         try:
+                              x = json.load(vcOwners)
+                              #closes json file from read
+                              for vcOwnList, vcId in x.items():
+                                   #check if user has a vc by going through vcOwners
+                                   if vcOwnList == str(owner):
+                                        await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(vcId).name)))
+                                        run = False
+                              if run:
+                                   #create vc with arg as name
+                                   channel = await ctx.guild.create_voice_channel(vcName, category=category)
+                                   await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                                   await channel.set_permissions(ctx.guild.get_role(970379648770928701), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                                   if ctx.author.voice != None:
+                                        if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel != None:
+                                             await ctx.author.move_to(channel)
+                                   #create json object nC
+                                   vcId = channel.id
+                                   nC = {owner : vcId}
+                                   x.update(nC)
+                                   #add vcOwner and vcId to json
+                                   await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
+                                   empty = asyncio.Future()
+                                   tpun.futureList[str(vcId)] = empty
+                                   asyncio.ensure_future(self.checks(vcId, empty, ctx))
 
-                    except ValueError:
-                         if x == "":
-                              x = {}
-               with open(jsonPath, 'w') as vcWrite:
-                    try:
-                         json.dump(x, vcWrite)
-                    except ValueError:
-                         print("Minecraft.py Minecraft.create Json write failed.")
+                         except ValueError:
+                              if x == "":
+                                   x = {}
+                    with open(jsonPath, 'w') as vcWrite:
+                         try:
+                              json.dump(x, vcWrite)
+                         except ValueError:
+                              print("Minecraft.py Minecraft.create Json write failed.")
     
      @vc.command(name='delete', usage=" ['reason'] reason is optional but if included must be in quotes", help="Deletes your personal channel")
      async def delete(self, ctx, reason = None):
