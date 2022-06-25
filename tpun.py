@@ -192,7 +192,7 @@ class tpun(commands.Cog):
           channel = self.bot.get_channel(dsChannel)
           #vcrole1 = get(creator.guild.roles, id=703562188224331777)
           if ctx.message.channel.id == dsChannel:
-                    category = ctx.channel.category
+               category = ctx.channel.category
                jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json"
                run : bool = True
                if vcName == "":
@@ -240,6 +240,8 @@ class tpun(commands.Cog):
                               json.dump(x, vcWrite)
                          except ValueError:
                               print("Minecraft.py Minecraft.create Json write failed.")
+          else:
+               await ctx.send("This command only works in the custom vc {0} channel.".format(self.bot.get_channel(989226756399566919).mention))
     
      @vc.command(name='delete', usage=" ['reason'] reason is optional but if included must be in quotes", help="Deletes your personal channel")
      async def delete(self, ctx, reason = None):
