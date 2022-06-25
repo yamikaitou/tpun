@@ -11,6 +11,7 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 import datetime
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
+from redbot.core import bank
 
 class tpun(commands.Cog):
      """
@@ -147,6 +148,7 @@ class tpun(commands.Cog):
 
      @commands.group(name='vc')
      async def vc(self, ctx):
+          await bank.set_currency_name("Crow Coin", ctx.guild)
           pass
      @vc.command(name='help', help="Shows all the commands for t!vc")
      async def help(self, ctx, arg):
