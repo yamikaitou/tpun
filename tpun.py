@@ -69,28 +69,29 @@ class tpun(commands.Cog):
 
      @commands.command(name="repremove", help="Removes a amount from a users reputation")
      async def repremove(self, ctx, user: discord.Member, amount:int):
-          jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/reputation.json"
-          newWrite = None
-          with open(jsonPath, 'r') as reputation:
-               try:
-                    x = json.load(reputation)
-                    for userId, userRep in x.items():
-                         if userId == str(user.id):
-                              currentRep = userRep - amount
-                              newWrite = {user.id : currentRep}
-                              await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}".format(ctx.author.name, amount, user.name, currentRep))
-                    if newWrite != None:
-                         x.pop(str(user.id), None)
-                         x.update(newWrite)
-                    else:
-                         await ctx.send("This user already has no reputation")
-               except ValueError:
-                    print("reputation.json failed to read")
-          with open(jsonPath, 'w') as reputationWrite:
-               try:
-                    json.dump(x, reputationWrite)
-               except ValueError:
-                    print("reputation.json failed to write")
+          if ctx.author.top_role.id == 971448331874209844 or ctx.author.top_role.id == 675089464036425738 or ctx.author.top_role.id == 673670374961184768:
+               jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/reputation.json"
+               newWrite = None
+               with open(jsonPath, 'r') as reputation:
+                    try:
+                         x = json.load(reputation)
+                         for userId, userRep in x.items():
+                              if userId == str(user.id):
+                                   currentRep = userRep - amount
+                                   newWrite = {user.id : currentRep}
+                                   await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}".format(ctx.author.name, amount, user.name, currentRep))
+                         if newWrite != None:
+                              x.pop(str(user.id), None)
+                              x.update(newWrite)
+                         else:
+                              await ctx.send("This user already has no reputation")
+                    except ValueError:
+                         print("reputation.json failed to read")
+               with open(jsonPath, 'w') as reputationWrite:
+                    try:
+                         json.dump(x, reputationWrite)
+                    except ValueError:
+                         print("reputation.json failed to write")
 
 
     
