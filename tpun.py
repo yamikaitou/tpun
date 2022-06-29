@@ -1,6 +1,9 @@
 from ast import Dict
+from multiprocessing.connection import Listener
 from typing import Literal
 import json
+from xmlrpc.client import Boolean
+from interactions import EventStatus
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
@@ -27,6 +30,69 @@ class tpun(commands.Cog):
           )
 
      futureList:Dict = {}
+
+     @commands.Cog.listener()
+     async def on_message(self, message: discord.Message):
+          if "thank you" in message.content or "thanks" in message.content or "Thank you" in message.content or "THANK YOU" in message.content or "Thank You" in message.content:
+               if message.mentions != None:
+                    users = message.mentions
+                    names = []
+                    newUser:Boolean = True
+                    for user in users:
+                         names.append(user.mention)
+                    for user in users:
+                         if user.id != message.author.id:
+                              jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/reputation.json"
+                              id = user.id
+                              with open(jsonPath, 'r') as reputation:
+                                   try:
+                                        x = json.load(reputation)
+                                        for userId, userRep in x.items():
+                                             if userId == str(id):
+                                                  currentRep = userRep + 1
+                                                  newWrite = {id : currentRep}
+                                                  await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
+                                                  newUser = False
+                                        if newUser:
+                                             newWrite = {id : 1}
+                                             await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
+                                        x.pop(str(id), None)
+                                        x.update(newWrite)
+                                   except ValueError:
+                                        if x == None:
+                                             x = {}
+                              with open(jsonPath, 'w') as reputationWrite:
+                                   try:
+                                        json.dump(x, reputationWrite)
+                                   except ValueError:
+                                        print("reputation.json write failed.")
+
+     @commands.command(name="repremove", help="Removes a amount from a users reputation")
+     async def repremove(self, ctx, user: discord.Member, amount:int):
+          jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/reputation.json"
+          newWrite = None
+          with open(jsonPath, 'r') as reputation:
+               try:
+                    x = json.load(reputation)
+                    for userId, userRep in x.items():
+                         if userId == str(user.id):
+                              currentRep = userRep - amount
+                              newWrite = {user.id : currentRep}
+                              await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}".format(ctx.author.name, amount, user.name, currentRep))
+                    if newWrite != None:
+                         x.pop(str(user.id), None)
+                         x.update(newWrite)
+                    else:
+                         await ctx.send("This user already has no reputation")
+               except ValueError:
+                    print("reputation.json failed to read")
+          with open(jsonPath, 'w') as reputationWrite:
+               try:
+                    json.dump(x, reputationWrite)
+               except ValueError:
+                    print("reputation.json failed to write")
+
+
     
      async def checks(self, id, empty, ctx):
           channel = self.bot.get_channel(id)
@@ -60,6 +126,43 @@ class tpun(commands.Cog):
                await self.create(ctx, ctx.author.name + "'s private vc")
                await self.lock(ctx)
                await mess1.delete()
+
+     async def emojiVerifier(self, ctx, emoji, mess1, user: discord.Member):
+          role: discord.Role = None
+          for x in ctx.guild.roles:
+               if x.id == 970544339237359636:
+                    unverified = x
+          if emoji == "♂":
+               for x in ctx.guild.roles:
+                    if x.id == 970379648770928701:
+                         role = x
+          elif emoji == "♀":
+               for x in ctx.guild.roles:
+                    if x.id == 991537001151078561:
+                         role = x
+          elif emoji == "💛":
+               for x in ctx.guild.roles:
+                    if x.id == 991537102841974915:
+                         role = x
+          elif emoji == "❤️":
+               for x in ctx.guild.roles:
+                    if x.id == 991537040036466698:
+                         role = x
+          elif emoji == "💙":
+               for x in ctx.guild.roles:
+                    if x.id == 991537074136174694:
+                         role = x
+          elif emoji == "💜":
+               for x in ctx.guild.roles:
+                    if x.id == 673683135271272459:
+                         role = x
+          if unverified in user.roles:
+               await user.add_roles(role)
+               await user.remove_roles(unverified)
+               await ctx.send("User Verified as {0}".format(role.name))
+               await mess1.delete()
+          else:
+               await ctx.send("User is already verified!")
 
      async def emojiRequest(self, ctx, emoji, mess1, user: discord.Member):
           if emoji == "✅":
@@ -278,7 +381,7 @@ class tpun(commands.Cog):
                          x.pop(str(owner), None)
                          json.dump(x, vcWrite)
                          #does a check to see if we delete the last entry in json files. Adds {} to json file because json doesn't play nice with empty files.
-                         if x == "":
+                         if x == None:
                               x = {}
                          await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
                     except ValueError:
@@ -331,6 +434,27 @@ class tpun(commands.Cog):
                          await mess1.delete()
                     else:
                          pass
+
+     @commands.command(name="verify", help="Opens the verification gui")
+     async def verify(self, ctx, user: discord.Member):
+          if ctx.author.top_role.id == 971448331874209844 or ctx.author.top_role.id == 675089464036425738 or ctx.author.top_role.id == 673670374961184768:
+               embed = discord.Embed(color=0xe02522, title='Verified emoji selector', description= 'From below please choose the emoji that best identifies your gender')
+               embed.set_footer(text="♂ : Male | ♀ : Female|💛 : Non Binary|❤️ : Trans Female|💙 : Trans Male|💜 : Gender Fluid")
+               embed.timestamp = datetime.datetime.utcnow()
+               mess1 = await ctx.channel.send(embed=embed)
+               emojis = ["♂","♀", "🌕", "❤️", "💙"]
+               start_adding_reactions(mess1, emojis)
+               try:
+                    result = await ctx.bot.wait_for("reaction_add", timeout=60.0, check=self.pred(emojis, mess1, user))
+                    emoji = str(result[0])
+                    await self.emojiVerifier(ctx, emoji, mess1, user)
+               except asyncio.TimeoutError:
+                    await ctx.channel.send('Verification gui timed out.')
+                    await mess1.delete()
+               else:
+                    pass
+          else:
+               pass
 
      @vc.command(name="rename", usage=" <'new name'> Name must be in quotes", help="Renames your personal vc")
      async def rename(self, ctx, rename = None):
