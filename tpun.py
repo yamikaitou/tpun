@@ -109,6 +109,24 @@ class tpun(commands.Cog):
           if userFound == False:
                await ctx.send("{0} doesn't have a reputation.".format(user.name))
 
+     @commands.command(name="buy", help="Buys a role for money")
+     async def buy(self, ctx, role: discord.Role):
+          userAccount: bank.Account = await bank.get_account(ctx.author)
+          buyableRoles = [970401202019926116,970401111334879292 , 970400980229320754 , 970398750440820758 , 970398649030934528 , 970398560346599474 , 970398471624482886 , 970397473849892884 , 970397345621614624 , 970397226629206106 , 970396957564604466 , 970396864769826866 , 970396683940823110 , 970396772369309736 , 970396437269586011 , 970396353953951794 , 970396243593404506 , 970396015612006411 , 970396117550374932 , 970395717975801916 , 970395636744749096 ]
+          if role.id in buyableRoles:
+               if userAccount.balance >= 200:
+                    for roleCheck in buyableRoles:
+                         if ctx.guild.get_role(roleCheck) in ctx.author.roles:
+                              await ctx.author.remove_roles(ctx.guild.get_role(roleCheck))
+
+                    await ctx.author.add_roles(role)
+                    await bank.set_balance(ctx.author, userAccount.balance-200)
+                    await ctx.send("{0} You bought {1} for 200 Crow Coin".format(ctx.author.name, role.name))
+               else:
+                    await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs 200 Crow Coin".format(ctx.author.name, role.name))
+          else:
+               await ctx.send("Sorry this role is not for sale, only color roles are purchasable")
+
      async def checks(self, id, empty, ctx):
           channel = self.bot.get_channel(id)
           await asyncio.sleep(60)
