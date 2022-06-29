@@ -93,8 +93,22 @@ class tpun(commands.Cog):
                     except ValueError:
                          print("reputation.json failed to write")
 
+     @commands.command(name="checkrep", help="Displays a user's reputation")
+     async def checkrep(self, ctx, user: discord.Member):
+          userFound = False
+          jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/reputation.json"
+          with open(jsonPath, 'r') as reputation:
+               try:
+                    x = json.load(reputation)
+                    for userId, userRep in x.items():
+                         if userId == str(user.id):
+                              await ctx.send("{0} has {1} reputation".format(user.name, userRep))
+                              userFound = True
+               except ValueError:
+                    print("reputation.json failed to read")
+          if userFound == False:
+               await ctx.send("{0} doesn't have a reputation.".format(user.name))
 
-    
      async def checks(self, id, empty, ctx):
           channel = self.bot.get_channel(id)
           await asyncio.sleep(60)
