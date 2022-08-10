@@ -1,2 +1,13 @@
-# Team-Punistic-Cog
-This cogs add all kinds of commands for discord red bots. It allows you to check on minecraft server status and add own person vc to discord servers (only 1 per person).
+##Team Punistic Cogs
+
+#Installation
+
+[p]repo add tpun-cogs https://github.com/batman202012/tpun
+
+[p]cog install tpun-cogs <cog-name>
+
+[p] is your prefix
+  
+##Cog list
+  
+#
