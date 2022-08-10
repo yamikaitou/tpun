@@ -25,7 +25,7 @@
   <h5>[p]minecraft status 'server'</h5>
 Returns the amount of people on server and the ping
   
-    <h5>[p]minecraft ip 'server'</h5>
+<h5>[p]minecraft ip 'server'</h5>
 Returns the server's ip
   
  <h3>pvc</h3>
