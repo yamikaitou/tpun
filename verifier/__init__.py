@@ -3,11 +3,11 @@ from pathlib import Path
 
 from redbot.core.bot import Red
 
-from .tpun import tpun
+from .verifier import verifier
 
 with open(Path(__file__).parent / "info.json") as fp:
     __red_end_user_data_statement__ = json.load(fp)["end_user_data_statement"]
 
 
 async def setup(bot: Red) -> None:
-    bot.add_cog(tpun(bot))
+    bot.add_cog(verifier(bot))

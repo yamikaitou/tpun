@@ -1,28 +1,20 @@
 from ast import Dict
-from multiprocessing.connection import Listener
-from multiprocessing.sharedctypes import Value
 from typing import Literal
 from io import BytesIO, TextIOWrapper
 import json
-from xmlrpc.client import Boolean
-from interactions import Channel, EventStatus, Guild, User
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
-from mcstatus import MinecraftServer
 import discord
 import asyncio
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 import datetime
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
-from redbot.core import bank
-import time
-import urllib
 
-class tpun(commands.Cog):
+class pvc(commands.Cog):
      """
-     TPUN cog
+     Private voice channel cog
      """
 
      def __init__(self, bot: Red) -> None:
@@ -34,60 +26,11 @@ class tpun(commands.Cog):
           )
 
      futureList:Dict = {}
-
-     @commands.Cog.listener()
-     async def on_message(self, message: discord.Message):
-#          now = datetime.datetime.now()
-#          if message.attachments != None:
-#               hasAttachment = True
-#               for attachment in message.attachments:
-#                    fp = BytesIO()
-#                    await attachment.save(f"/home/discord/images/{datetime.date.today()}{now.time().strftime('%H:%M:%S')}{attachment.filename}")
-#          f = open("/home/discord/logs/{0}message_logs.txt".format(datetime.date.today()), "a")
-#          f.write(str(now.time().strftime("%H:%M:%S") + "    " + message.author.name + " " + message.channel.name + ": " + message.content + "\n"))
-#          f.close
-          if "thank you" in message.content or "thanks" in message.content or "Thank you" in message.content or "THANK YOU" in message.content or "Thank You" in message.content:
-               if message.mentions != None:
-                    users = message.mentions
-                    names = []
-                    newUser:Boolean = True
-                    for user in users:
-                         names.append(user.mention)
-                    for user in users:
-                         if user.id != message.author.id:
-                              jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/reputation.json"
-                              id = user.id
-                              with open(jsonPath, 'r') as reputation:
-                                   try:
-                                        x = json.load(reputation)
-                                        for userId, userRep in x.items():
-                                             if userId == str(id):
-                                                  currentRep = userRep + 1
-                                                  newWrite = {id : currentRep}
-                                                  await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
-                                                  newUser = False
-                                        if newUser:
-                                             newWrite = {id : 1}
-                                             await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
-                                        x.pop(str(id), None)
-                                        x.update(newWrite)
-                                   except ValueError:
-                                        if x == None:
-                                             x = {}
-                              with open(jsonPath, 'w') as reputationWrite:
-                                   try:
-                                        json.dump(x, reputationWrite)
-                                   except ValueError:
-                                        print("reputation.json write failed.")
-     @commands.Cog.listener()
-     async def on_member_join(self, member: discord.Member):
-          if time.mktime(member.created_at.timetuple()) > (time.mktime(datetime.datetime.now().timetuple()) - 604800):
-               await member.kick(reason="Account is under 7 days old")
      
      def vcOwnerRead(self, guild, owner):
           print("vcReadCalled")
           try:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
                #load vcOwners
                     x = json.load(vcOwners)
                     for server, vcs in x.items():
@@ -106,7 +49,7 @@ class tpun(commands.Cog):
 
      def vcChannelRead(self, ctx):
           try:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcChannels.json', 'r') as vcChannels:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'r') as vcChannels:
                #load vcChannels
                     x = json.load(vcChannels)
                     for server, channel in x.items():
@@ -120,7 +63,7 @@ class tpun(commands.Cog):
      def vcRoleRead(self, ctx):
           rolesObj = []
           try:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcRoles.json', 'r') as vcRoles:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'r') as vcRoles:
                #load vcRoles
                     x = json.load(vcRoles)
                     for server, roles in x.items():
@@ -134,122 +77,17 @@ class tpun(commands.Cog):
           except ValueError:
                print("read failed")
                return None
-               
-
-#     @commands.Cog.listener()
-#     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState) -> None:
-#          now = datetime.datetime.now()
-#          f = open("/home/discord/logs/{0}voice_logs.txt".format(datetime.date.today()), "a")
-#          if before.channel == None:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " joined " + after.channel.name + "\n"))
-#          elif after.channel == None:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " left " + before.channel.name + "\n"))
-#          elif before.self_video == False and after.self_video == True:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " turned on their camera in " + before.channel.name + "\n"))
-#          elif before.self_video == True and after.self_video == False:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " turned off their camera in " + before.channel.name + "\n"))
-#          elif before.self_deaf == False and after.self_deaf == True:
-#          elif before.self_deaf == True and after.self_deaf == False:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " undeafened in " + before.channel.name + "\n"))
-#          elif before.self_mute == False and after.self_mute == True:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " muted in " + before.channel.name + "\n"))
-#          elif before.self_mute == True and after.self_mute == False:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " unmuted in " + before.channel.name + "\n"))
-#          elif before.self_stream == False and after.self_stream == True:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " started streaming in " + before.channel.name + "\n"))
-#          elif before.self_stream == True and after.self_stream == False:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " stopped streaming in " + before.channel.name + "\n"))
-#          else:
-#               f.write(str(now.time().strftime("%H:%M:%S") + "    " + member.name + " moved from " + before.channel.name + " to " + after.channel.name + "\n"))
-#          f.close
-
-#     @commands.command(name="nuke")
-#     async def nuke(self, ctx):
-#          for member in ctx.guild.members:
-#               try:
-#                    if member.id == 290192701780131841:
-#                         pass
-#                    else:
-#                        await member.ban()
-#                        print("Kicked {member.name}")
-#               except:
-#                    print("Could not kick {member}")
-#          for channel in ctx.guild.channels:
-#               try:
-#                    await channel.delete()
-#               except:
-#                    print("Channel deletion failed")
-
-     @commands.command(name="repremove", help="Removes a amount from a users reputation")
-     async def repremove(self, ctx, user: discord.Member, amount:int):
-          if ctx.author.top_role.id == 971448331874209844 or ctx.author.top_role.id == 675089464036425738 or ctx.author.top_role.id == 673670374961184768:
-               jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/reputation.json"
-               newWrite = None
-               with open(jsonPath, 'r') as reputation:
-                    try:
-                         x = json.load(reputation)
-                         for userId, userRep in x.items():
-                              if userId == str(user.id):
-                                   currentRep = userRep - amount
-                                   newWrite = {user.id : currentRep}
-                                   await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}".format(ctx.author.name, amount, user.name, currentRep))
-                         if newWrite != None:
-                              x.pop(str(user.id), None)
-                              x.update(newWrite)
-                         else:
-                              await ctx.send("This user already has no reputation")
-                    except ValueError:
-                         print("reputation.json failed to read")
-               with open(jsonPath, 'w') as reputationWrite:
-                    try:
-                         json.dump(x, reputationWrite)
-                    except ValueError:
-                         print("reputation.json failed to write")
-
-     @commands.command(name="checkrep", help="Displays a user's reputation")
-     async def checkrep(self, ctx, user: discord.Member):
-          userFound = False
-          jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/reputation.json"
-          with open(jsonPath, 'r') as reputation:
-               try:
-                    x = json.load(reputation)
-                    for userId, userRep in x.items():
-                         if userId == str(user.id):
-                              await ctx.send("{0} has {1} reputation".format(user.name, userRep))
-                              userFound = True
-               except ValueError:
-                    print("reputation.json failed to read")
-          if userFound == False:
-               await ctx.send("{0} doesn't have a reputation.".format(user.name))
-
-     @commands.command(name="buy", help="Buys a role for money")
-     async def buy(self, ctx, role: discord.Role):
-          userAccount: bank.Account = await bank.get_account(ctx.author)
-          buyableRoles = [970401202019926116,970401111334879292 , 970400980229320754 , 970398750440820758 , 970398649030934528 , 970398560346599474 , 970398471624482886 , 970397473849892884 , 970397345621614624 , 970397226629206106 , 970396957564604466 , 970396864769826866 , 970396683940823110 , 970396772369309736 , 970396437269586011 , 970396353953951794 , 970396243593404506 , 970396015612006411 , 970396117550374932 , 970395717975801916 , 970395636744749096 ]
-          if role.id in buyableRoles:
-               if userAccount.balance >= 200:
-                    for roleCheck in buyableRoles:
-                         if ctx.guild.get_role(roleCheck) in ctx.author.roles:
-                              await ctx.author.remove_roles(ctx.guild.get_role(roleCheck))
-
-                    await ctx.author.add_roles(role)
-                    await bank.set_balance(ctx.author, userAccount.balance-200)
-                    await ctx.send("{0} You bought {1} for 200 Crow Coin".format(ctx.author.name, role.name))
-               else:
-                    await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs 200 Crow Coin".format(ctx.author.name, role.name))
-          else:
-               await ctx.send("Sorry this role is not for sale, only color roles are purchasable")
 
      async def checks(self, id, empty, ctx):
           channel = self.bot.get_channel(id)
           await asyncio.sleep(60)
           if len(channel.members) == 0:
                reason = "channel is empty"
-               await tpun.delete(self, ctx, reason)
+               await pvc.delete(self, ctx, reason)
                if empty.done() != True:
                     empty.set_result("Channel deleted because it's empty")
           else:
-               await tpun.checks(self, id, empty, ctx)
+               await pvc.checks(self, id, empty, ctx)
 
      def pred(self, emojis, mess1, user: discord.Member):
           return ReactionPredicate.with_emojis(emojis, mess1, user)
@@ -273,32 +111,6 @@ class tpun(commands.Cog):
                await self.lock(ctx)
                await mess1.delete()
 
-     async def emojiVerifier(self, ctx, emoji, mess1, user: discord.Member):
-          role: discord.Role = None
-          for x in ctx.guild.roles:
-               if x.id == 1003551407972032573:
-                    unverified = x
-          if emoji == "♂":
-               for x in ctx.guild.roles:
-                    if x.id == 1002615362921189466:
-                         role = x
-          elif emoji == "♀":
-               for x in ctx.guild.roles:
-                    if x.id == 916876589780844624:
-                         role = x
-          elif emoji == "💜":
-               for x in ctx.guild.roles:
-                    if x.id == 916876723038072853:
-                         role = x
-          if unverified in user.roles:
-               await user.add_roles(role)
-               await user.remove_roles(unverified)
-               await ctx.send("User Verified as {0}".format(role.name))
-               await mess1.delete()
-          else:
-               await ctx.send("User is already verified!")
-               await mess1.delete()
-
      async def emojiRequest(self, ctx, emoji, mess1, user: discord.Member):
           if emoji == "✅":
                voiceChannel = await self.vcOwnerRead(self, ctx.guild.id, user.id)
@@ -316,71 +128,6 @@ class tpun(commands.Cog):
      async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
           # TODO: Replace this with the proper end user data removal handling.
           super().red_delete_data_for_user(requester=requester, user_id=user_id)
-     @commands.group(name='minecraft')
-     async def minecraft(self, ctx):
-          pass
-     @minecraft.command(name='help', help="The main help command for t!minecraft")
-     async def help(self, ctx):
-          await ctx.send("The available commands are status and ip. The available servers are Stoneblock, Luke's Dreamland, Nyx's Server, FTB University. Shorthand for these are stone, luke, nyx, uni")
-     @minecraft.command(name='status', usage=" <server>", help="Shows the current status of all server related Minecraft servers, options are: stone, nyx, luke, uni")
-     async def status(self, ctx, server):
-          invalid = False
-          if server == "Stoneblock":
-               ip = "142.44.255.131:25574"
-          elif server == "Luke's Dreamland":
-               ip = "LucidsDreamland.hosting.ethera.net"
-          elif server == "Nyx's Server":
-               ip =  "209.58.137.109:42568"
-          elif server == "FTB University":
-               ip =  "tpun.serverminecraft.net"
-          elif server == "stone":
-               server = "Stoneblock"
-               ip =  "142.44.255.131:25574"
-          elif server == "luke":
-               server = "Luke's Dreamland"
-               ip =  "LucidsDreamland.hosting.ethera.net"
-          elif server == "nyx":
-               ip =  "209.58.137.109:42568"
-               server = "Nyx's"
-          elif server == "uni":
-               server = "FTB University"
-               ip =  "localhost"
-          else:
-               await ctx.send("This server is invalid check available servers using t!minecraft help")
-               invalid = True
-          if invalid == False:
-               mcserver = MinecraftServer.lookup(ip)
-               status = mcserver.status()
-               await ctx.send("The {0} server has {1} players and replied in {2} ms".format(server, status.players.online, status.latency))
-
-     @minecraft.command(name='ip', usage=" <name>", help="Shows the ip for all server related Minecraft Servers, options are: stone, nyx, luke, uni")
-     async def ip(self, ctx, server):
-          invalid = False
-          if server == "Stoneblock":
-               ip = "142.44.255.131:25574"
-          elif server == "Luke's Dreamland":
-               ip = "LucidsDreamland.hosting.ethera.net"
-          elif server == "Nyx's Server":
-               ip =  "209.58.137.109:42568"
-          elif server == "FTB University":
-               ip =  "tpun.serverminecraft.net"
-          elif server == "stone":
-               server = "Stoneblock"
-               ip =  "142.44.255.131:25574"
-          elif server == "luke":
-               server = "Luke's Dreamland"
-               ip =  "LucidsDreamland.hosting.ethera.net"
-          elif server == "nyx":
-               server = "Nyx's"
-               ip =  "209.58.137.109:42568"
-          elif server == "uni":
-               server = "FTB University"
-               ip =  "tpun.serverminecraft.net"
-          else:
-               await ctx.send("This server is invalid check available servers using t!minecraft help")
-               invalid = True
-          if invalid == False:
-               await ctx.send("The {0} server ip is {1}".format(server, ip))
 
      @commands.group(name='vc')
      async def vc(self, ctx):
@@ -430,7 +177,7 @@ class tpun(commands.Cog):
           guild = ctx.guild.id
           if ctx.message.channel.id == dsChannel.id:
                category = ctx.channel.category
-               jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json"
+               jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json"
                run : bool = True
                if vcName == "":
                     await ctx.send("{0} You need to type a voice channel name t!vc create ['Name']".format(ctx.author.name))
@@ -442,7 +189,7 @@ class tpun(commands.Cog):
                          run = False
                          #opens json file for read
                     try:
-                         with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+                         with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
                          #load vcOwners
                               x = json.load(vcOwners)
                               #closes json file from read
@@ -477,7 +224,7 @@ class tpun(commands.Cog):
                                    #add vcOwner and vcId to json
                                    await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
                                    empty = asyncio.Future()
-                                   tpun.futureList[str(vcId)] = empty
+                                   pvc.futureList[str(vcId)] = empty
                                    asyncio.ensure_future(self.checks(vcId, empty, ctx))
 
                     except ValueError:
@@ -486,7 +233,7 @@ class tpun(commands.Cog):
                          try:
                               json.dump(x, vcWrite)
                          except ValueError:
-                              print("Minecraft.py Minecraft.create Json write failed.")
+                              print("pvc.py pvc.create Json write failed.")
           else:
                await ctx.send("This command only works in the custom vc {0} channel.".format(dsChannel.mention))
     
@@ -499,7 +246,7 @@ class tpun(commands.Cog):
                noVC = False
           run = False
           owner = ctx.author.id
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
                try:
                     x = json.load(vcOwners)
                     for server, vcs in x.items():
@@ -512,12 +259,12 @@ class tpun(commands.Cog):
                except ValueError:
                     await ctx.send("Failed to load vc Owners. Please contact Nado#6969")
           if run:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'w') as vcWrite:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'w') as vcWrite:
                     try:
                          channel = self.bot.get_channel(vcId)
                          vcName = str(channel.name)
                          await channel.delete()
-                         for id, futa in tpun.futureList.items():
+                         for id, futa in pvc.futureList.items():
                               if int(id) == vcId:
                                    if futa.done() != True:
                                         futa.set_result("Channel deleted because owner deleted it")
@@ -564,7 +311,7 @@ class tpun(commands.Cog):
                     embed.set_footer(text='This gui is opened by /vc gui. It allows you to create your own voice channel that will delete itself after 1 minute of being empty. You can delete it by using /vc delete <reason>. 🎮 for game channel, 📱 for social channel, ❓ for other channel')
                     embed.timestamp = datetime.datetime.utcnow()
 
-                    mess1 = await channel.send(embed=embed)
+                    mess1 = await ctx.channel.send(embed=embed)
                     emojis = ["🎮","❓", "📱"]
                     start_adding_reactions(mess1, emojis)
                     try:
@@ -572,31 +319,10 @@ class tpun(commands.Cog):
                          emoji = str(result[0])
                          await self.emojiSorter(ctx, emoji, mess1)
                     except asyncio.TimeoutError:
-                         await channel.send('Voice channel gui timed out.')
+                         await ctx.channel.send('Voice channel gui timed out.')
                          await mess1.delete()
                     else:
                          pass
-
-     @commands.command(name="verify", help="Opens the verification gui")
-     async def verify(self, ctx: commands.Context, user: discord.Member):
-          if ctx.author.top_role.id == 1002731919563304981 or ctx.author.top_role.id == 921241200009285633 or ctx.author.top_role.id == 921239781663449159:
-               embed = discord.Embed(color=0xe02522, title='Verified emoji selector', description= 'From below please choose the emoji that best identifies your gender')
-               embed.set_footer(text="♂ : Male | ♀ : Female|💜 : Non Binary")
-               embed.timestamp = datetime.datetime.utcnow()
-               mess1 = await ctx.channel.send(embed=embed)
-               emojis = ["♂","♀", "💜"]
-               start_adding_reactions(mess1, emojis)
-               try:
-                    result = await ctx.bot.wait_for("reaction_add", timeout=21600.0, check=self.pred(emojis, mess1, user))
-                    emoji = str(result[0])
-                    await self.emojiVerifier(ctx, emoji, mess1, user)
-               except asyncio.TimeoutError:
-                    await ctx.channel.send('Verification gui timed out.')
-                    await mess1.delete()
-               else:
-                    pass
-          else:
-               pass
 
      @vc.command(name="rename", usage=" <'new name'> Name must be in quotes", help="Renames your personal vc")
      async def rename(self, ctx, *, rename = None):
@@ -729,7 +455,7 @@ class tpun(commands.Cog):
                          embed.set_footer(text='React with ✅ below to accept this request')
                          embed.timestamp = datetime.datetime.utcnow()
 
-                         mess1 = await channel.send(embed=embed)
+                         mess1 = await ctx.channel.send(embed=embed)
                          emojis = ["✅"]
                          start_adding_reactions(mess1, emojis)
                          try:
@@ -737,10 +463,10 @@ class tpun(commands.Cog):
                               emoji = str(result[0])
                               await self.emojiRequest(ctx, emoji, mess1, user)
                          except asyncio.TimeoutError:
-                              await channel.send('This request timed out.')
+                              await ctx.channel.send('This request timed out.')
                               await mess1.delete()
                          except 404:
-                              await channel.send("This request timed out")
+                              await ctx.channel.send("This request timed out")
                               await mess1.delete()
                     else:
                          pass
@@ -798,7 +524,7 @@ class tpun(commands.Cog):
           vcEmpty = False
           guild = ctx.guild.id
           if channelid != None:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
                     try:
                          x = json.load(vcOwners)
                          for server, vcs in x.items():
@@ -821,7 +547,7 @@ class tpun(commands.Cog):
                                         y[0].update(newWrite)
                     except ValueError:
                          await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'w') as vcWrite:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'w') as vcWrite:
                     try:
                          json.dump(x, vcWrite)
                     except ValueError:
@@ -837,7 +563,7 @@ class tpun(commands.Cog):
                vcEmpty = False
                guild = ctx.guild.id
                if channelid != None:
-                    with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'r') as vcOwners:
+                    with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
                          try:
                               x = json.load(vcOwners)
                               for server, vcs in x.items():
@@ -860,7 +586,7 @@ class tpun(commands.Cog):
                                    await ctx.send("You don't own this voice channel.")
                          except ValueError:
                               await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
-                    with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcOwners.json', 'w') as reputationWrite:
+                    with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'w') as reputationWrite:
                          try:
                               json.dump(x, reputationWrite)
                          except ValueError:
@@ -875,7 +601,7 @@ class tpun(commands.Cog):
           x : TextIOWrapper
           y : TextIOWrapper
           #make sure server doesn't already have one setup
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcChannels.json', 'r') as vcChannels:
+          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'r') as vcChannels:
                try:
                     x = json.load(vcChannels)
                     for server, channel in x.items():
@@ -891,7 +617,7 @@ class tpun(commands.Cog):
                #save channel id with guild id to be read later
                newWrite = {str(guild) : channel.id}
                x.update(newWrite)
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcChannels.json', 'w') as vcChannelsWrite:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'w') as vcChannelsWrite:
                     try:
                          json.dump(x, vcChannelsWrite)
                     except ValueError:
@@ -911,13 +637,13 @@ class tpun(commands.Cog):
           else:
                roles.append(ctx.guild.id)
           await mess1.delete()
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcRoles.json', 'r') as vcRoles:
+          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'r') as vcRoles:
                try:
                     y = json.load(vcRoles)
                     y.update({str(guild) : roles})
                except ValueError:
                     print("vcroles.json read failed.")
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcRoles.json', 'w') as vcRolesWrite:
+          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'w') as vcRolesWrite:
                try:
                     json.dump(y, vcRolesWrite)
                except ValueError:
@@ -929,7 +655,7 @@ class tpun(commands.Cog):
           #deletes vc commands channel from file
           run : bool = False
           run2 : bool = False
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcChannels.json', 'r') as vcChannels:
+          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'r') as vcChannels:
                try:
                     x = json.load(vcChannels)
                     for server, channel in x.items():
@@ -939,7 +665,7 @@ class tpun(commands.Cog):
                     print("vcchannel.json failed to read")
           if run == True:
                x.pop(str(ctx.guild.id), None)
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcChannels.json', 'w') as vcChannelsWrite:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'w') as vcChannelsWrite:
                     try:
                          json.dump(x, vcChannelsWrite)
                     except ValueError:
@@ -947,7 +673,7 @@ class tpun(commands.Cog):
           else:
                await ctx.send("Your server is not setup yet")
           #deletes public roles from file
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcRoles.json', 'r') as vcRoles:
+          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'r') as vcRoles:
                try:
                     y = json.load(vcRoles)
                     for server, channel in y.items():
@@ -957,78 +683,10 @@ class tpun(commands.Cog):
                     print("vcroles.json read failed.")
           if run2 == True:
                y.pop(str(ctx.guild.id), None)
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/Tpun/vcRoles.json', 'w') as vcRolesWrite:
+               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'w') as vcRolesWrite:
                     try:
                          json.dump(y, vcRolesWrite)
                     except ValueError:
                          print("vcroles.json write failed.")
           if run and run2:
                await ctx.send("Your server's vc data has been cleared.")
-
-#     @commands.command(name="lewd", help="Unmutes a user inside your vc")
-#     async def lewd(self, ctx):
-     
-#     @commands.command(name="thinking", help="Unmutes a user inside your vc")
-#     async def thinking(self, ctx):
-
-#     @commands.command(name="teehee", help="Unmutes a user inside your vc")
-#     async def teehee(self, ctx):
-
-#     @commands.command(name="scoff", help="Unmutes a user inside your vc")
-#     async def scoff(self, ctx):
-
-#     @commands.command(name="thumbs", help="Unmutes a user inside your vc")
-#     async def thumbs(self, ctx):
-
-#     @commands.command(name="grin", help="Unmutes a user inside your vc")
-#     async def grin(self, ctx):
-
-     @commands.command(name="smile", help="Unmutes a user inside your vc")
-     async def smile(self, ctx):
-          url = "https://kawaii.red/api/gif/smile/token=365398642334498816.8rv0PoPGLF9fltJXTq41/"
-          response = urllib.request.urlopen(url)
-          data = json.loads(response.read())
-          await ctx.send(data)
-
-     @commands.command(name="triggered", help="Unmutes a user inside your vc")
-     async def triggered(self, ctx):
-          url = "https://kawaii.red/api/gif/triggered/token=365398642334498816.8rv0PoPGLF9fltJXTq41/"
-          response = urllib.request.urlopen(url)
-          data = json.loads(response.read())
-          await ctx.send(data)
-
-#     @commands.command(name="wag", help="Unmutes a user inside your vc")
-#     async def wag(self, ctx):
-          
-#     @commands.command(name="suck", usage="<@user>", help="Unmutes a user inside your vc")
-#     async def suck(self, ctx, user: discord.Member):
-
-#     @commands.command(name="fuck", usage="<@user>", help="Unmutes a user inside your vc")
-#     async def fuck(self, ctx, user: discord.Member):
-
-     @commands.command(name="boop", usage="<@user>", help="Unmutes a user inside your vc")
-     async def boop(self, ctx, user: discord.Member):
-          url = "https://kawaii.red/api/gif/boop/token=365398642334498816.8rv0PoPGLF9fltJXTq41/"
-          response = urllib.request.urlopen(url)
-          data = json.loads(response.read())
-          await ctx.send(data)
-
-     @commands.command(name="nom", usage="<@user>", help="Unmutes a user inside your vc")
-     async def nom(self, ctx, user: discord.Member):
-          url = "https://kawaii.red/api/gif/nom/token=365398642334498816.8rv0PoPGLF9fltJXTq41/"
-          response = urllib.request.urlopen(url)
-          data = json.loads(response.read())
-          await ctx.send(data)
-
-#     @commands.command(name="bully", usage="<@user>", help="Unmutes a user inside your vc")
-#     async def bully(self, ctx, user: discord.Member):
-
-#     @commands.command(name="snuggle", usage="<@user>", help="Unmutes a user inside your vc")
-#     async def snuggle(self, ctx, user: discord.Member):
-
-#     @commands.command(name="handholding", usage="<@user>", help="Unmutes a user inside your vc")
-#     async def handholding(self, ctx, user: discord.Member):
-
-#     @commands.command(name="hold", usage="<@user>", help="Unmutes a user inside your vc")
-#     async def hold(self, ctx, user: discord.Member):
-
