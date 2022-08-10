@@ -1,6 +1,6 @@
-<h1># Team Punistic Cogs</h1>
+<h1>Team Punistic Cogs</h1>
 
-<h2># Installation</h2>
+<h2>Installation</h2>
 
 <h3>[p] is your prefix</h3>
 
@@ -13,10 +13,10 @@
   
   
   
-  <h2># Cog list</h2>
+  <h2>Cog list</h2>
   
   
-  <h3># minecraft</h3>
+  <h3>minecraft</h3>
 
 <h4>Cog for checking the status' of minecraft servers</h4>
 
@@ -84,7 +84,7 @@ Claims a private voice channel as yours if the owner is no longer present
 Transfers private voice channel ownership to 'user'
 
   
-<h3># reputation</h3>
+<h3>reputation</h3>
   
 <h4>Gives users +1 rep everytime someone thanks them</h4>
 
@@ -95,7 +95,7 @@ Removes 'amount' of reputation from 'user'
 Checks the amount of rep 'user' has
 
   
-<h3># rolebuy</h3>
+<h3>rolebuy</h3>
 
 <h4>Allows users to buy roles using redbot currency</h4>
   
@@ -103,12 +103,12 @@ Checks the amount of rep 'user' has
 Buys 'role' and removes currency from user
 
   
-<h3># usergate</h3>
+<h3>usergate</h3>
   
 <h4>Prevents user accounts that are under 7 days old from joining the server</h4>
   
   
-<h3># verifier</h3>
+<h3>verifier</h3>
   
 <h4>Verifies users using a gui</h4>
   
