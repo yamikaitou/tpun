@@ -1,6 +1,6 @@
-##Team Punistic Cogs
+# # Team Punistic Cogs
 
-#Installation
+# Installation
 
 [p]repo add tpun-cogs https://github.com/batman202012/tpun
 
@@ -8,6 +8,6 @@
 
 [p] is your prefix
   
-##Cog list
+# # Cog list
   
-#
+# 
