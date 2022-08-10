@@ -1,14 +1,14 @@
-# Team Punistic Cogs
+<h1># Team Punistic Cogs</h1>
 
-# Installation
+<h2># Installation</h2>
 
 [p] is your prefix
 
 [p]repo add tpun-cogs https://github.com/batman202012/tpun
 
-[p]cog install tpun-cogs <cog-name>
+[p]cog install tpun-cogs \<cog-name\>
   
-[p]load <cog-name>
+[p]load \<cog-name\>
   
   
   
@@ -80,7 +80,7 @@ Enables <user>'s permissions to speak/stream/use camera/type in vc text chat in 
 [p]vc claim
 Claims a private voice channel as yours if the owner is no longer present
   
-[p]vc transfer <user mention>
+[p]vc transfer \<user mention\>
 Transfers private voice channel ownership to <user>
 
   
@@ -88,19 +88,19 @@ Transfers private voice channel ownership to <user>
   
 Gives users +1 rep everytime someone thanks them
 
-[p]repremove <user mention> <amount to remove>
-Removes <amount> of reputation from <user>
+[p]repremove \<user mention\> \<amount to remove\>
+Removes \<amount\> of reputation from <user>
   
-[p]checkrep <user mention>
-Checks the amount of rep <user> has
+[p]checkrep \<user mention\>
+Checks the amount of rep \<user\> has
 
   
 # rolebuy
 
 Allows users to buy roles using redbot currency
   
-[p]buy <role mention>
-Buys <role> and removes currency from user
+[p]buy \<role mention\>
+Buys \<role\> and removes currency from user
 
   
 # usergate
@@ -112,5 +112,5 @@ Prevents user accounts that are under 7 days old from joining the server
   
 Verifies users using a gui
   
-[p]verify <user mention>
-Removes <user> unverified role and gives them their selected (from gui) verified role
+[p]verify \<user mention\>
+Removes \<user\> unverified role and gives them their selected (from gui) verified role
