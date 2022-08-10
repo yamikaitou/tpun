@@ -8,7 +8,7 @@
 
 <h4>[p]cog install tpun-cogs \<cog-name\></h4>
   
-  <h4>[p]load \<cog-name\></h4>
+  <h4>[p]load <cog-name></h4>
   
   
   
