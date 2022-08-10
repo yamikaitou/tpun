@@ -1,4 +1,4 @@
-# # Team Punistic Cogs
+# Team Punistic Cogs
 
 # Installation
 
@@ -8,6 +8,6 @@
 
 [p] is your prefix
   
-# # Cog list
+# Cog list
   
 # 
