@@ -1,0 +1,21 @@
+{
+    "name": "timedping",
+    "short": "TPUN Timed Ping cog",
+    "description": "Team Punistic red cog for preventing mass pings such as vc ping or chat ping",
+    "end_user_data_statement": "This cog does not persistently store any data or metadata about users.",
+    "install_msg": "Congrats, run [p]load timedping to load the cog",
+    "author": [
+        "Nado"
+    ],
+    "required_cogs": {},
+    "requirements": [],
+    "tags": [
+        "Pings",
+        "Tpun",
+        "Moderation"
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}
