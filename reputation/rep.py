@@ -24,7 +24,7 @@ class rep(commands.Cog):
         
         )
         global jsonPath
-        jsonPath = data_manager.cog_data_path(raw_name="rep/reputation.json")
+        jsonPath = data_manager.cog_data_path(cog_instance=self)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
