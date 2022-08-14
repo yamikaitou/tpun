@@ -47,6 +47,7 @@ class rep(commands.Cog):
                         id = user.id
                         print(jsonPath)
                         with open(str(jsonPath), 'r') as reputation:
+                            print(reputation)
                             try:
                                 x = json.load(reputation)
                                 for userId, userRep in x.items():
@@ -56,12 +57,12 @@ class rep(commands.Cog):
                                         await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
                                         newUser = False
                                         print('existing user')
-                                    if newUser:
-                                        newWrite = {id : 1}
-                                        await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
-                                        print('new user')
-                                    x.pop(str(id), None)
-                                    x.update(newWrite)
+                                if newUser:
+                                    newWrite = {id : 1}
+                                    await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
+                                    print('new user')
+                                x.pop(str(id), None)
+                                x.update(newWrite)
                             except ValueError:
                                 if x == None:
                                     x = {}
