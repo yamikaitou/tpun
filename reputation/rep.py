@@ -25,6 +25,12 @@ class rep(commands.Cog):
         )
         global jsonPath
         jsonPath = data_manager.cog_data_path(cog_instance=self)
+        jsonPath = jsonPath.joinpath("/reputation.json")
+        if jsonPath.exists:
+            pass
+        else:
+            with jsonPath.open("w", encoding ="utf-8") as f:
+                f.write("{}")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
