@@ -1,0 +1,20 @@
+{
+    "name": "Rep",
+    "short": "TPUN Reputation cog",
+    "description": "Team Punistic red cog for give users +1 rep anytime they get thanks",
+    "end_user_data_statement": "This cog does persistently store data about users. It uses stores the user's id in a file along with the amount of rep they have.",
+    "install_msg": "Congrats",
+    "author": [
+        "Nado"
+    ],
+    "required_cogs": {},
+    "requirements": [],
+    "tags": [
+        "Reputation",
+        "Tpun"
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}
