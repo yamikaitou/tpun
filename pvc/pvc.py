@@ -2,7 +2,6 @@ from ast import Dict
 from typing import Literal
 from io import BytesIO, TextIOWrapper
 import json
-from typing_extensions import Self
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
