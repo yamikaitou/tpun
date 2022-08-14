@@ -685,8 +685,8 @@ class pvc(commands.Cog):
                     print("vcroles.json write failed.")
                #display settings to insure they are correct
           mess2 = await ctx.send("Your settings are currently: {0} as the channel and {1} are the public roles that will be used.".format(channel.name, roles))
-          await mess0.delete()
           await asyncio.sleep(30)
+          await mess0.delete()
           await mess2.delete()
 
      @commands.admin()
