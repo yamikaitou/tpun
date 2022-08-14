@@ -55,9 +55,11 @@ class rep(commands.Cog):
                                         newWrite = {id : currentRep}
                                         await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
                                         newUser = False
+                                        print('existing user')
                                     if newUser:
                                         newWrite = {id : 1}
                                         await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
+                                        print('new user')
                                     x.pop(str(id), None)
                                     x.update(newWrite)
                             except ValueError:
@@ -66,6 +68,7 @@ class rep(commands.Cog):
                         with open(str(jsonPath), 'w') as reputationWrite:
                             try:
                                 json.dump(x, reputationWrite)
+                                print('info written')
                             except ValueError:
                                 print("reputation.json write failed.")
 
