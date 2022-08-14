@@ -45,6 +45,7 @@ class rep(commands.Cog):
                 for user in users:
                     if user.id != message.author.id:
                         id = user.id
+                        print(jsonPath)
                         with open(jsonPath, 'r') as reputation:
                             try:
                                 x = json.load(reputation)
