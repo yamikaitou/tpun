@@ -81,11 +81,11 @@ class rep(commands.Cog):
                         currentRep = userRep - amount
                         newWrite = {user.id : currentRep}
                         await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}".format(ctx.author.name, amount, user.name, currentRep))
-                    if newWrite != None:
-                        x.pop(str(user.id), None)
-                        x.update(newWrite)
-                    else:
-                        await ctx.send("This user already has no reputation")
+                if newWrite != None:
+                    x.pop(str(user.id), None)
+                    x.update(newWrite)
+                else:
+                    await ctx.send("This user already has no reputation")
             except ValueError:
                 print("reputation.json failed to read")
         with open(str(jsonPath), 'w') as reputationWrite:
