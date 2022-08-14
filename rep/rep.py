@@ -45,7 +45,6 @@ class rep(commands.Cog):
                 for user in users:
                     if user.id != message.author.id:
                         id = user.id
-                        print(jsonPath)
                         with open(str(jsonPath), 'r') as reputation:
                             print(reputation)
                             try:
@@ -56,11 +55,9 @@ class rep(commands.Cog):
                                         newWrite = {id : currentRep}
                                         await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
                                         newUser = False
-                                        print('existing user')
                                 if newUser:
                                     newWrite = {id : 1}
                                     await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
-                                    print('new user')
                                 x.pop(str(id), None)
                                 x.update(newWrite)
                             except ValueError:
@@ -69,10 +66,10 @@ class rep(commands.Cog):
                         with open(str(jsonPath), 'w') as reputationWrite:
                             try:
                                 json.dump(x, reputationWrite)
-                                print('info written')
                             except ValueError:
                                 print("reputation.json write failed.")
 
+    @commands.mod()
     @commands.command(name="repremove", help="Removes a amount from a users reputation")
     async def repremove(self, ctx, user: discord.Member, amount:int):
         if ctx.author.top_role.id == 971448331874209844 or ctx.author.top_role.id == 675089464036425738 or ctx.author.top_role.id == 673670374961184768:
