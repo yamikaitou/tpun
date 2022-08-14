@@ -626,7 +626,7 @@ class pvc(commands.Cog):
           else:
                await ctx.send("You can only run this command while you are in your voice channel.")
 
-     @commands.guildowner_or_permissions("administrator")
+     @commands.guildowner_or_permissions()
      @vc.command(name="setup", help="Set's up a channel for creating custom vc's in, please put this channel in the category you would like all custom vc's to be made in")
      async def setup(self, ctx):
           global vcRolesPath
