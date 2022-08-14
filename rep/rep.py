@@ -1,4 +1,5 @@
 from xmlrpc.client import Boolean
+from redbot.core import data_manager
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
@@ -6,6 +7,8 @@ import discord
 import asyncio
 from io import BytesIO, TextIOWrapper
 import json
+
+
 
 class rep(commands.Cog):
     """
@@ -18,10 +21,14 @@ class rep(commands.Cog):
             self,
             identifier=None,
             force_registration=True,
+        
         )
+        global jsonPath
+        jsonPath = data_manager.cog_data_path(cog_instance=rep, raw_name="reputation.json")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
+        global jsonPath
         if "thank you" in message.content or "thanks" in message.content or "Thank you" in message.content or "THANK YOU" in message.content or "Thank You" in message.content:
             if message.mentions != None:
                 users = message.mentions
@@ -31,7 +38,6 @@ class rep(commands.Cog):
                     names.append(user.mention)
                 for user in users:
                     if user.id != message.author.id:
-                        jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/reputation/reputation.json"
                         id = user.id
                         with open(jsonPath, 'r') as reputation:
                             try:
@@ -59,7 +65,6 @@ class rep(commands.Cog):
     @commands.command(name="repremove", help="Removes a amount from a users reputation")
     async def repremove(self, ctx, user: discord.Member, amount:int):
         if ctx.author.top_role.id == 971448331874209844 or ctx.author.top_role.id == 675089464036425738 or ctx.author.top_role.id == 673670374961184768:
-            jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/reputation/reputation.json"
             newWrite = None
             with open(jsonPath, 'r') as reputation:
                 try:
@@ -85,7 +90,6 @@ class rep(commands.Cog):
     @commands.command(name="checkrep", help="Displays a user's reputation")
     async def checkrep(self, ctx, user: discord.Member):
         userFound = False
-        jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/reputation/reputation.json"
         with open(jsonPath, 'r') as reputation:
             try:
                 x = json.load(reputation)
