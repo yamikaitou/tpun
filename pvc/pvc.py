@@ -45,7 +45,7 @@ class pvc(commands.Cog):
                     f.write("{}")
 
           global vcChannelsPath
-          vcChannelsPath = path / 'vcOwners.json'
+          vcChannelsPath = path / 'vcChannels.json'
           if vcChannelsPath.exists():
                pass
           else:
@@ -685,9 +685,9 @@ class pvc(commands.Cog):
                     print("vcroles.json write failed.")
                #display settings to insure they are correct
           mess2 = await ctx.send("Your settings are currently: {0} as the channel and {1} are the public roles that will be used.".format(channel.name, roles))
-          mess0.delete()
+          await mess0.delete()
           await asyncio.sleep(30)
-          mess2.delete()
+          await mess2.delete()
 
      @commands.admin()
      @vc.command(name="clear_settings", help="Clears the personal vc commands channel allowing for fresh setup")
