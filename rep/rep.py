@@ -26,7 +26,7 @@ class rep(commands.Cog):
         global jsonPath
         path = data_manager.cog_data_path(cog_instance=self)
         jsonPath = path / 'reputation.json'
-        if jsonPath.exists:
+        if jsonPath.exists():
             pass
         else:
             with jsonPath.open("w", encoding ="utf-8") as f:
