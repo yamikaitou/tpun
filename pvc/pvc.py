@@ -2,6 +2,7 @@ from ast import Dict
 from typing import Literal
 from io import BytesIO, TextIOWrapper
 import json
+from typing_extensions import Self
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
@@ -11,6 +12,8 @@ RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 import datetime
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
+from redbot.core import data_manager
+
 
 class pvc(commands.Cog):
      """
@@ -24,13 +27,38 @@ class pvc(commands.Cog):
                identifier=None,
                force_registration=True,
           )
+     
+          global vcOwnersPath
+          path = data_manager.cog_data_path(cog_instance=self)
+          vcOwnersPath = path / 'vcOwners.json'
+          if vcOwnersPath.exists():
+               pass
+          else:
+               with vcOwnersPath.open("w", encoding ="utf-8") as f:
+                    f.write("{}")
+
+          global vcRolesPath
+          vcRolesPath = path / 'vcRoles.json'
+          if vcRolesPath.exists():
+               pass
+          else:
+               with vcRolesPath.open("w", encoding ="utf-8") as f:
+                    f.write("{}")
+
+          global vcChannelsPath
+          vcChannelsPath = path / 'vcOwners.json'
+          if vcChannelsPath.exists():
+               pass
+          else:
+               with vcChannelsPath.open("w", encoding ="utf-8") as f:
+                    f.write("{}")
 
      futureList:Dict = {}
      
      def vcOwnerRead(self, guild, owner):
-          print("vcReadCalled")
+          global vcOwnersPath
           try:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
+               with open(str(vcOwnersPath), 'r') as vcOwners:
                #load vcOwners
                     x = json.load(vcOwners)
                     for server, vcs in x.items():
@@ -48,8 +76,9 @@ class pvc(commands.Cog):
                return None
 
      def vcChannelRead(self, ctx):
+          global vcChannelsPath
           try:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'r') as vcChannels:
+               with open(str(vcChannelsPath), 'r') as vcChannels:
                #load vcChannels
                     x = json.load(vcChannels)
                     for server, channel in x.items():
@@ -61,9 +90,10 @@ class pvc(commands.Cog):
                return None
 
      def vcRoleRead(self, ctx):
+          global vcRolesPath
           rolesObj = []
           try:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'r') as vcRoles:
+               with open(str(vcRolesPath), 'r') as vcRoles:
                #load vcRoles
                     x = json.load(vcRoles)
                     for server, roles in x.items():
@@ -171,13 +201,13 @@ class pvc(commands.Cog):
 
      @vc.command(name='create', usage=" <'name'> name must be in quotes", help="Creates a voice channel with <'name'>. You can only have 1 vc. VC deletes after 1 minute of inactivity. You must join your vc within 1 minute or it will be deleted.")
      async def create(self, ctx, *, vcName):
+          global vcOwnersPath
           #gets channel for bot message
           dsChannel = self.vcChannelRead(ctx)
           roleList = self.vcRoleRead(ctx)
           guild = ctx.guild.id
           if ctx.message.channel.id == dsChannel.id:
                category = ctx.channel.category
-               jsonPath = "/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json"
                run : bool = True
                if vcName == "":
                     await ctx.send("{0} You need to type a voice channel name t!vc create ['Name']".format(ctx.author.name))
@@ -189,7 +219,7 @@ class pvc(commands.Cog):
                          run = False
                          #opens json file for read
                     try:
-                         with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
+                         with open(str(vcOwnersPath), 'r') as vcOwners:
                          #load vcOwners
                               x = json.load(vcOwners)
                               #closes json file from read
@@ -229,7 +259,7 @@ class pvc(commands.Cog):
 
                     except ValueError:
                          pass
-                    with open(jsonPath, 'w') as vcWrite:
+                    with open(str(vcOwnersPath), 'w') as vcWrite:
                          try:
                               json.dump(x, vcWrite)
                          except ValueError:
@@ -239,6 +269,7 @@ class pvc(commands.Cog):
     
      @vc.command(name='delete', usage=" ['reason'] reason is optional but if included must be in quotes", help="Deletes your personal channel")
      async def delete(self, ctx, reason = None):
+          global vcOwnersPath
           noVC = True
           if reason == None:
                reason = "user deleted their own channel"
@@ -246,7 +277,7 @@ class pvc(commands.Cog):
                noVC = False
           run = False
           owner = ctx.author.id
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
+          with open(str(vcOwnersPath), 'r') as vcOwners:
                try:
                     x = json.load(vcOwners)
                     for server, vcs in x.items():
@@ -259,7 +290,7 @@ class pvc(commands.Cog):
                except ValueError:
                     await ctx.send("Failed to load vc Owners. Please contact Nado#6969")
           if run:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'w') as vcWrite:
+               with open(str(vcOwnersPath), 'w') as vcWrite:
                     try:
                          channel = self.bot.get_channel(vcId)
                          vcName = str(channel.name)
@@ -516,6 +547,7 @@ class pvc(commands.Cog):
 
      @vc.command(name="claim", usage="", help="Claims a voice channel from another user if they're not in it.")
      async def claim(self, ctx):
+          global vcOwnersPath
           owner:int = 0
           newOwner = str(ctx.author.id)
           channelid = ctx.author.voice.channel.id
@@ -524,7 +556,7 @@ class pvc(commands.Cog):
           vcEmpty = False
           guild = ctx.guild.id
           if channelid != None:
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
+               with open(str(vcOwnersPath), 'r') as vcOwners:
                     try:
                          x = json.load(vcOwners)
                          for server, vcs in x.items():
@@ -547,7 +579,7 @@ class pvc(commands.Cog):
                                         y[0].update(newWrite)
                     except ValueError:
                          await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'w') as vcWrite:
+               with open(str(vcOwnersPath), 'w') as vcWrite:
                     try:
                          json.dump(x, vcWrite)
                     except ValueError:
@@ -555,6 +587,7 @@ class pvc(commands.Cog):
 
      @vc.command(name="transfer", usage=" <@user>", help="Transfers a voice channel to another user")
      async def transfer(self, ctx, newOwner:discord.Member):
+          global vcOwnersPath
           owner = str(ctx.author.id)
           if ctx.author.voice != None:
                channelid = ctx.author.voice.channel.id
@@ -563,7 +596,7 @@ class pvc(commands.Cog):
                vcEmpty = False
                guild = ctx.guild.id
                if channelid != None:
-                    with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'r') as vcOwners:
+                    with open(str(vcOwnersPath), 'r') as vcOwners:
                          try:
                               x = json.load(vcOwners)
                               for server, vcs in x.items():
@@ -586,7 +619,7 @@ class pvc(commands.Cog):
                                    await ctx.send("You don't own this voice channel.")
                          except ValueError:
                               await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
-                    with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcOwners.json', 'w') as reputationWrite:
+                    with open(str(vcOwnersPath), 'w') as reputationWrite:
                          try:
                               json.dump(x, reputationWrite)
                          except ValueError:
@@ -594,14 +627,17 @@ class pvc(commands.Cog):
           else:
                await ctx.send("You can only run this command while you are in your voice channel.")
 
+     @commands.guildowner_or_permissions("administrator")
      @vc.command(name="setup", help="Set's up a channel for creating custom vc's in, please put this channel in the category you would like all custom vc's to be made in")
      async def setup(self, ctx):
+          global vcRolesPath
+          global vcChannelsPath
           guild = ctx.guild.id
           run : bool = True
           x : TextIOWrapper
           y : TextIOWrapper
           #make sure server doesn't already have one setup
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'r') as vcChannels:
+          with open(str(vcOwnersPath), 'r') as vcChannels:
                try:
                     x = json.load(vcChannels)
                     for server, channel in x.items():
@@ -613,11 +649,11 @@ class pvc(commands.Cog):
           if run:
                #create custom vc command channel
                channel = await ctx.guild.create_text_channel("personal-vc-commands")
-               await ctx.send("Make sure to put the personal-vc-commands channel in the category you wish channels to be made in. You may rename the channel to whatever you wish.")
+               mess0 = await ctx.send("Make sure to put the personal-vc-commands channel in the category you wish channels to be made in. You may rename the channel to whatever you wish.")
                #save channel id with guild id to be read later
                newWrite = {str(guild) : channel.id}
                x.update(newWrite)
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'w') as vcChannelsWrite:
+               with open(str(vcChannelsPath), 'w') as vcChannelsWrite:
                     try:
                          json.dump(x, vcChannelsWrite)
                     except ValueError:
@@ -637,25 +673,32 @@ class pvc(commands.Cog):
           else:
                roles.append(ctx.guild.id)
           await mess1.delete()
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'r') as vcRoles:
+          with open(str(vcRolesPath), 'r') as vcRoles:
                try:
                     y = json.load(vcRoles)
                     y.update({str(guild) : roles})
                except ValueError:
                     print("vcroles.json read failed.")
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'w') as vcRolesWrite:
+          with open(str(vcRolesPath), 'w') as vcRolesWrite:
                try:
                     json.dump(y, vcRolesWrite)
                except ValueError:
                     print("vcroles.json write failed.")
                #display settings to insure they are correct
-          await ctx.send("Your settings are currently: {0} as the channel and {1} are the public roles that will be used.".format(channel.name, roles))
+          mess2 = await ctx.send("Your settings are currently: {0} as the channel and {1} are the public roles that will be used.".format(channel.name, roles))
+          mess0.delete()
+          await asyncio.sleep(30)
+          mess2.delete()
+
+     @commands.admin()
      @vc.command(name="clear_settings", help="Clears the personal vc commands channel allowing for fresh setup")
      async def clear_settings(self, ctx):
+          global vcChannelsPath
+          global vcRolesPath
           #deletes vc commands channel from file
           run : bool = False
           run2 : bool = False
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'r') as vcChannels:
+          with open(str(vcChannelsPath), 'r') as vcChannels:
                try:
                     x = json.load(vcChannels)
                     for server, channel in x.items():
@@ -665,7 +708,7 @@ class pvc(commands.Cog):
                     print("vcchannel.json failed to read")
           if run == True:
                x.pop(str(ctx.guild.id), None)
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcChannels.json', 'w') as vcChannelsWrite:
+               with open(str(vcChannelsPath), 'w') as vcChannelsWrite:
                     try:
                          json.dump(x, vcChannelsWrite)
                     except ValueError:
@@ -673,7 +716,7 @@ class pvc(commands.Cog):
           else:
                await ctx.send("Your server is not setup yet")
           #deletes public roles from file
-          with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'r') as vcRoles:
+          with open(str(vcRolesPath), 'r') as vcRoles:
                try:
                     y = json.load(vcRoles)
                     for server, channel in y.items():
@@ -683,7 +726,7 @@ class pvc(commands.Cog):
                     print("vcroles.json read failed.")
           if run2 == True:
                y.pop(str(ctx.guild.id), None)
-               with open('/home/discord/.local/share/Red-DiscordBot/data/tpun/cogs/pvc/vcRoles.json', 'w') as vcRolesWrite:
+               with open(str(vcRolesPath), 'w') as vcRolesWrite:
                     try:
                          json.dump(y, vcRolesWrite)
                     except ValueError:
