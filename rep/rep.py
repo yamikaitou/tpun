@@ -46,7 +46,7 @@ class rep(commands.Cog):
                     if user.id != message.author.id:
                         id = user.id
                         print(jsonPath)
-                        with open(jsonPath, 'r') as reputation:
+                        with open(str(jsonPath), 'r') as reputation:
                             try:
                                 x = json.load(reputation)
                                 for userId, userRep in x.items():
@@ -63,7 +63,7 @@ class rep(commands.Cog):
                             except ValueError:
                                 if x == None:
                                     x = {}
-                        with open(jsonPath, 'w') as reputationWrite:
+                        with open(str(jsonPath), 'w') as reputationWrite:
                             try:
                                 json.dump(x, reputationWrite)
                             except ValueError:
@@ -73,7 +73,7 @@ class rep(commands.Cog):
     async def repremove(self, ctx, user: discord.Member, amount:int):
         if ctx.author.top_role.id == 971448331874209844 or ctx.author.top_role.id == 675089464036425738 or ctx.author.top_role.id == 673670374961184768:
             newWrite = None
-            with open(jsonPath, 'r') as reputation:
+            with open(str(jsonPath), 'r') as reputation:
                 try:
                     x = json.load(reputation)
                     for userId, userRep in x.items():
@@ -88,7 +88,7 @@ class rep(commands.Cog):
                             await ctx.send("This user already has no reputation")
                 except ValueError:
                     print("reputation.json failed to read")
-            with open(jsonPath, 'w') as reputationWrite:
+            with open(str(jsonPath), 'w') as reputationWrite:
                 try:
                     json.dump(x, reputationWrite)
                 except ValueError:
@@ -97,7 +97,7 @@ class rep(commands.Cog):
     @commands.command(name="checkrep", help="Displays a user's reputation")
     async def checkrep(self, ctx, user: discord.Member):
         userFound = False
-        with open(jsonPath, 'r') as reputation:
+        with open(str(jsonPath), 'r') as reputation:
             try:
                 x = json.load(reputation)
                 for userId, userRep in x.items():
