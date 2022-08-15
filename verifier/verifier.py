@@ -7,6 +7,7 @@ from redbot.core.utils.menus import start_adding_reactions
 import datetime
 from redbot.core import data_manager
 import json
+from redbot.core.utils.predicates import ReactionPredicate
 
 class verifier(commands.Cog):
     """
@@ -66,6 +67,9 @@ class verifier(commands.Cog):
         else:
             await ctx.send("User is already verified!")
             await mess1.delete()
+
+    def pred(self, emojis, mess1, user: discord.Member):
+        return ReactionPredicate.with_emojis(emojis, mess1, user)
         
 
     @commands.admin()
