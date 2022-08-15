@@ -30,22 +30,34 @@ class verifier(commands.Cog):
                 f.write("{}")
 
     async def emojiVerifier(self, ctx, emoji, mess1, user: discord.Member):
+        global verifiedRolesPath
+        unverified :int
+        male :int
+        female :int
+        nb :int
+        try:
+            with open(str(verifiedRolesPath), 'r') as verifiedList:
+                x = json.load(verifiedList)
+        except ValueError:
+            print("verifiedRoles.json failed to read")
+        for i in x.items():
+            for roleList in i:
+                for key, role in roleList.items():
+                    if key == "unverified":
+                        unverified = role
+                    elif key == "male":
+                        male = role
+                    elif key == "female":
+                        female = role
+                    elif key == "nb":
+                        nb = role
         role: discord.Role = None
-        for x in ctx.guild.roles:
-            if x.id == 1003551407972032573:
-                unverified = x
         if emoji == "♂":
-            for x in ctx.guild.roles:
-                if x.id == 1002615362921189466:
-                    role = x
+            role = male
         elif emoji == "♀":
-            for x in ctx.guild.roles:
-                if x.id == 916876589780844624:
-                    role = x
+            role = female
         elif emoji == "💜":
-            for x in ctx.guild.roles:
-                if x.id == 916876723038072853:
-                    role = x
+            role = nb
         if unverified in user.roles:
             await user.add_roles(role)
             await user.remove_roles(unverified)
@@ -54,6 +66,7 @@ class verifier(commands.Cog):
         else:
             await ctx.send("User is already verified!")
             await mess1.delete()
+        
 
     @commands.admin()
     @commands.command(name="verify", help="Opens the verification gui")
@@ -83,7 +96,7 @@ class verifier(commands.Cog):
             with open(str(verifiedRolesPath), 'r') as verifiedList:
                 x = json.load(verifiedList)
         except ValueError:
-            print("pingList.json failed to read")
+            print("verifiedRoles.json failed to read")
 
         def check0(m):
             return m.channel == mess0.channel
@@ -140,5 +153,5 @@ class verifier(commands.Cog):
             try:
                 json.dump(x, verifiedRoles)
             except ValueError:
-                print("vcroles.json write failed.")
+                print("verifierRoles.json write failed.")
         
