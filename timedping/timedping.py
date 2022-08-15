@@ -153,7 +153,7 @@ class timedping(commands.Cog):
                         for role, cooldown in i.items():
                             roles = roles + "<@&{0}> with cooldown {1} seconds \n".format(role, cooldown)
                     mess1 = await ctx.send(roles)
-                    asyncio.sleep(120)
+                    await asyncio.sleep(120)
                     await mess1.delete()
             except ValueError:
                 print("Failed to read pingList.json")
