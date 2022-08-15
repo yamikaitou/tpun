@@ -149,8 +149,9 @@ class timedping(commands.Cog):
                 x = json.load(pingList)
                 if str(guild) in x:
                     y = x[str(guild)].copy()
-                    for role, cooldown in y[0]:
-                        roles = roles + "<@&{0}> with cooldown {1} seconds \n".format(role, cooldown)
+                    for i in y:
+                        for role, cooldown in i.items():
+                            roles = roles + "<@&{0}> with cooldown {1} seconds \n".format(role, cooldown)
                     mess1 = await ctx.send(roles)
                     asyncio.sleep(120)
                     await mess1.delete()
