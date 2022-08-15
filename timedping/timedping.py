@@ -63,7 +63,6 @@ class timedping(commands.Cog):
                                 roles = i
             except ValueError:
                 print("pingList.json failed to read")
-        print(roles)
         for role, cooldown in roles.items():
             print(message.guild.get_role(int(role)).name)
             print("/" + message.guild.get_role(int(role)).name + "/ix")
