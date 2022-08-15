@@ -73,9 +73,9 @@ class timedping(commands.Cog):
                         notInTempo = False
                         print("role found in tempo")
                         if y > time.time():
-                            await message.reply("There is a {0} hour cooldown in between vc ping uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown), int(y)))
+                            await message.reply("There is a {0} hour cooldown in between uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown), int(y)))
                         else:
-                            await message.reply("<@&{0}}>".format(role))
+                            await message.reply("<@&{0}>".format(role))
                             newTempo = {str(role): int(time.time() + cooldown)}
                             tempo.update(newTempo)
                     else:
