@@ -66,6 +66,7 @@ class timedping(commands.Cog):
         print(roles)
         for role, cooldown in roles.items():
             print(message.guild.get_role(int(role)).name)
+            print("/" + message.guild.get_role(int(role)).name + "/ix")
             if re.search("/" + message.guild.get_role(int(role)).name + "/ix", message.content):
                 print("ping found")
                 for x, y in tempo.items():
