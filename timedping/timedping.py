@@ -48,7 +48,7 @@ class timedping(commands.Cog):
             print("pingList.json failed to read")
 
     @commands.Cog.listener()
-    async def on_message(self, ctx, message: discord.Message):
+    async def on_message(self, message: discord.Message):
         global tempo
         guild = message.guild.id
         roles = {}
@@ -63,7 +63,7 @@ class timedping(commands.Cog):
             except ValueError:
                 print("pingList.json failed to read")
         for role, cooldown in roles:
-            if re.search("/" + ctx.guild.get_role(role).name + "/ix", message.content):
+            if re.search("/" + message.guild.get_role(role).name + "/ix", message.content):
                 for x, y in tempo:
                     if x == str(role):
                         if y > time.time():
