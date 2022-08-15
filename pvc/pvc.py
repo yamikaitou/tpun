@@ -62,12 +62,9 @@ class pvc(commands.Cog):
                     x = json.load(vcOwners)
                     for server, vcs in x.items():
                          if server == str(guild):
-                              print("serverFound")
                               for i in vcs:
-                                   print(i)
                                    for vcOwner, vcId in i.items():
                                         if vcOwner == str(owner):
-                                             print(vcOwner)
                                              voiceChannel = self.bot.get_channel(int(vcId))
                                              return voiceChannel
           except ValueError:
@@ -101,7 +98,6 @@ class pvc(commands.Cog):
                                    return(roles)
                               else:
                                    rolesObj.append(roles)
-                                   print(rolesObj)
                                    return(rolesObj)
           except ValueError:
                print("read failed")
@@ -234,9 +230,7 @@ class pvc(commands.Cog):
                                    #create vc with arg as name
                                    channel = await ctx.guild.create_voice_channel(vcName, category=category)
                                    await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                                   print(roleList)
                                    for role in roleList:
-                                        print(role)
                                         await channel.set_permissions(ctx.guild.get_role(role), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                                    if ctx.author.voice != None:
                                         if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel != None:
@@ -247,7 +241,6 @@ class pvc(commands.Cog):
                                    if str(guild) in x:
                                         y = x[str(guild)].copy()
                                         y[0].update(nC)
-                                        print(x)
                                    else:
                                         x.update({str(guild) : [{}]})
                                    #add vcOwner and vcId to json
@@ -287,7 +280,7 @@ class pvc(commands.Cog):
                                              run = True
                                              vcId = idList
                except ValueError:
-                    await ctx.send("Failed to load vc Owners. Please contact Nado#6969")
+                    await ctx.send("Failed to load vc Owners.")
           if run:
                with open(str(vcOwnersPath), 'w') as vcWrite:
                     try:
@@ -318,7 +311,6 @@ class pvc(commands.Cog):
      async def name(self, ctx):
           owner = ctx.author.id
           voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
-          print(voiceChannel)
           if voiceChannel != None:
                vcName = voiceChannel.name
                await ctx.send("{0} Your personal vc is named {1}.".format(ctx.author.name, voiceChannel.mention))
