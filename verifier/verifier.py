@@ -47,13 +47,18 @@ class verifier(commands.Cog):
                 for i in items:
                     print(i)
                     for key, role in i.items():
+                        print(key)
                         if key == "unverified":
+                            print("unverified found")
                             unverified = role
                         elif key == "male":
+                            print("male found")
                             male = role
                         elif key == "female":
+                            print("female found")
                             female = role
                         elif key == "nb":
+                            print("nb found")
                             nb = role
         role: discord.Role = None
         if emoji == "♂":
