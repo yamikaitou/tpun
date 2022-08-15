@@ -102,7 +102,6 @@ class verifier(commands.Cog):
         if msg0.content != "none":
             for i in msg0.role_mentions:
                 newWrite.update({"unverified": i.id})
-        await asyncio.sleep(120)
         await mess0.delete()
 
 
@@ -111,7 +110,6 @@ class verifier(commands.Cog):
         if msg1.content != "none":
             for i in msg1.role_mentions:
                 newWrite.update({"male": i.id})
-        await asyncio.sleep(120)
         await mess1.delete()
 
         mess2 = await ctx.send("Please input the role for verified females")
@@ -119,7 +117,6 @@ class verifier(commands.Cog):
         if msg2.content != "none":
             for i in msg2.role_mentions:
                 newWrite.update({"female": i.id})
-        await asyncio.sleep(120)
         await mess2.delete()
 
         mess3 = await ctx.send("Please input the role for verified non-binary")
@@ -127,7 +124,6 @@ class verifier(commands.Cog):
         if msg3.content != "none":
             for i in msg3.role_mentions:
                 newWrite.update({"nb": i.id})
-        await asyncio.sleep(120)
         await mess3.delete()
 
         if str(guild) in x:
