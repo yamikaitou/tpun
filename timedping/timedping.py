@@ -91,7 +91,7 @@ class timedping(commands.Cog):
     async def tping(self, ctx):
         pass
 
-    @tping.command(name="add", usage="<role mention> <cooldown>", help="Adds a role to the timed ping list")
+    @tping.command(name="add", usage="<role mention> <cooldown in seconds>", help="Adds a role to the timed ping list")
     async def add(self, ctx, role: discord.Role, cooldown: int):
         global pingListPath
         guild = ctx.guild.id
@@ -111,6 +111,7 @@ class timedping(commands.Cog):
         with open(str(pingListPath), 'w') as pingList:
             try:
                 json.dump(x, pingList)
+                await ctx.send("{0} was added to the Timed Ping List with cooldown {1} seconds".format(role.mention, cooldown))
             except ValueError:
                 print("pingList.json write failed")
         
@@ -135,17 +136,23 @@ class timedping(commands.Cog):
                         x = {}
             except ValueError:
                 print("Failed to write to pingList.json")
+        await ctx.send("{0} was removed from the Timed Ping List".format(role.mention))
 
 
     @tping.command(name="list", help="Lists all the timed ping roles for the server")
     async def list(self, ctx):
         global pingListPath
         guild = ctx.guild.id
+        roles = ""
         with open(str(pingListPath), 'r') as pingList:
             try:
                 x = json.load(pingList)
                 if str(guild) in x:
                     y = x[str(guild)].copy()
-                    await ctx.send(y)
+                    for role, cooldown in y.items():
+                        roles = roles + "<@&{0}> with cooldown {1} seconds \n".format(role, cooldown)
+                    mess1 = await ctx.send(roles)
+                    asyncio.sleep(120)
+                    await mess1.delete()
             except ValueError:
                 print("Failed to read pingList.json")

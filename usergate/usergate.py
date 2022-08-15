@@ -61,5 +61,6 @@ class usergate(commands.Cog):
           with open(str(userGatePath), 'w') as userGate:
                try:
                     json.dump(x, userGate)
+                    await ctx.send("Usergate was set to {0} days".format(days))
                except ValueError:
                     print("userGate.json write failed")
