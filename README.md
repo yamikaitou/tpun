@@ -16,18 +16,7 @@
   <h2>Cog list</h2>
   
   
-  
-  <h3>minecraft</h3>
-
-
-<h4>Cog for checking the status' of minecraft servers</h4>
-
-  <h5>[p]minecraft status 'server'</h5>
-Returns the amount of people on server and the ping
-  
-<h5>[p]minecraft ip 'server'</h5>
-Returns the server's ip
-  
+ 
  <h3>pvc</h3>
 
 
@@ -116,15 +105,20 @@ Buys 'role' and removes currency from user
 <h3>usergate</h3>
   
   
-<h4>Prevents user accounts that are under 7 days old from joining the server</h4>
+<h4>Prevents user accounts that are under 'days' old from joining the server</h4>
+
+<h5>[p]usergate 'day'</h5>
+Sets the number of 'days' a user's account must exist
   
   
   
 <h3>verifier</h3>
   
   
-<h4>Verifies users using a gui</h4>
+<h4>Verifies users as a gender role using a gui</h4>
   
   
 <h5>[p]verify 'user mention'</h5>
 Removes 'user' unverified role and gives them their selected (from gui) verified role
+
+<h5>[p]vsetup</h5>
