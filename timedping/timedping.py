@@ -7,9 +7,10 @@ import time
 import asyncio
 from redbot.core import data_manager
 import json
+import re
 
 global tempo
-tempo : int = 0
+tempo : dict = {}
 
 class timedping(commands.Cog):
     """
@@ -49,15 +50,27 @@ class timedping(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         global tempo
-        if "@vc ping" in message.content or "@vcping" in message.content or "@VC ping" in message.content:
-            if tempo > time.time():
-                await message.reply("There is a 5 hour cooldown in between vc ping uses. There is <t:{0}:R> remaining in the cooldown".format(int(tempo)))
-            else:
-                if message.author.voice != None:
-                    await message.reply("<@&931995861779644547>")
-                    tempo = time.time() + 18000
-                else:
-                    await message.reply("You must be in a vc to use the vc ping")
+        guild = message.guild.id
+        roles = {}
+        if "@" in message.content:
+            try:
+                with open(str(pingListPath), 'r') as pingList:
+                    x = json.load(pingList)
+                    for server, rolesList in x.items():
+                        if server == str(guild):
+                            for i in rolesList:
+                                roles = i
+            except ValueError:
+                print("pingList.json failed to read")
+        for role, cooldown in roles:
+            if re.search("/"+str(role)+"/ix", message.content):
+                for x, y in tempo:
+                    if x == str(role):
+                        if y > time.time():
+                            await message.reply("There is a {0} hour cooldown in between vc ping uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown),int(y)))
+                        else:
+                            await message.reply("<@&{0}}>".format(role))
+                            tempo.update(str(role), int(time.time() + cooldown))
 
     @commands.guildowner_or_permissions()
     @commands.group(name="tping", help="Base command for all timed ping commands")
