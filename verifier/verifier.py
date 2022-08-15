@@ -43,23 +43,16 @@ class verifier(commands.Cog):
             print("verifiedRoles.json failed to read")
         for server, items in x.items():
             if server == str(ctx.guild.id):
-                print(items)
                 for i in items:
-                    print(i)
                     for key, role in i.items():
-                        print(key)
                         if key == "unverified":
-                            print("unverified found")
                             unverified = ctx.guild.get_role(int(role))
                         elif key == "male":
-                            print("male found")
-                            male = role
+                            male = ctx.guild.get_role(int(role))
                         elif key == "female":
-                            print("female found")
-                            female = role
+                            female = ctx.guild.get_role(int(role))
                         elif key == "nb":
-                            print("nb found")
-                            nb = role
+                            nb = ctx.guild.get_role(int(role))
         role: discord.Role = None
         if emoji == "♂":
             role = male
