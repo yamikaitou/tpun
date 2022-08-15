@@ -52,6 +52,7 @@ class timedping(commands.Cog):
         global tempo
         guild = message.guild.id
         roles = {}
+        notInTempo = False
         if "@" in message.content:
             try:
                 with open(str(pingListPath), 'r') as pingList:
@@ -78,8 +79,10 @@ class timedping(commands.Cog):
                             await message.reply("<@&{0}}>".format(role))
                             tempo.update(str(role), int(time.time() + cooldown))
                     else:
-                        await message.reply("<@&{0}}>".format(role))
-                        tempo.update(str(role), int(time.time() + cooldown))
+                        notInTempo = True
+                if notInTempo:
+                    await message.reply("<@&{0}}>".format(role))
+                    tempo.update(str(role), int(time.time() + cooldown))
 
     @commands.guildowner_or_permissions()
     @commands.group(name="tping", help="Base command for all timed ping commands")
