@@ -86,11 +86,11 @@ class timedping(commands.Cog):
                     newTempo = {str(role): int(time.time() + cooldown)}
                     tempo.update(newTempo)
 
-    @commands.guildowner_or_permissions()
     @commands.group(name="tping", help="Base command for all timed ping commands")
     async def tping(self, ctx):
         pass
 
+    @commands.guildowner_or_permissions()
     @tping.command(name="add", usage="<role mention> <cooldown in seconds>", help="Adds a role to the timed ping list")
     async def add(self, ctx: commands.Context, role: discord.Role, cooldown: int):
         global pingListPath
@@ -115,7 +115,7 @@ class timedping(commands.Cog):
             except ValueError:
                 print("pingList.json write failed")
         
-
+    @commands.guildowner_or_permissions()
     @tping.command(name="remove", usage="<role mention>", help="Removes a role from the timed ping list")
     async def remove(self, ctx: commands.Context, role: discord.Role):
         global pingListPath
@@ -139,6 +139,7 @@ class timedping(commands.Cog):
         await ctx.send("{0} was removed from the Timed Ping List".format(role.mention))
 
 
+    @commands.guildowner_or_permissions()
     @tping.command(name="list", help="Lists all the timed ping roles for the server")
     async def list(self, ctx: commands.Context):
         global pingListPath
