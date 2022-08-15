@@ -43,7 +43,9 @@ class verifier(commands.Cog):
             print("verifiedRoles.json failed to read")
         for server, items in x.items():
             if server == str(ctx.guild.id):
+                print(items)
                 for i in items:
+                    print(i)
                     for key, role in i.items():
                         if key == "unverified":
                             unverified = role
