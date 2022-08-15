@@ -66,13 +66,20 @@ class timedping(commands.Cog):
         print(roles)
         for role, cooldown in roles.items():
             if re.search("/" + message.guild.get_role(int(role)).name + "/ix", message.content):
+                print("ping found")
                 for x, y in tempo.items():
+                    print(x)
+                    print(y)
                     if x == str(role):
+                        print("role found in tempo")
                         if y > time.time():
                             await message.reply("There is a {0} hour cooldown in between vc ping uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown),int(y)))
                         else:
                             await message.reply("<@&{0}}>".format(role))
                             tempo.update(str(role), int(time.time() + cooldown))
+                    else:
+                        await message.reply("<@&{0}}>".format(role))
+                        tempo.update(str(role), int(time.time() + cooldown))
 
     @commands.guildowner_or_permissions()
     @commands.group(name="tping", help="Base command for all timed ping commands")
