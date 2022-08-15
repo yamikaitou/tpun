@@ -41,17 +41,18 @@ class verifier(commands.Cog):
                 x = json.load(verifiedList)
         except ValueError:
             print("verifiedRoles.json failed to read")
-        for i in x.items():
-            for roleList in i:
-                for key, role in roleList.items():
-                    if key == "unverified":
-                        unverified = role
-                    elif key == "male":
-                        male = role
-                    elif key == "female":
-                        female = role
-                    elif key == "nb":
-                        nb = role
+        for server, items in x.items():
+            if server == str(ctx.guild.id):
+                for i in items:
+                    for key, role in i.items():
+                        if key == "unverified":
+                            unverified = role
+                        elif key == "male":
+                            male = role
+                        elif key == "female":
+                            female = role
+                        elif key == "nb":
+                            nb = role
         role: discord.Role = None
         if emoji == "♂":
             role = male
