@@ -57,7 +57,6 @@ class usergate(commands.Cog):
                except ValueError:
                     print("userGate.json read failed")
           x.update({str(guild) : days})
-          print(x)
           with open(str(userGatePath), 'w') as userGate:
                try:
                     json.dump(x, userGate)
