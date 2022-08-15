@@ -52,7 +52,7 @@ class timedping(commands.Cog):
         global tempo
         guild = message.guild.id
         roles = {}
-        notInTempo = False
+        notInTempo = True
         if "@" in message.content:
             try:
                 with open(str(pingListPath), 'r') as pingList:
@@ -72,6 +72,7 @@ class timedping(commands.Cog):
                     print(x)
                     print(y)
                     if x == str(role):
+                        notInTempo = False
                         print("role found in tempo")
                         if y > time.time():
                             await message.reply("There is a {0} hour cooldown in between vc ping uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown),int(y)))
