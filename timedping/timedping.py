@@ -91,7 +91,7 @@ class timedping(commands.Cog):
     async def tping(self, ctx):
         pass
 
-    @tping.command(name="add", usage=" <role mention> <cooldown>", help="Adds a role to the timed ping list")
+    @tping.command(name="add", usage="<role mention> <cooldown>", help="Adds a role to the timed ping list")
     async def add(self, ctx, role: discord.Role, cooldown: int):
         global pingListPath
         guild = ctx.guild.id
@@ -115,7 +115,7 @@ class timedping(commands.Cog):
                 print("pingList.json write failed")
         
 
-    @tping.command(name="remove", usage=" <role mention>", help="Removes a role from the timed ping list")
+    @tping.command(name="remove", usage="<role mention>", help="Removes a role from the timed ping list")
     async def remove(self, ctx, role: discord.Role):
         global pingListPath
         guild = ctx.guild.id
