@@ -67,7 +67,7 @@ class timedping(commands.Cog):
             print(message.guild.get_role(int(role)).name)
             print("/" + message.guild.get_role(int(role)).name + "/ix")
             print(message.content)
-            if re.search("/" + message.guild.get_role(int(role)).name + "/ix", message.content):
+            if bool(re.search("/" + message.guild.get_role(int(role)).name + "/ix", message.content)) or bool(re.search("/" + message.guild.get_role(int(role)).name + "/i", message.content)):
                 print("ping found")
                 for x, y in tempo.items():
                     print(x)
