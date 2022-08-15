@@ -45,23 +45,21 @@ class verifier(commands.Cog):
             await ctx.send("User is already verified!")
             await mess1.delete()
 
+    @commands.admin()
     @commands.command(name="verify", help="Opens the verification gui")
     async def verify(self, ctx: commands.Context, user: discord.Member):
-        if ctx.author.top_role.id == 1002731919563304981 or ctx.author.top_role.id == 921241200009285633 or ctx.author.top_role.id == 921239781663449159:
-            embed = discord.Embed(color=0xe02522, title='Verified emoji selector', description= 'From below please choose the emoji that best identifies your gender')
-            embed.set_footer(text="♂ : Male | ♀ : Female|💜 : Non Binary")
-            embed.timestamp = datetime.datetime.utcnow()
-            mess1 = await ctx.channel.send(embed=embed)
-            emojis = ["♂","♀", "💜"]
-            start_adding_reactions(mess1, emojis)
-            try:
-                result = await ctx.bot.wait_for("reaction_add", timeout=21600.0, check=self.pred(emojis, mess1, user))
-                emoji = str(result[0])
-                await self.emojiVerifier(ctx, emoji, mess1, user)
-            except asyncio.TimeoutError:
-                await ctx.channel.send('Verification gui timed out.')
-                await mess1.delete()
-            else:
-                pass
+        embed = discord.Embed(color=0xe02522, title='Verified emoji selector', description= 'From below please choose the emoji that best identifies your gender')
+        embed.set_footer(text="♂ : Male | ♀ : Female|💜 : Non Binary")
+        embed.timestamp = datetime.datetime.utcnow()
+        mess1 = await ctx.channel.send(embed=embed)
+        emojis = ["♂","♀", "💜"]
+        start_adding_reactions(mess1, emojis)
+        try:
+            result = await ctx.bot.wait_for("reaction_add", timeout=21600.0, check=self.pred(emojis, mess1, user))
+            emoji = str(result[0])
+            await self.emojiVerifier(ctx, emoji, mess1, user)
+        except asyncio.TimeoutError:
+            await ctx.channel.send('Verification gui timed out.')
+            await mess1.delete()
         else:
             pass

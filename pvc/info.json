@@ -1,8 +1,8 @@
 {
-    "name": "Private Voice Channels",
-    "short": "TPUN PVC cog",
-    "description": "Team Punistic red cog for creating private voice channels",
-    "end_user_data_statement": "This cog doespersistently store data about users. Specifically their id's to keep track of the private voice channels they own. It also stores the id's of the guilds it is in.",
+    "name": "TPUN Private Voice Channel",
+    "short": "pvc",
+    "description": "Team Punistic red cog for creating and managing private voice channels",
+    "end_user_data_statement": "This cog doespersistently storedata or metadata about users. It stores the user's id to keep track of the channels the user owns.",
     "install_msg": "Congrats",
     "author": [
         "Nado"
@@ -10,9 +10,11 @@
     "required_cogs": {},
     "requirements": [],
     "tags": [
-        "Voice channel",
-        "Tpun",
-        "private"
+        "private",
+        "voice",
+        "channel",
+        "channels",
+        "Tpun"
     ],
     "min_bot_version": "3.3.10",
     "hidden": false,

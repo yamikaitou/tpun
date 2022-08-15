@@ -1,7 +1,7 @@
 {
-    "name": "minecraft",
-    "short": "TPUN Minecraft cog",
-    "description": "Team Punistic red cog for checking minecraft server",
+    "name": "TPUN User Gate Cog",
+    "short": "usergate",
+    "description": "Team Punistic red cog for preventing new accounts from joining server",
     "end_user_data_statement": "This cog does not persistently store any data or metadata about users.",
     "install_msg": "Congrats",
     "author": [
@@ -10,7 +10,7 @@
     "required_cogs": {},
     "requirements": [],
     "tags": [
-        "Minecraft",
+        "Usergate",
         "Tpun"
     ],
     "min_bot_version": "3.3.10",
