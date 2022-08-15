@@ -30,7 +30,7 @@ class verifier(commands.Cog):
             with verifiedRolesPath.open("w", encoding ="utf-8") as f:
                 f.write("{}")
 
-    async def emojiVerifier(self, ctx, emoji, mess1, user: discord.Member):
+    async def emojiVerifier(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
         global verifiedRolesPath
         unverified :int = None
         male :int
@@ -50,7 +50,7 @@ class verifier(commands.Cog):
                         print(key)
                         if key == "unverified":
                             print("unverified found")
-                            unverified = role
+                            unverified = ctx.guild.get_role(int(role))
                         elif key == "male":
                             print("male found")
                             male = role
