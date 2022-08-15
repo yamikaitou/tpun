@@ -1,0 +1,23 @@
+{
+    "name": "TPUN Verifier Cog",
+    "short": "verifier",
+    "description": "Team Punistic red cog for age verifying users as gender roles",
+    "end_user_data_statement": "This cog does not persistently store any data or metadata about users.",
+    "install_msg": "Congrats",
+    "author": [
+        "Nado"
+    ],
+    "required_cogs": {},
+    "requirements": [],
+    "tags": [
+        "verify",
+        "age",
+        "gender",
+        "role",
+        "Tpun"
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}

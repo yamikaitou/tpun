@@ -48,7 +48,7 @@ class usergate(commands.Cog):
 
      @commands.guildowner_or_permissions()
      @commands.command(name="usergate", usage="<days>", help="Sets the number of days a user's account must exist before joining server, if user does not meet requirement they will get kicked.")
-     async def usergate(self, ctx, days : int):
+     async def usergate(self, ctx: commands.Context, days : int):
           global userGatePath
           guild = ctx.guild.id
           with open(str(userGatePath), 'r') as userGate:
@@ -57,6 +57,7 @@ class usergate(commands.Cog):
                except ValueError:
                     print("userGate.json read failed")
           x.update({str(guild) : days})
+          print(x)
           with open(str(userGatePath), 'w') as userGate:
                try:
                     json.dump(x, userGate)
