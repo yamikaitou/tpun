@@ -96,8 +96,8 @@ class timedping(commands.Cog):
             try:
                 x = json.load(pingList)
             except ValueError:
-                await ctx.send("Failed to load vc Owners.")
-        with open(str(vcOwnersPath), 'w') as vcWrite:
+                print("Failed to read to pingList.json")
+        with open(str(pingListPath), 'w') as vcWrite:
             try:
                 if str(guild) in x:
                     y = x[str(guild)].copy()
@@ -107,10 +107,18 @@ class timedping(commands.Cog):
                     if x == None:
                         x = {}
             except ValueError:
-                await ctx.send("Failed to delete your vc.")
+                print("Failed to write to pingList.json")
 
 
     @tping.command(name="list", help="Lists all the timed ping roles for the server")
     async def list(self, ctx):
         global pingListPath
         guild = ctx.guild.id
+        with open(str(pingListPath), 'r') as pingList:
+            try:
+                x = json.load(pingList)
+                if str(guild) in x:
+                    y = x[str(guild)].copy()
+                    await ctx.send(y)
+            except ValueError:
+                print("Failed to read pingList.json")
