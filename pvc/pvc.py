@@ -623,6 +623,7 @@ class pvc(commands.Cog):
      async def setup(self, ctx: commands.Context):
           global vcRolesPath
           global vcChannelsPath
+          global vcOwnersPath
           guild = ctx.guild.id
           run : bool = True
           x : TextIOWrapper
@@ -676,6 +677,17 @@ class pvc(commands.Cog):
                except ValueError:
                     print("vcroles.json write failed.")
                #display settings to insure they are correct
+          with open(str(vcOwnersPath), 'r') as vcOwnersRead:
+               try:
+                    x = json.load(vcOwnersRead)
+               except ValueError:
+                    print("vcOwners.json read failed")
+          with open(str(vcOwnersPath), 'w') as vcOwnersWrite:
+               try:
+                    x.update({str(guild) : [{}]})
+                    json.dump(x, vcOwnersWrite)
+               except ValueError:
+                    print("vcOwners.json write failed")
           mess2 = await ctx.send("Your settings are currently: {0} as the channel and {1} are the public roles that will be used.".format(channel.name, roles))
           await asyncio.sleep(30)
           await mess0.delete()
