@@ -64,9 +64,9 @@ class timedping(commands.Cog):
             except ValueError:
                 print("pingList.json failed to read")
         print(roles)
-        for role, cooldown in roles:
-            if re.search("/" + message.guild.get_role(role).name + "/ix", message.content):
-                for x, y in tempo:
+        for role, cooldown in roles.items():
+            if re.search("/" + message.guild.get_role(int(role)).name + "/ix", message.content):
+                for x, y in tempo.items():
                     if x == str(role):
                         if y > time.time():
                             await message.reply("There is a {0} hour cooldown in between vc ping uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown),int(y)))
