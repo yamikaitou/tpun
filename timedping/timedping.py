@@ -60,12 +60,12 @@ class timedping(commands.Cog):
                     for server, rolesList in x.items():
                         if server == str(guild):
                             for i in rolesList:
-                                print(i)
                                 roles = i
             except ValueError:
                 print("pingList.json failed to read")
         print(roles)
         for role, cooldown in roles.items():
+            print(message.guild.get_role(int(role)).name)
             if re.search("/" + message.guild.get_role(int(role)).name + "/ix", message.content):
                 print("ping found")
                 for x, y in tempo.items():
