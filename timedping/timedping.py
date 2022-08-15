@@ -81,7 +81,7 @@ class timedping(commands.Cog):
                         print("role isn't in tempo")
                         notInTempo = True
                 if notInTempo:
-                    await message.reply("<@&{0}}>".format(int(role)))
+                    await message.reply("<@&{0}>".format(int(role)))
                     tempo.update(str(role), int(time.time() + cooldown))
 
     @commands.guildowner_or_permissions()
