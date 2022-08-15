@@ -32,7 +32,7 @@ class verifier(commands.Cog):
 
     async def emojiVerifier(self, ctx, emoji, mess1, user: discord.Member):
         global verifiedRolesPath
-        unverified :int
+        unverified :int = None
         male :int
         female :int
         nb :int
@@ -67,6 +67,8 @@ class verifier(commands.Cog):
             await user.remove_roles(unverified)
             await ctx.send("User Verified as {0}".format(role.name))
             await mess1.delete()
+        elif unverified == None:
+            await ctx.send("Server was not setup, please ask the owner to run [p]vsetup")
         else:
             await ctx.send("User is already verified!")
             await mess1.delete()
