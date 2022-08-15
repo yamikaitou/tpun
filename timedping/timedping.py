@@ -92,7 +92,7 @@ class timedping(commands.Cog):
         pass
 
     @tping.command(name="add", usage="<role mention> <cooldown in seconds>", help="Adds a role to the timed ping list")
-    async def add(self, ctx, role: discord.Role, cooldown: int):
+    async def add(self, ctx: commands.Context, role: discord.Role, cooldown: int):
         global pingListPath
         guild = ctx.guild.id
         nC = {role.id : cooldown}
@@ -117,7 +117,7 @@ class timedping(commands.Cog):
         
 
     @tping.command(name="remove", usage="<role mention>", help="Removes a role from the timed ping list")
-    async def remove(self, ctx, role: discord.Role):
+    async def remove(self, ctx: commands.Context, role: discord.Role):
         global pingListPath
         guild = ctx.guild.id
         with open(str(pingListPath), 'r') as pingList:
@@ -140,7 +140,7 @@ class timedping(commands.Cog):
 
 
     @tping.command(name="list", help="Lists all the timed ping roles for the server")
-    async def list(self, ctx):
+    async def list(self, ctx: commands.Context):
         global pingListPath
         guild = ctx.guild.id
         roles = ""

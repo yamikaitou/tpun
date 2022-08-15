@@ -71,7 +71,7 @@ class rep(commands.Cog):
 
     @commands.mod()
     @commands.command(name="repremove", help="Removes a amount from a users reputation")
-    async def repremove(self, ctx, user: discord.Member, amount:int):
+    async def repremove(self, ctx: commands.Context, user: discord.Member, amount:int):
         newWrite = None
         with open(str(jsonPath), 'r') as reputation:
             try:
@@ -95,7 +95,7 @@ class rep(commands.Cog):
                 print("reputation.json failed to write")
 
     @commands.command(name="checkrep", help="Displays a user's reputation")
-    async def checkrep(self, ctx, user: discord.Member):
+    async def checkrep(self, ctx: commands.Context, user: discord.Member):
         userFound = False
         with open(str(jsonPath), 'r') as reputation:
             try:
