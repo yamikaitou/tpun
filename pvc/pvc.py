@@ -280,7 +280,7 @@ class pvc(commands.Cog):
                                              run = True
                                              vcId = idList
                except ValueError:
-                    await ctx.send("Failed to load vc Owners. Please contact Nado#6969")
+                    await ctx.send("Failed to load vc Owners.")
           if run:
                with open(str(vcOwnersPath), 'w') as vcWrite:
                     try:
