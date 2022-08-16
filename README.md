@@ -12,9 +12,9 @@
 <div id="installation"><h2>Installation</h2></center>
 
 <h3>
-`
+```
 [p] is your prefix
-`
+```
 </h3>
 <br />
 <h4>
