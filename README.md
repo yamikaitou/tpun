@@ -1,18 +1,24 @@
 <div id="header" align="center">
- <img src="https://i.imgur.com/1heyRLg.gif" width="250"/>
-</div>
-<div id="badges" align="center">
-<a href="https://discordapp.com/users/365398642334498816">
-<img src="https://img.shields.io/badge/Discord-blue?style=flat&logo=Discord&logoColor=white" alt="Discord"/>
-</a>
 
-[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg)](https://github.com/batman202012/tpun/actions/workflows/main.yml)
-[![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)
+ <img src="https://i.imgur.com/1heyRLg.gif"/>
+
+</div>
+
+<div id="socials" align="center">
+
+[![Discord](https://img.shields.io/badge/Discord-blue?style=flat&logo=Discord&logoColor=white)](https://discordapp.com/users/365398642334498816) [![Youtube](https://img.shields.io/badge/Youtube-red?style=flat&logo=Youtube&logoColor=white)](https://www.youtube.com/channel/UCFu5oVPzFrSk5HhkPhgeRhQ) [![Linkedin](https://img.shields.io/badge/Linkedin-blue?style=flat&logo=Linkedin&logoColor=white)](https://www.linkedin.com/in/joseph-m-b48b66136/) [![Steam](https://img.shields.io/badge/Steam-gray?style=flat&logo=Steam&logoColor=white)](https://steamcommunity.com/id/sgtnado/) 
+
 </div>
 
 <div id="Instalalation" align="center">
 
 # Team Punistic Cogs
+
+<div id="workflow" align="center">
+
+[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg)](https://github.com/batman202012/tpun/actions/workflows/main.yml) [![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)
+
+</div>
 
 <br />
 <br />
