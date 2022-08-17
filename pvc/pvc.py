@@ -329,7 +329,7 @@ class pvc(commands.Cog):
                          if server == str(ctx.guild.id):
                               for i in vcs:
                                    for vcOwner, vcId in i.items():
-                                        voiceChannel : discord.VoiceChannel = await self.bot.get_channel(int(vcId))
+                                        voiceChannel : discord.VoiceChannel = self.bot.get_channel(int(vcId))
                                         name : discord.Member = await self.bot.get_or_fetch_member(ctx.guild.id, vcOwner)
                                         message = voiceChannel.mention + " ⌇ " + name.mention
 
