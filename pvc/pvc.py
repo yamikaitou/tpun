@@ -329,9 +329,9 @@ class pvc(commands.Cog):
                          if server == str(ctx.guild.id):
                               for i in vcs:
                                    for vcOwner, vcId in i.items():
-                                        voiceChannel : str = self.bot.get_channel(int(vcId)).mention
-                                        name : str = self.bot.fetch_user(vcOwner).mention
-                                        message = voiceChannel + " ⌇ " + name
+                                        voiceChannel : discord.VoiceChannel = self.bot.get_channel(int(vcId))
+                                        name : discord.User = self.bot.fetch_user(vcOwner)
+                                        message = voiceChannel.mention + " ⌇ " + name.mention
 
                                         embed.add_field(name=" ", value=message, inline=True)
                await ctx.send(embed=embed)
