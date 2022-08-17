@@ -38,6 +38,15 @@ jobs:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
+    -name: Enter Redenv
+      run: |
+      sudo apt update
+      sudo apt -y install software-properties-common
+      sudo add-apt-repository -y ppa:deadsnakes/ppa
+      sudo apt -y install python3.9 python3.9-dev python3.9-venv python3-pip git openjdk-11-jre-headless build-essential nano
+      python3.9 -m venv ~/redenv
+      ~/redenv/Scripts/activate.bat
+
     - name: Install dependencies
       run: |
         python3.9 -m pip install --upgrade pip
