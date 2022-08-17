@@ -308,7 +308,7 @@ class pvc(commands.Cog):
                     await ctx.send("{0} You can't delete a VC if you don't have one.".format(ctx.author.name))
 
      @vc.command(name='name', help="Returns the name of your vc")
-     async def name(self, ctx: commands.Context):
+     async def name(self, ctx):
           owner = ctx.author.id
           voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
           if voiceChannel != None:
