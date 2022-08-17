@@ -28,7 +28,7 @@ class verifier(commands.Cog):
         if verifiedRolesPath.exists():
             pass
         else:
-            with verifiedRolesPath.open("w", encoding ="utf-8") as f:
+            with verifiedRolesPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
     async def emojiVerifier(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
@@ -75,7 +75,6 @@ class verifier(commands.Cog):
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
 
-
     @commands.admin()
     @commands.command(name="verify", help="Opens the verification gui")
     async def verify(self, ctx: commands.Context, user: discord.Member):
@@ -107,47 +106,33 @@ class verifier(commands.Cog):
         except ValueError:
             print("verifiedRoles.json failed to read")
 
-        def check0(m):
+        def check(m):
             return m.channel == mess0.channel
 
-        def check1(m):
-            return m.channel == mess1.channel
-
-        def check2(m):
-            return m.channel == mess2.channel
-
-        def check3(m):
-            return m.channel == mess3.channel
-
         mess0 = await ctx.send("Please input the role for unverified members.")
-        msg0 = await self.bot.wait_for('message', check=check0, timeout=120)
+        msg0 = await self.bot.wait_for('message', check=check, timeout=120)
         if msg0.content != "none":
             for i in msg0.role_mentions:
                 newWrite.update({"unverified": i.id})
         await mess0.delete()
-
-
         mess1 = await ctx.send("Please input the role for verified males")
-        msg1 = await self.bot.wait_for('message', check=check1, timeout=120)
+        msg1 = await self.bot.wait_for('message', check=check, timeout=120)
         if msg1.content != "none":
             for i in msg1.role_mentions:
                 newWrite.update({"male": i.id})
         await mess1.delete()
-
         mess2 = await ctx.send("Please input the role for verified females")
-        msg2 = await self.bot.wait_for('message', check=check2, timeout=120)
+        msg2 = await self.bot.wait_for('message', check=check, timeout=120)
         if msg2.content != "none":
             for i in msg2.role_mentions:
                 newWrite.update({"female": i.id})
         await mess2.delete()
-
         mess3 = await ctx.send("Please input the role for verified non-binary")
-        msg3 = await self.bot.wait_for('message', check=check3, timeout=120)
+        msg3 = await self.bot.wait_for('message', check=check, timeout=120)
         if msg3.content != "none":
             for i in msg3.role_mentions:
                 newWrite.update({"nb": i.id})
         await mess3.delete()
-
         if str(guild) in x:
             y = x[str(guild)].copy()
             for key, role in newWrite:
