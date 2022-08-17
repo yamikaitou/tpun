@@ -157,6 +157,9 @@
 
 ##### Renames your private voice channel to 'name'
 
+<br />
+<br />
+
 - `
 [p]vc region <int>
 `
