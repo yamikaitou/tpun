@@ -332,7 +332,7 @@ class pvc(commands.Cog):
                                    for vcOwner, vcId in i.items():
                                         voiceChannel : discord.VoiceChannel = self.bot.get_channel(int(vcId))
                                         name : discord.Member = await guild.fetch_member(vcOwner)
-                                        message = "<#" + voiceChannel.id + ">" + " ⌇ " + "<@" + name.mention + ">"
+                                        message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
                                         embed.add_field(name=" ", value=message, inline=True)
                await ctx.send(embed=embed)
           except ValueError:
