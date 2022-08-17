@@ -79,7 +79,7 @@ class rolebuy(commands.Cog):
         buyableRoles = []
         userAccount: bank.Account = await bank.get_account(ctx.author)
         for roleList, cost in self.roleListRead(ctx.guild.id, role).items():
-            buyableRoles.append(roleList)
+            buyableRoles.append(int(roleList))
             print(buyableRoles)
             if role.id in buyableRoles:
                 cost = self.roleListCost(role)
