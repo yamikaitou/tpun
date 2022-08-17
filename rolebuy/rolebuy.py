@@ -77,18 +77,19 @@ class rolebuy(commands.Cog):
     @rb.command(name="buy", help="Buys a role for money")
     async def buy(self, ctx: commands.Context, role: discord.Role):
         userAccount: bank.Account = await bank.get_account(ctx.author)
-        buyableRoles = self.roleListRead(ctx.guild.id, role)
-        print(buyableRoles)
-        if role.id in buyableRoles.items():
-            cost = self.roleListCost(role)
-            if userAccount.balance >= cost:
-                await ctx.author.add_roles(role)
-                await bank.set_balance(ctx.author, userAccount.balance-cost)
-                await ctx.send("{0} You bought {1} for {2} currency".format(ctx.author.name, role.name, cost))
+        for roleList, cost in self.roleListRead(ctx.guild.id, role).items():
+            buyableRoles = buyableRoles + roleList
+            print(buyableRoles)
+            if role.id in buyableRoles:
+                cost = self.roleListCost(role)
+                if userAccount.balance >= cost:
+                    await ctx.author.add_roles(role)
+                    await bank.set_balance(ctx.author, userAccount.balance-cost)
+                    await ctx.send("{0} You bought {1} for {2} currency".format(ctx.author.name, role.name, cost))
+                else:
+                    await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs {2} currency".format(ctx.author.name, role.name, cost))
             else:
-                await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs {2} currency".format(ctx.author.name, role.name, cost))
-        else:
-            await ctx.send("Sorry this role is not for sale, run rb list to find out with ones are.")
+                await ctx.send("Sorry this role is not for sale, run rb list to find out with ones are.")
 
     @commands.guildowner_or_permissions()
     @rb.command(name="add", usage="<role mention> <cooldown in seconds>", help="Adds a role to the buyable role list")
