@@ -53,9 +53,9 @@ class rolebuy(commands.Cog):
             print("roleList.json failed to read")
 
     def roleListCost(self, guild: int, roleArg: discord.role):
-        global roleListCost
+        global roleCostPath
         try:
-            with open(str(roleListCost), 'r') as roleCost:
+            with open(str(roleCostPath), 'r') as roleCost:
                 x = json.load(roleCost)
                 for server, rolesList in x.items():
                     if server == str(guild):
