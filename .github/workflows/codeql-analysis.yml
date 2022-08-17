@@ -1,29 +1,3 @@
-
-Skip to content
-Pull requests
-Issues
-Marketplace
-Explore
-@batman202012
-Dav-Git /
-Dav-Cogs
-Public
-
-Code
-Issues 6
-Pull requests 1
-Actions
-Security 2
-
-    Insights
-
-Dav-Cogs/.github/workflows/codeql-analysis.yml
-@Dav-Git
-Dav-Git Upgrade to CodeQL v2
-Latest commit cd1057b on May 25
-History
-1 contributor
-71 lines (61 sloc) 2.39 KB
 # For most projects, this workflow file will not need changing; you simply need
 # to commit it to your repository.
 #
@@ -95,19 +69,3 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
-Footer
-© 2022 GitHub, Inc.
-Footer navigation
-
-    Terms
-    Privacy
-    Security
-    Status
-    Docs
-    Contact GitHub
-    Pricing
-    API
-    Training
-    Blog
-    About
-
