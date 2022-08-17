@@ -78,11 +78,11 @@ class rolebuy(commands.Cog):
     async def buy(self, ctx: commands.Context, role: discord.Role):
         buyableRoles = []
         userAccount: bank.Account = await bank.get_account(ctx.author)
-        for roleList, cost in self.roleListRead(self, ctx.guild.id, role).items():
+        for roleList, cost in self.roleListRead(ctx.guild.id, role).items():
             buyableRoles.append(int(roleList))
             print(buyableRoles)
             if role.id in buyableRoles:
-                cost = self.roleListCost(role)
+                cost = self.roleListCost(ctx.guild.id, role)
                 if userAccount.balance >= cost:
                     await ctx.author.add_roles(role)
                     await bank.set_balance(ctx.author, userAccount.balance - cost)
