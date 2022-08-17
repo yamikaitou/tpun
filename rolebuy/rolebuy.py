@@ -78,17 +78,14 @@ class rolebuy(commands.Cog):
     async def buy(self, ctx: commands.Context, role: discord.Role):
         userAccount: bank.Account = await bank.get_account(ctx.author)
         buyableRoles = self.roleListRead(self, ctx.guild.id, role)
-        if role.id in buyableRoles:
-            if userAccount.balance >= 200:
-                for roleCheck in buyableRoles:
-                    if ctx.guild.get_role(roleCheck) in ctx.author.roles:
-                        await ctx.author.remove_roles(ctx.guild.get_role(roleCheck))
-
+        if role.id in buyableRoles.items():
+            cost = self.roleListCost(role)
+            if userAccount.balance >= cost:
                 await ctx.author.add_roles(role)
-                await bank.set_balance(ctx.author, userAccount.balance-200)
-                await ctx.send("{0} You bought {1} for 200 Crow Coin".format(ctx.author.name, role.name))
+                await bank.set_balance(ctx.author, userAccount.balance-cost)
+                await ctx.send("{0} You bought {1} for {2} currency".format(ctx.author.name, role.name, cost))
             else:
-                await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs 200 Crow Coin".format(ctx.author.name, role.name))
+                await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs {2} currency".format(ctx.author.name, role.name, cost))
         else:
             await ctx.send("Sorry this role is not for sale, only color roles are purchasable")
 
@@ -139,7 +136,6 @@ class rolebuy(commands.Cog):
                 print("Failed to write to roleList.json")
         await ctx.send("{0} was removed from the buyable role List".format(role.mention))
 
-    @commands.guildowner_or_permissions()
     @rb.command(name="list", help="Lists all the timed ping roles for the server")
     async def list(self, ctx: commands.Context):
         global roleListPath
@@ -152,7 +148,7 @@ class rolebuy(commands.Cog):
                     y = x[str(guild)].copy()
                     for i in y:
                         for role, cost in i.items():
-                            roles = roles + "<@&{0}> with cooldown {1} seconds \n".format(role, cost)
+                            roles = roles + "<@&{0}> with cost of {1} currency \n".format(role, cost)
                     mess1 = await ctx.send(roles)
                     await asyncio.sleep(120)
                     await mess1.delete()
