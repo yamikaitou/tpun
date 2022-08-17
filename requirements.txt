@@ -1,4 +1,7 @@
+pip>=22.2.1
 setuptools>=63.4.0
 wheel>=0.37.1
 Red-DiscordBot>=3.4.17
-discord==1.7.3
+redbot>=1.5
+red>=0.2.2
+discord.py==1.7.3
