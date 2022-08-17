@@ -308,7 +308,7 @@ class pvc(commands.Cog):
                     await ctx.send("{0} You can't delete a VC if you don't have one.".format(ctx.author.name))
 
      @vc.command(name='name', help="Returns the name of your vc")
-     async def name(self, ctx):
+     async def name(self, ctx: commands.Context):
           owner = ctx.author.id
           voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
           if voiceChannel != None:
@@ -318,7 +318,7 @@ class pvc(commands.Cog):
                await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
      @vc.command(name='list', help="Lists all the owners of vc's")
-     async def name(self, ctx: commands.Context):
+     async def list(self, ctx: commands.Context):
           owner = ctx.author.id
           embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
           try:
