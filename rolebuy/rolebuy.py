@@ -85,7 +85,7 @@ class rolebuy(commands.Cog):
                 cost = self.roleListCost(role)
                 if userAccount.balance >= cost:
                     await ctx.author.add_roles(role)
-                    await bank.set_balance(ctx.author, userAccount.balance-cost)
+                    await bank.set_balance(ctx.author, userAccount.balance - cost)
                     await ctx.send("{0} You bought {1} for {2} currency".format(ctx.author.name, role.name, cost))
                 else:
                     await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs {2} currency".format(ctx.author.name, role.name, cost))
