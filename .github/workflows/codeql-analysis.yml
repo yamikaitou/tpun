@@ -24,7 +24,6 @@ jobs:
   analyze:
     name: Analyze
     runs-on: self-hosted
-    setup-python-dependencies: false
     permissions:
       actions: read
       contents: read
@@ -34,6 +33,7 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'python' ]
+        setup-python-dependencies: false
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
         # Learn more:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed

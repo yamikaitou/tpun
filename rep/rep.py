@@ -52,7 +52,7 @@ class rep(commands.Cog):
                                         await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
                                         newUser = False
                                 if newUser:
-                                    newWrite = {id : 1}
+                                    newWrite = {id: 1}
                                     await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
                                 x.pop(str(id), None)
                                 x.update(newWrite)
@@ -67,7 +67,7 @@ class rep(commands.Cog):
 
     @commands.mod()
     @commands.command(name="repremove", help="Removes a amount from a users reputation")
-    async def repremove(self, ctx: commands.Context, user: discord.Member, amount:int):
+    async def repremove(self, ctx: commands.Context, user: discord.Member, amount: int):
         newWrite = None
         with open(str(jsonPath), 'r') as reputation:
             try:
@@ -75,7 +75,7 @@ class rep(commands.Cog):
                 for userId, userRep in x.items():
                     if userId == str(user.id):
                         currentRep = userRep - amount
-                        newWrite = {user.id : currentRep}
+                        newWrite = {user.id: currentRep}
                         await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}".format(ctx.author.name, amount, user.name, currentRep))
                 if newWrite is not None:
                     x.pop(str(user.id), None)
