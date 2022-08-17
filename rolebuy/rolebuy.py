@@ -80,6 +80,7 @@ class rolebuy(commands.Cog):
         userAccount: bank.Account = await bank.get_account(ctx.author)
         for roleList, cost in self.roleListRead(ctx.guild.id, role).items():
             buyableRoles.append(int(roleList))
+            print(buyableRoles)
             if role.id in buyableRoles:
                 if userAccount.balance >= cost:
                     await ctx.author.add_roles(role)
