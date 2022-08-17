@@ -9,6 +9,7 @@ from redbot.core import data_manager
 import json
 from redbot.core.utils.predicates import ReactionPredicate
 
+
 class verifier(commands.Cog):
     """
     Emoji Verification cog
@@ -32,10 +33,10 @@ class verifier(commands.Cog):
 
     async def emojiVerifier(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
         global verifiedRolesPath
-        unverified :int = None
-        male :int
-        female :int
-        nb :int
+        unverified: int = None
+        male: int
+        female: int
+        nb: int
         try:
             with open(str(verifiedRolesPath), 'r') as verifiedList:
                 x = json.load(verifiedList)
@@ -65,7 +66,7 @@ class verifier(commands.Cog):
             await user.remove_roles(unverified)
             await ctx.send("User Verified as {0}".format(role.name))
             await mess1.delete()
-        elif unverified == None:
+        elif unverified is None:
             await ctx.send("Server was not setup, please ask the owner to run [p]vsetup")
         else:
             await ctx.send("User is already verified!")
@@ -73,16 +74,17 @@ class verifier(commands.Cog):
 
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
-        
+
 
     @commands.admin()
     @commands.command(name="verify", help="Opens the verification gui")
     async def verify(self, ctx: commands.Context, user: discord.Member):
-        embed = discord.Embed(color=0xe02522, title='Verified emoji selector', description= 'From below please choose the emoji that best identifies your gender')
+        description0: str = 'From below please choose the emoji that best identifies your gender'
+        embed = discord.Embed(color=0xe02522, title='Verified emoji selector', description=description0)
         embed.set_footer(text="♂ : Male | ♀ : Female|💜 : Non Binary")
         embed.timestamp = datetime.datetime.utcnow()
         mess1 = await ctx.channel.send(embed=embed)
-        emojis = ["♂","♀", "💜"]
+        emojis = ["♂", "♀", "💜"]
         start_adding_reactions(mess1, emojis)
         try:
             result = await ctx.bot.wait_for("reaction_add", timeout=21600.0, check=self.pred(emojis, mess1, user))
@@ -97,7 +99,7 @@ class verifier(commands.Cog):
     @commands.guildowner()
     @commands.command(name="vsetup", help="Setup command for verify cog")
     async def setup(self, ctx: commands.Context):
-        newWrite : dict = {}
+        newWrite: dict = {}
         guild = ctx.guild.id
         try:
             with open(str(verifiedRolesPath), 'r') as verifiedList:
@@ -116,7 +118,7 @@ class verifier(commands.Cog):
 
         def check3(m):
             return m.channel == mess3.channel
-        
+
         mess0 = await ctx.send("Please input the role for unverified members.")
         msg0 = await self.bot.wait_for('message', check=check0, timeout=120)
         if msg0.content != "none":
@@ -154,11 +156,9 @@ class verifier(commands.Cog):
             y[0].update(newWrite)
         else:
             y = [newWrite]
-            x.update({str(guild) : y})
-        print(x)
+            x.update({str(guild): y})
         with open(str(verifiedRolesPath), 'w') as verifiedRoles:
             try:
                 json.dump(x, verifiedRoles)
             except ValueError:
                 print("verifierRoles.json write failed.")
-        
