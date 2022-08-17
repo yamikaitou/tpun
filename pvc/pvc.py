@@ -320,6 +320,7 @@ class pvc(commands.Cog):
      @vc.command(name='list', help="Lists all the owners of vc's")
      async def list(self, ctx: commands.Context):
           owner = ctx.author.id
+          guild: discord.Guild = ctx.guild
           embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
           try:
                with open(str(vcOwnersPath), 'r') as vcOwners:
@@ -330,7 +331,7 @@ class pvc(commands.Cog):
                               for i in vcs:
                                    for vcOwner, vcId in i.items():
                                         voiceChannel : discord.VoiceChannel = self.bot.get_channel(int(vcId))
-                                        name : discord.Member = await ctx.guild.get_member(vcOwner)
+                                        name : discord.Member = guild.fetch_member(vcOwner)
                                         message = "<#" + voiceChannel.id + ">" + " ⌇ " + "<@" + name.mention + ">"
                                         embed.add_field(name=" ", value=message, inline=True)
                await ctx.send(embed=embed)
