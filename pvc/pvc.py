@@ -52,7 +52,7 @@ class pvc(commands.Cog):
             with vcChannelsPath.open("w", encoding= "utf-8") as f:
                 f.write("{}")
 
-    futureList:Dict = {}
+    futureList: Dict = {}
 
     def vcOwnerRead(self, guild, owner):
         global vcOwnersPath
@@ -92,10 +92,10 @@ class pvc(commands.Cog):
                 for server, roles in x.items():
                     if server == str(ctx.guild.id):
                         if type(roles) == list:
-                            return(roles)
+                            return roles
                         else:
                             rolesObj.append(roles)
-                            return(rolesObj)
+                            return rolesObj
         except ValueError:
             print("read failed")
             return None
@@ -145,7 +145,6 @@ class pvc(commands.Cog):
             else:
                 await ctx.send("{0} does not own a vc.".format(user.name))
             await mess1.delete()
-
 
     async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
         # TODO: Replace this with the proper end user data removal handling.
@@ -200,7 +199,7 @@ class pvc(commands.Cog):
         guild = ctx.guild.id
         if ctx.message.channel.id == dsChannel.id:
             category = ctx.channel.category
-            run : bool = True
+            run: bool = True
             if vcName == "":
                 await ctx.send("{0} You need to type a voice channel name t!vc create ['Name']".format(ctx.author.name))
             else:
@@ -227,12 +226,12 @@ class pvc(commands.Cog):
                                 if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
                                     await ctx.author.move_to(channel)
                                     vcId = channel.id
-                                    nC = {owner : vcId}
+                                    nC = {owner: vcId}
                                     if str(guild) in x:
                                         y = x[str(guild)].copy()
                                         y[0].update(nC)
                                     else:
-                                        x.update({str(guild) : [{}]})
+                                        x.update({str(guild): [{}]})
                                     await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
                                     empty = asyncio.Future()
                                     pvc.futureList[str(vcId)] = empty
@@ -247,7 +246,7 @@ class pvc(commands.Cog):
                         print("pvc.py pvc.create Json write failed.")
         else:
             await ctx.send("This command only works in the custom vc {0} channel.".format(dsChannel.mention))
-    
+
     @vc.command(name='delete', usage=" ['reason'] reason is optional but if included must be in quotes", help="Deletes your personal channel")
     async def delete(self, ctx: commands.Context, reason = None):
         global vcOwnersPath
@@ -316,12 +315,12 @@ class pvc(commands.Cog):
                 x = json.load(vcOwners)
                 for server, vcs in x.items():
                     if server == str(ctx.guild.id):
-                            for i in vcs:
-                                for vcOwner, vcId in i.items():
-                                    voiceChannel : discord.VoiceChannel = self.bot.get_channel(int(vcId))
-                                    name : discord.Member = await guild.fetch_member(vcOwner)
-                                    message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
-                                    embed.add_field(name="🔊", value=message, inline=True)
+                        for i in vcs:
+                            for vcOwner, vcId in i.items():
+                                voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
+                                name: discord.Member = await guild.fetch_member(vcOwner)
+                                message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
+                                embed.add_field(name="🔊", value=message, inline=True)
             await ctx.send(embed=embed)
         except ValueError:
             print("vc owners read failed")
@@ -330,7 +329,7 @@ class pvc(commands.Cog):
     async def gui(self, ctx: commands.Context):
         dsChannel = self.vcChannelRead(ctx)
         if ctx.message.channel.id == dsChannel.id:
-            embed = discord.Embed(color=0xe02522, title='Voice Channel Creator', description= 'Creates a personal voice channel.')
+            embed = discord.Embed(color=0xe02522, title='Voice Channel Creator', description='Creates a personal voice channel.')
             embed.set_footer(text='This gui is opened by /vc gui. It allows you to create your own voice channel that will delete itself after 1 minute of being empty. You can delete it by using /vc delete <reason>. 🎮 for game channel, 📱 for social channel, ❓ for other channel')
             embed.timestamp = datetime.datetime.utcnow()
             mess1 = await ctx.channel.send(embed=embed)
@@ -347,7 +346,7 @@ class pvc(commands.Cog):
                 pass
 
     @vc.command(name="rename", usage=" <'new name'> Name must be in quotes", help="Renames your personal vc")
-    async def rename(self, ctx: commands.Context, *, rename = None):
+    async def rename(self, ctx: commands.Context, *, rename=None):
         if rename is None:
             await ctx.send("{0} Please enter a new name for your vc.".format(ctx.author.name))
         else:
@@ -408,7 +407,7 @@ class pvc(commands.Cog):
             text = "Auto"
         else:
             await ctx.send("Something went wrong, please contact Nado#6969")
-          
+
         voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
         if voiceChannel is not None:
             await voiceChannel.edit(rtc_region=region)
@@ -418,7 +417,6 @@ class pvc(commands.Cog):
 
     @vc.command(name="lock", help="Locks your vc", description="Changes your vc to invite only members can join use t!vc invite <@user> to invite someone")
     async def lock(self, ctx: commands.Context):
-        owner = ctx.author.id
         roleList = self.vcRoleRead(ctx)
         voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
         if voiceChannel is not None:
@@ -472,7 +470,7 @@ class pvc(commands.Cog):
             else:
                 dsChannel = self.vcChannelRead(ctx)
                 if ctx.message.channel.id == dsChannel.id:
-                    embed = discord.Embed(color=0xe02522, title='Voice Channel Request', description= '{0}: {1} is requesting to join your channel'.format(user.mention, ctx.author.name))
+                    embed = discord.Embed(color=0xe02522, title='Voice Channel Request', description='{0}: {1} is requesting to join your channel'.format(user.mention, ctx.author.name))
                     embed.set_footer(text='React with ✅ below to accept this request')
                     embed.timestamp = datetime.datetime.utcnow()
                     mess1 = await ctx.channel.send(embed=embed)
@@ -489,7 +487,7 @@ class pvc(commands.Cog):
                         await ctx.channel.send("This request timed out")
                         await mess1.delete()
                     else:
-                         pass
+                        pass
 
     @vc.command(name="kick", usage="<@user>", help="Kicks a user from your vc")
     async def kick(self, ctx: commands.Context, user: discord.Member):
@@ -661,7 +659,7 @@ class pvc(commands.Cog):
         with open(str(vcRolesPath), 'r') as vcRoles:
             try:
                 y = json.load(vcRoles)
-                y.update({str(guild) : roles})
+                y.update({str(guild): roles})
             except ValueError:
                 print("vcroles.json read failed.")
         with open(str(vcRolesPath), 'w') as vcRolesWrite:
@@ -676,7 +674,7 @@ class pvc(commands.Cog):
                 print("vcOwners.json read failed")
         with open(str(vcOwnersPath), 'w') as vcOwnersWrite:
             try:
-                x.update({str(guild) : [{}]})
+                x.update({str(guild): [{}]})
                 json.dump(x, vcOwnersWrite)
             except ValueError:
                 print("vcOwners.json write failed")
@@ -690,7 +688,6 @@ class pvc(commands.Cog):
     async def clear_settings(self, ctx: commands.Context):
         global vcChannelsPath
         global vcRolesPath
-        #deletes vc commands channel from file
         run: bool = False
         run2: bool = False
         with open(str(vcChannelsPath), 'r') as vcChannels:
