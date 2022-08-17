@@ -33,7 +33,7 @@ class pvc(commands.Cog):
         if vcOwnersPath.exists():
             pass
         else:
-            with vcOwnersPath.open("w", encoding= "utf-8") as f:
+            with vcOwnersPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
         global vcRolesPath
@@ -41,7 +41,7 @@ class pvc(commands.Cog):
         if vcRolesPath.exists():
             pass
         else:
-            with vcRolesPath.open("w", encoding= "utf-8") as f:
+            with vcRolesPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
         global vcChannelsPath
@@ -49,7 +49,7 @@ class pvc(commands.Cog):
         if vcChannelsPath.exists():
             pass
         else:
-            with vcChannelsPath.open("w", encoding= "utf-8") as f:
+            with vcChannelsPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
     futureList: Dict = {}
@@ -248,7 +248,7 @@ class pvc(commands.Cog):
             await ctx.send("This command only works in the custom vc {0} channel.".format(dsChannel.mention))
 
     @vc.command(name='delete', usage=" ['reason'] reason is optional but if included must be in quotes", help="Deletes your personal channel")
-    async def delete(self, ctx: commands.Context, reason = None):
+    async def delete(self, ctx: commands.Context, reason=None):
         global vcOwnersPath
         noVC = True
         if reason is None:
@@ -285,7 +285,6 @@ class pvc(commands.Cog):
                             y = x[str(ctx.guild.id)].copy()
                             y[0].pop(str(owner), None)
                         json.dump(x, vcWrite)
-                        #does a check to see if we delete the last entry in json files. Adds {} to json file because json doesn't play nice with empty files.
                         if x is None:
                             x = {}
                         await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
@@ -297,7 +296,6 @@ class pvc(commands.Cog):
 
     @vc.command(name='name', help="Returns the name of your vc")
     async def name(self, ctx: commands.Context):
-        owner = ctx.author.id
         voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
         if voiceChannel is not None:
             vcName = voiceChannel.name
@@ -307,7 +305,6 @@ class pvc(commands.Cog):
 
     @vc.command(name='list', help="Lists all the owners of vc's")
     async def list(self, ctx: commands.Context):
-        owner = ctx.author.id
         guild: discord.Guild = ctx.guild
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
         try:
@@ -333,7 +330,7 @@ class pvc(commands.Cog):
             embed.set_footer(text='This gui is opened by /vc gui. It allows you to create your own voice channel that will delete itself after 1 minute of being empty. You can delete it by using /vc delete <reason>. 🎮 for game channel, 📱 for social channel, ❓ for other channel')
             embed.timestamp = datetime.datetime.utcnow()
             mess1 = await ctx.channel.send(embed=embed)
-            emojis = ["🎮","❓", "📱"]
+            emojis = ["🎮", "❓", "📱"]
             start_adding_reactions(mess1, emojis)
             try:
                 result = await ctx.bot.wait_for("reaction_add", timeout=180.0, check=self.pred(emojis, mess1, ctx.author))
@@ -356,7 +353,6 @@ class pvc(commands.Cog):
                 await ctx.send("{0} Your channel's name was changed to {1}".format(ctx.author.name, voiceChannel.mention))
             else:
                 await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
-
 
     @vc.command(name="region", usage="<region number>", help="Changes the region of your vc. The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
     async def region(self, ctx: commands.Context, region):
@@ -461,7 +457,6 @@ class pvc(commands.Cog):
 
     @vc.command(name="request", usage="<@user>", help="Sends a user a request to join their vc, request last 5 minutes")
     async def request(self, ctx: commands.Context, user: discord.Member):
-        #gets channel for bot message
         if user is None:
             await ctx.send("{0} Please mention a user to request to join".format(ctx.author.name))
         else:
@@ -535,7 +530,7 @@ class pvc(commands.Cog):
     @vc.command(name="claim", usage="", help="Claims a voice channel from another user if they're not in it.")
     async def claim(self, ctx: commands.Context):
         global vcOwnersPath
-        owner:int = 0
+        owner: int = 0
         newOwner = str(ctx.author.id)
         channelid = ctx.author.voice.channel.id
         newWrite = {newOwner: channelid}
@@ -573,7 +568,7 @@ class pvc(commands.Cog):
                     print("vcOwners.json write failed.")
 
     @vc.command(name="transfer", usage=" <@user>", help="Transfers a voice channel to another user")
-    async def transfer(self, ctx: commands.Context, newOwner:discord.Member):
+    async def transfer(self, ctx: commands.Context, newOwner: discord.Member):
         global vcOwnersPath
         owner = str(ctx.author.id)
         if ctx.author.voice is not None:

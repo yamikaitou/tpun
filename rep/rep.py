@@ -6,6 +6,7 @@ from redbot.core.config import Config
 import discord
 import json
 
+
 class rep(commands.Cog):
     """
     Reputation cog
@@ -24,7 +25,7 @@ class rep(commands.Cog):
         if jsonPath.exists():
             pass
         else:
-            with jsonPath.open("w", encoding ="utf-8") as f:
+            with jsonPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
     @commands.Cog.listener()
@@ -47,7 +48,7 @@ class rep(commands.Cog):
                                 for userId, userRep in x.items():
                                     if userId == str(id):
                                         currentRep = userRep + 1
-                                        newWrite = {id : currentRep}
+                                        newWrite = {id: currentRep}
                                         await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
                                         newUser = False
                                 if newUser:
@@ -76,7 +77,7 @@ class rep(commands.Cog):
                         currentRep = userRep - amount
                         newWrite = {user.id : currentRep}
                         await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}".format(ctx.author.name, amount, user.name, currentRep))
-                if newWrite != None:
+                if newWrite is not None:
                     x.pop(str(user.id), None)
                     x.update(newWrite)
                 else:

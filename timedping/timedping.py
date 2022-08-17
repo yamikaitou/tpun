@@ -7,9 +7,9 @@ import asyncio
 from redbot.core import data_manager
 import json
 import re
-
 global tempo
 tempo: dict = {}
+
 
 class timedping(commands.Cog):
     """

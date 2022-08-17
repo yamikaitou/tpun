@@ -7,6 +7,7 @@ import datetime
 import time
 import json
 
+
 class usergate(commands.Cog):
     """
     User gate cog
@@ -40,8 +41,8 @@ class usergate(commands.Cog):
                         daysAmount = days
             except ValueError:
                 print("userGate.json read failed")
-        if time.mktime(member.created_at.timetuple()) > (time.mktime(datetime.datetime.now().timetuple()) - (days * 24 * 60 * 60)):
-            await member.kick(reason="Account is under {0} days old".format(str(days)))
+        if time.mktime(member.created_at.timetuple()) > (time.mktime(datetime.datetime.now().timetuple()) - (daysAmount * 24 * 60 * 60)):
+            await member.kick(reason="Account is under {0} days old".format(str(daysAmount)))
 
     @commands.guildowner_or_permissions()
     @commands.command(name="usergate", usage="<days>", help="Sets the number of days a user's account must exist before joining server, if user does not meet requirement they will get kicked.")
