@@ -333,7 +333,7 @@ class pvc(commands.Cog):
                                         voiceChannel : discord.VoiceChannel = self.bot.get_channel(int(vcId))
                                         name : discord.Member = await guild.fetch_member(vcOwner)
                                         message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
-                                        embed.add_field(name=" ", value=message, inline=True)
+                                        embed.add_field(name="🔊", value=message, inline=True)
                await ctx.send(embed=embed)
           except ValueError:
                print("vc owners read failed")
