@@ -330,7 +330,7 @@ class pvc(commands.Cog):
                               for i in vcs:
                                    for vcOwner, vcId in i.items():
                                         voiceChannel : discord.VoiceChannel = self.bot.get_channel(int(vcId))
-                                        name : discord.Member = await self.bot.get_or_fetch_member(ctx.guild.id, vcOwner)
+                                        name : discord.Member = await ctx.guild.get_member(vcOwner)
                                         message = voiceChannel.mention + " ⌇ " + name.mention
                                         embed.add_field(name=" ", value=message, inline=True)
                await ctx.send(embed=embed)
