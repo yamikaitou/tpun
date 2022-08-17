@@ -157,6 +157,7 @@ class pvc(commands.Cog):
      @commands.group(name='vc')
      async def vc(self, ctx: commands.Context):
           pass
+     
      @vc.command(name='help', help="Shows all the commands for t!vc")
      async def help(self, ctx: commands.Context, arg):
           if arg == None:
