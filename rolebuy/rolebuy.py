@@ -76,6 +76,7 @@ class rolebuy(commands.Cog):
 
     @rb.command(name="buy", help="Buys a role for money")
     async def buy(self, ctx: commands.Context, role: discord.Role):
+        buyableRoles = []
         userAccount: bank.Account = await bank.get_account(ctx.author)
         for roleList, cost in self.roleListRead(ctx.guild.id, role).items():
             buyableRoles = buyableRoles + roleList
