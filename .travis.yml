@@ -1,0 +1,6 @@
+language: python3.9
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install libxml2-dev
+  - sudo apt-get -y install pip setuptools wheel
+  - sudo apt-get -y install Red-DiscordBot 
