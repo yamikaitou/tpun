@@ -335,7 +335,7 @@ class pvc(commands.Cog):
             embed.timestamp = datetime.datetime.utcnow()
             mess1 = await ctx.channel.send(embed=embed)
             emojis = ["🎮","❓", "📱"]
-            start_adding_reactions(mess1, emojis
+            start_adding_reactions(mess1, emojis)
             try:
                 result = await ctx.bot.wait_for("reaction_add", timeout=180.0, check=self.pred(emojis, mess1, ctx.author))
                 emoji = str(result[0])
