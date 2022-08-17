@@ -298,7 +298,6 @@ class pvc(commands.Cog):
     async def name(self, ctx: commands.Context):
         voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
         if voiceChannel is not None:
-            vcName = voiceChannel.name
             await ctx.send("{0} Your personal vc is named {1}.".format(ctx.author.name, voiceChannel.mention))
         else:
             await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
