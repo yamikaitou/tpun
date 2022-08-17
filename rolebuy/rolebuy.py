@@ -41,9 +41,9 @@ class rolebuy(commands.Cog):
                 f.write("{}")
 
     def roleListRead(self, guild: int, roleArg: discord.role):
-        global roleListRead
+        global roleListPath
         try:
-            with open(str(roleListRead), 'r') as roleList:
+            with open(str(roleListPath), 'r') as roleList:
                 x = json.load(roleList)
                 for server, rolesList in x.items():
                     if server == str(guild):
