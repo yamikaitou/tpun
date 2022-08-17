@@ -317,6 +317,25 @@ class pvc(commands.Cog):
           else:
                await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
+     @vc.command(name='list', help="Lists all the owners of vc's")
+     async def name(self, ctx: commands.Context):
+          owner = ctx.author.id
+          embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
+          try:
+               with open(str(vcOwnersPath), 'r') as vcOwners:
+               #load vcOwners
+                    x = json.load(vcOwners)
+                    for server, vcs in x.items():
+                         if server == str(ctx.guild.id):
+                              for i in vcs:
+                                   for vcOwner, vcId in i.items():
+                                        voiceChannel : discord.VoiceChannel = self.bot.get_channel(int(vcId))
+                                        name : discord.User = self.bot.fetch_user(vcOwner)
+                                        embed.add_field(name=voiceChannel.mention, value=name.mention, inline=True)
+               await ctx.send(embed=embed)
+          except ValueError:
+               print("vc owners read failed")
+
      @vc.command(name="gui", help="Opens the vc creation gui")
      async def gui(self, ctx: commands.Context):
           #gets channel for bot message
