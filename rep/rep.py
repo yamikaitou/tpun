@@ -5,7 +5,7 @@ from redbot.core.bot import Red
 from redbot.core.config import Config
 import discord
 import asyncio
-from io import BytesIO, TextIOWrapper
+from io import TextIOWrapper
 import json
 
 
