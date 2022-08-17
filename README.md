@@ -143,6 +143,15 @@
 <br />
 
 - `
+[p]vc list
+`
+
+##### Returns an embed of personal voice channel and owners
+
+<br />
+<br />
+
+- `
 [p]vc rename <name>
 `
 
