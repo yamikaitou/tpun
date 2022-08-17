@@ -165,6 +165,8 @@ class pvc(commands.Cog):
                await ctx.send("Creates a voice channel with <'name'> t!vc create <'Name'>. You can only have 1 vc. VC deletes after 1 minute of inactivity. You must join your vc within 1 minute or it will be deleted.")
           elif arg == 'delete':
                await ctx.send("Deletes your personal channel, requires a reason t!delete ['reason']. Channels delete on their own after 1 minute of being empty.")
+          elif arg == 'list':
+               await ctx.send("Lists all the owners of vc's")
           elif arg == 'gui':
                await ctx.send("Opens the vc creation gui. use t!vc gui")
           elif arg == 'region':
