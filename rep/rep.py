@@ -4,11 +4,7 @@ from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
 import discord
-import asyncio
-from io import TextIOWrapper
 import json
-
-
 
 class rep(commands.Cog):
     """
@@ -21,7 +17,6 @@ class rep(commands.Cog):
             self,
             identifier=None,
             force_registration=True,
-        
         )
         global jsonPath
         path = data_manager.cog_data_path(cog_instance=self)
@@ -36,10 +31,10 @@ class rep(commands.Cog):
     async def on_message(self, message: discord.Message):
         global jsonPath
         if "thank you" in message.content or "thanks" in message.content or "Thank you" in message.content or "THANK YOU" in message.content or "Thank You" in message.content:
-            if message.mentions != None:
+            if message.mentions is not None:
                 users = message.mentions
                 names = []
-                newUser : Boolean = True
+                newUser: Boolean = True
                 for user in users:
                     names.append(user.mention)
                 for user in users:
@@ -61,7 +56,7 @@ class rep(commands.Cog):
                                 x.pop(str(id), None)
                                 x.update(newWrite)
                             except ValueError:
-                                if x == None:
+                                if x is None:
                                     x = {}
                         with open(str(jsonPath), 'w') as reputationWrite:
                             try:
@@ -106,5 +101,5 @@ class rep(commands.Cog):
                         userFound = True
             except ValueError:
                 print("reputation.json failed to read")
-        if userFound == False:
+        if userFound is False:
             await ctx.send("{0} doesn't have a reputation.".format(user.name))
