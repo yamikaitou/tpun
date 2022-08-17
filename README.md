@@ -1,10 +1,13 @@
 <div id="header" align="center">
-  <img src="https://i.imgur.com/1heyRLg.gif" width="250"/>
+ <img src="https://i.imgur.com/1heyRLg.gif" width="250"/>
 </div>
 <div id="badges" align="center">
 <a href="https://discordapp.com/users/365398642334498816">
-  <img src="https://img.shields.io/badge/Discord-blue?style=flat&logo=Discord&logoColor=white" alt="Discord"/>
+<img src="https://img.shields.io/badge/Discord-blue?style=flat&logo=Discord&logoColor=white" alt="Discord"/>
 </a>
+
+[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg)](https://github.com/batman202012/tpun/actions/workflows/main.yml)
+[![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)
 </div>
 
 <div id="Instalalation" align="center">
@@ -156,6 +159,9 @@
 `
 
 ##### Renames your private voice channel to 'name'
+
+<br />
+<br />
 
 - `
 [p]vc region <int>
