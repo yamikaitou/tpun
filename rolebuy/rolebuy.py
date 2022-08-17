@@ -82,7 +82,6 @@ class rolebuy(commands.Cog):
             buyableRoles.append(int(roleList))
             print(buyableRoles)
             if role.id in buyableRoles:
-                cost = self.roleListCost(ctx.guild.id, role)
                 if userAccount.balance >= cost:
                     await ctx.author.add_roles(role)
                     await bank.set_balance(ctx.author, userAccount.balance - cost)
