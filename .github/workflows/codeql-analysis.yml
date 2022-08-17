@@ -33,14 +33,23 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'python' ]
+        python-version: [ "3.6", "3.7", "3.8", "3.9"]
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python' ]
         # Learn more:
         # https://docs.github.com/en/free-pro-team@latest/github/finding-security-vulnerabilities-and-errors-in-your-code/configuring-code-scanning#changing-the-languages-that-are-analyzed
 
     steps:
-    - name: Enter Redenv
-      run: |
-        source ~/redenv/bin/activate
+    - name: Set up Python ${{ matrix.python }} (deadsnakes)
+      uses: deadsnakes/action@v1.0.0
+      if: endsWith(matrix.python-version, '-dev')
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Set up Python ${{ matrix.python-version }}
+      if: "!endsWith(matrix.python-version, '-dev')"
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
