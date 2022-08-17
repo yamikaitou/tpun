@@ -329,9 +329,9 @@ class pvc(commands.Cog):
                          if server == str(ctx.guild.id):
                               for i in vcs:
                                    for vcOwner, vcId in i.items():
-                                        voiceChannel = self.bot.get_channel(int(vcId))
-                                        name = self.bot.fetch_user(vcOwner)
-                                        embed.add_field(name=voiceChannel.mention, value=name.mention, inline=True)
+                                        voiceChannel = self.bot.get_channel(int(vcId)).mention
+                                        name = self.bot.fetch_user(vcOwner).mention
+                                        embed.add_field(name=voiceChannel, value=name, inline=True)
                await ctx.send(embed=embed)
           except ValueError:
                print("vc owners read failed")
