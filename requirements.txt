@@ -1,2 +1,4 @@
+setuptools>=63.4.0
+wheel>=0.37.1
 Red-DiscordBot>=3.4.17
 discord==1.7.3
