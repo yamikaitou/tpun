@@ -1,2 +1,2 @@
-git+ https://github.com/Cog-Creators/Red-DiscordBot@v3.4
+Red-DiscordBot>=3.4.17
 discord==1.7.3
