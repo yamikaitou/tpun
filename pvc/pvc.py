@@ -1,5 +1,6 @@
 from ast import Dict
-from typing import Literal
+from types import GeneratorType
+from typing import Generator, Literal
 from io import TextIOWrapper
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
@@ -206,8 +207,9 @@ class pvc(commands.Cog):
                 try:
                     with open(str(vcOwnersPath), 'r') as vcOwners:
                         x = json.load(vcOwners)
-                        theVals = ([server, vcs, i, owner, vcId] for server, vcs in x.items() if server == str(ctx.guild.id) for i in vcs for owner, vcId in i.items())
+                        theVals: Generator = ([server, vcs, i, owner, vcId] for server, vcs in x.items() if server == str(ctx.guild.id) for i in vcs for owner, vcId in i.items())
                         for valList in theVals:
+                            print(valList)
                             print(valList[3])
                             print(valList[4])
                             if owner == str(valList[3]):
