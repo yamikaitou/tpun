@@ -1,5 +1,6 @@
 from ast import Dict
-from typing import Literal
+from types import GeneratorType
+from typing import Generator, Literal
 from io import TextIOWrapper
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
@@ -90,12 +91,8 @@ class pvc(commands.Cog):
             with open(str(vcRolesPath), 'r') as vcRoles:
                 x = json.load(vcRoles)
                 for server, roles in x.items():
-                    if server == str(ctx.guild.id):
-                        if type(roles) == list:
-                            return roles
-                        else:
-                            rolesObj.append(roles)
-                            return rolesObj
+                    if server == str(ctx.guild.id) and type(roles) == list:
+                        return roles
         except ValueError:
             print("read failed")
             return None
@@ -207,43 +204,44 @@ class pvc(commands.Cog):
                 if vcName == "no activity":
                     await ctx.send("You can't create a game vc if you're not playing a game.")
                     run = False
+            try:
+                with open(str(vcOwnersPath), 'r') as vcOwners:
+                    x = json.load(vcOwners)
+                    for server, vcs in x.items():
+                        if server == str(ctx.guild.id):
+                            for i in vcs:
+                                for owner, vcId in i.items():
+                                    if owner == str(owner):
+                                        await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(vcId).name)))
+                                        run = False
+                    if run:
+                        channel = await ctx.guild.create_voice_channel(vcName, category=category)
+                        await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                        for role in roleList:
+                            await channel.set_permissions(ctx.guild.get_role(role), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                        if ctx.author.voice is not None:
+                            if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
+                                await ctx.author.move_to(channel)
+                                vcId = channel.id
+                                nC = {owner: vcId}
+                                if str(guild) in x:
+                                    y = x[str(guild)].copy()
+                                    y[0].update(nC)
+                                else:
+                                    x.update({str(guild): [{}]})
+                                    y = x[str(guild)].copy()
+                                    y[0].update(nC)
+                                await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
+                                empty = asyncio.Future()
+                                pvc.futureList[str(vcId)] = empty
+                                asyncio.ensure_future(self.checks(vcId, empty, ctx))
+            except ValueError:
+                pass
+            with open(str(vcOwnersPath), 'w') as vcWrite:
                 try:
-                    with open(str(vcOwnersPath), 'r') as vcOwners:
-                        x = json.load(vcOwners)
-                        for server, vcs in x.items():
-                            if server == str(ctx.guild.id):
-                                for i in vcs:
-                                    for owner, vcId in i.items():
-                                        if owner == str(owner):
-                                            await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(vcId).name)))
-                                            run = False
-                        if run:
-                            channel = await ctx.guild.create_voice_channel(vcName, category=category)
-                            await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                            for role in roleList:
-                                await channel.set_permissions(ctx.guild.get_role(role), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                            if ctx.author.voice is not None:
-                                if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
-                                    await ctx.author.move_to(channel)
-                                    vcId = channel.id
-                                    nC = {owner: vcId}
-                                    if str(guild) in x:
-                                        y = x[str(guild)].copy()
-                                        y[0].update(nC)
-                                    else:
-                                        x.update({str(guild): [{}]})
-                                    await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
-                                    empty = asyncio.Future()
-                                    pvc.futureList[str(vcId)] = empty
-                                    asyncio.ensure_future(self.checks(vcId, empty, ctx))
-
+                    json.dump(x, vcWrite)
                 except ValueError:
-                    pass
-                with open(str(vcOwnersPath), 'w') as vcWrite:
-                    try:
-                        json.dump(x, vcWrite)
-                    except ValueError:
-                        print("pvc.py pvc.create Json write failed.")
+                    print("pvc.create Json write failed.")
         else:
             await ctx.send("This command only works in the custom vc {0} channel.".format(dsChannel.mention))
 
