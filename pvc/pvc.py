@@ -206,7 +206,7 @@ class pvc(commands.Cog):
                 try:
                     with open(str(vcOwnersPath), 'r') as vcOwners:
                         x = json.load(vcOwners)
-                        theVals = list([server, vcs, i, owner, vcId] for server, vcs in x.items() if server == str(ctx.guild.id) for i in vcs for owner, vcId in i.items())
+                        theVals = ([server, vcs, i, owner, vcId] for server, vcs in x.items() if server == str(ctx.guild.id) for i in vcs for owner, vcId in i.items())
                         print(theVals)
                         for server, vcs, i, owner, vcId in theVals:
                             if owner == str(owner):
