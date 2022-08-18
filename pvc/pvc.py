@@ -90,12 +90,8 @@ class pvc(commands.Cog):
             with open(str(vcRolesPath), 'r') as vcRoles:
                 x = json.load(vcRoles)
                 for server, roles in x.items():
-                    if server == str(ctx.guild.id):
-                        if type(roles) == list:
-                            return roles
-                        else:
-                            rolesObj.append(roles)
-                            return rolesObj
+                    if server == str(ctx.guild.id) and type(roles) == list:
+                        return roles
         except ValueError:
             print("read failed")
             return None
@@ -210,13 +206,10 @@ class pvc(commands.Cog):
                 try:
                     with open(str(vcOwnersPath), 'r') as vcOwners:
                         x = json.load(vcOwners)
-                        for server, vcs in x.items():
-                            if server == str(ctx.guild.id):
-                                for i in vcs:
-                                    for owner, vcId in i.items():
-                                        if owner == str(owner):
-                                            await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(vcId).name)))
-                                            run = False
+                        theVals =([server, vcs, i, owner, vcId] for server, vcs in x.items() if server == str(ctx.guild.id) for i in vcs for owner, vcId in i.items() if owner == str(owner))
+                        for vcId in theVals:
+                            await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(vcId).name)))
+                            run = False
                         if run:
                             channel = await ctx.guild.create_voice_channel(vcName, category=category)
                             await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
