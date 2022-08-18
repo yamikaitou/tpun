@@ -16,7 +16,7 @@
 
 <div id="workflow" align="center">
 
-[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg)](https://github.com/batman202012/tpun/actions/workflows/main.yml) [![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)
+[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg?branch=beta-testing)](https://github.com/batman202012/tpun/actions/workflows/main.yml) [![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg?branch=beta-testing)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)
 
 </div>
 
