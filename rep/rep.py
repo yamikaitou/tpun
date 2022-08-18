@@ -16,7 +16,7 @@ class rep(commands.Cog):
         self.bot = bot
         self.config = Config.get_conf(
             self,
-            identifier=None,
+            identifier=365398642334498816,
             force_registration=True,
         )
         global jsonPath
