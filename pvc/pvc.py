@@ -222,19 +222,19 @@ class pvc(commands.Cog):
                         if ctx.author.voice is not None:
                             if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
                                 await ctx.author.move_to(channel)
-                                vcId = channel.id
-                                nC = {owner: vcId}
-                                if str(guild) in x:
-                                    y = x[str(guild)].copy()
-                                    y[0].update(nC)
-                                else:
-                                    x.update({str(guild): [{}]})
-                                    y = x[str(guild)].copy()
-                                    y[0].update(nC)
-                                await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
-                                empty = asyncio.Future()
-                                pvc.futureList[str(vcId)] = empty
-                                asyncio.ensure_future(self.checks(vcId, empty, ctx))
+                        vcId = channel.id
+                        nC = {owner: vcId}
+                        if str(guild) in x:
+                            y = x[str(guild)].copy()
+                            y[0].update(nC)
+                        else:
+                            x.update({str(guild): [{}]})
+                            y = x[str(guild)].copy()
+                            y[0].update(nC)
+                        await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
+                        empty = asyncio.Future()
+                        pvc.futureList[str(vcId)] = empty
+                        asyncio.ensure_future(self.checks(vcId, empty, ctx))
             except ValueError:
                 pass
             with open(str(vcOwnersPath), 'w') as vcWrite:
