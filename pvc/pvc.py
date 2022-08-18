@@ -208,7 +208,7 @@ class pvc(commands.Cog):
                         x = json.load(vcOwners)
                         theVals =([server, vcs, i, owner, vcId] for server, vcs in x.items() if server == str(ctx.guild.id) for i in vcs for owner, vcId in i.items())
                         for server, vcs, i, owner, vcId in theVals:
-                            if owner == str(owner)
+                            if owner == str(owner):
                                 await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(theVals[vcId]).name)))
                                 run = False
                         if run:
