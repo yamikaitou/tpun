@@ -96,18 +96,15 @@ class pvc(commands.Cog):
             print("read failed")
             return None
 
-    async def checks(self, id, empty, ctx: commands.Context):
-        channel = self.bot.get_channel(id)
+    async def checks(self):
         print(self.futureList)
-        while empty.done() is not True:
-            await asyncio.sleep(60)
-            if len(channel.members) == 0:
-                reason = "channel is empty"
-                await pvc.delete(self, ctx, reason)
-                empty.set_result("Channel deleted because it's empty")
-                for id in self.futureList.keys():
-                    self.futureList[id] = None
-                break
+        while True:
+            for vcId, futa in self.futureList:
+                if futa.done() is not True:
+                    if len(self.bot.get_channel(vcId).members) == 0:
+                        reason = "channel is empty"
+                        await pvc.delete(self, ctx, reason)
+                        futa.set_result("Channel deleted because it's empty")
 
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
