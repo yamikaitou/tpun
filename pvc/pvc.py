@@ -50,8 +50,6 @@ class pvc(commands.Cog):
         )
         self.getpaths()
 
-
-
     futureList: Dict = {}
 
     def loadVcOwners():
@@ -78,8 +76,6 @@ class pvc(commands.Cog):
             if vcOwner == str(owner):
                 voiceChannel = self.bot.get_channel(int(vcId))
                 return voiceChannel
-
-
 
     def vcChannelRead(self, ctx: commands.Context):
         global vcChannelsPath
