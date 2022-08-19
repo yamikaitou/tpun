@@ -552,8 +552,8 @@ class pvc(commands.Cog):
                                 vcEmpty = True
                             else:
                                  await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
-                            if vcEmpty and str(ctx.guild.id) in x:
-                                    y = x[str(guild)].copy()
+                            if vcEmpty and str(guild.id) in x:
+                                    y = x[str(guild.id)].copy()
                                     y[0].pop(str(owner), None)
                                     y[0].update(newWrite)
                             else:
