@@ -57,11 +57,10 @@ class timedping(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         global tempo
-        if message.guild is not None:
+        if message.guild is not None and "@" in message.content:
             guild = message.guild.id
             roles = {}
-            if "@" in message.content:
-                roles = self.parsePingList(guild)
+            roles = self.parsePingList(guild)
             for role, cooldown in roles.items():
                 if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
                     if role not in tempo.keys():
