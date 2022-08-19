@@ -25,25 +25,19 @@ class pvc(commands.Cog):
         global vcOwnersPath
         path = data_manager.cog_data_path(cog_instance=self)
         vcOwnersPath = path / 'vcOwners.json'
-        if vcOwnersPath.exists():
-            pass
-        else:
+        if not vcOwnersPath.exists():
             with vcOwnersPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
         global vcRolesPath
         vcRolesPath = path / 'vcRoles.json'
-        if vcRolesPath.exists():
-            pass
-        else:
+        if not vcRolesPath.exists():
             with vcRolesPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
         global vcChannelsPath
         vcChannelsPath = path / 'vcChannels.json'
-        if vcChannelsPath.exists():
-            pass
-        else:
+        if not vcChannelsPath.exists():
             with vcChannelsPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
@@ -104,14 +98,17 @@ class pvc(commands.Cog):
 
     async def checks(self, id, empty, ctx: commands.Context):
         channel = self.bot.get_channel(id)
-        await asyncio.sleep(60)
-        if len(channel.members) == 0:
-            reason = "channel is empty"
-            await pvc.delete(self, ctx, reason)
-            if empty.done() is not True:
-                empty.set_result("Channel deleted because it's empty")
-        else:
-            await pvc.checks(self, id, empty, ctx)
+        while empty.done() is not True:
+            print(empty)
+            print(self.futureList)
+            await asyncio.sleep(60)
+            if len(channel.members) == 0:
+                reason = "channel is empty"
+                await pvc.delete(self, ctx, reason)
+                pvc.futureList.pop(str(id), None)
+                break
+            else:
+                pass
 
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
@@ -264,6 +261,11 @@ class pvc(commands.Cog):
                 if vc:
                     run = True
                     vcId = vc.id
+                    for id, futa in pvc.futureList.items():
+                        if int(id) == vcId and futa.done() is not True:
+                            futa.set_result(reason)
+                            pvc.futureList.pop(str(vcId), None)
+                            break
             except ValueError:
                 await ctx.send("Failed to load vc Owners.")
         if run:
@@ -272,17 +274,13 @@ class pvc(commands.Cog):
                     channel = self.bot.get_channel(vcId)
                     vcName = str(channel.name)
                     await channel.delete()
-                    for id, futa in pvc.futureList.items():
-                        if int(id) == vcId:
-                            if futa.done() is not True:
-                                futa.set_result("Channel deleted because owner deleted it")
-                            if str(ctx.guild.id) in x:
-                                y = x[str(ctx.guild.id)].copy()
-                                y[0].pop(str(owner), None)
-                            json.dump(x, vcWrite)
-                            if x is None or x == "null":
-                                x = "{}"
-                            await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
+                    if str(ctx.guild.id) in x:
+                        y = x[str(ctx.guild.id)].copy()
+                        y[0].pop(str(owner), None)
+                    json.dump(x, vcWrite)
+                    if x is None:
+                        x = "{}"
+                    await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
                 except ValueError:
                     await ctx.send("Failed to delete your vc.")
         else:
@@ -545,29 +543,28 @@ class pvc(commands.Cog):
             newWrite = {str(newOwner.id): int(channelid)}
             x = None
             vcEmpty = False
-            guild = ctx.guild.id
+            guild = ctx.guild
             if channelid is not None:
                 with open(str(vcOwnersPath), 'r') as vcOwners:
                     try:
                         x = json.load(vcOwners)
-                        for server, vcs in x.items():
-                            if server == str(ctx.guild.id):
-                                for i in vcs:
-                                    for vcOwnList, vcNameList in i.items():
-                                        if vcOwnList == str(ctx.author.id):
-                                            ownerObj = await self.bot.get_or_fetch_member(ctx.guild, vcOwnList)
-                                            if ownerObj.voice.channel.id == channelid:
-                                                await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, self.bot.get_channel(vcNameList).mention))
-                                                vcEmpty = True
-                                            else:
-                                                await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
-                            if vcEmpty:
-                                if str(ctx.guild.id) in x:
-                                    y = x[str(guild)].copy()
+                        vcObj = self.vcOwnerRead(guild.id, ctx.author.id)
+                        ownerObj = await self.bot.get_or_fetch_member(guild, ctx.author.id)
+                        y = x[str(guild.id)].copy()
+                        if vcObj is not None and vcObj.id == channelid:
+                            if ownerObj.voice.channel.id == channelid:
+                                if str(newOwner.id) not in y[0].keys():
+                                    await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
+                                    vcEmpty = True
+                                else:
+                                    await ctx.send("{0} already owns a vc".format(newOwner.display_name))
+                            else:
+                                 await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
+                            if vcEmpty and str(guild.id) in x:
                                     y[0].pop(str(owner), None)
                                     y[0].update(newWrite)
-                            else:
-                                await ctx.send("You don't own this voice channel.")
+                        else:
+                            await ctx.send("You don't own this voice channel.")
                     except ValueError:
                         await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
                 with open(str(vcOwnersPath), 'w') as reputationWrite:
