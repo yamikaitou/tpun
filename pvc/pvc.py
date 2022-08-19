@@ -25,25 +25,19 @@ class pvc(commands.Cog):
         global vcOwnersPath
         path = data_manager.cog_data_path(cog_instance=self)
         vcOwnersPath = path / 'vcOwners.json'
-        if vcOwnersPath.exists():
-            pass
-        else:
+        if not vcOwnersPath.exists():
             with vcOwnersPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
         global vcRolesPath
         vcRolesPath = path / 'vcRoles.json'
-        if vcRolesPath.exists():
-            pass
-        else:
+        if not vcRolesPath.exists():
             with vcRolesPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
         global vcChannelsPath
         vcChannelsPath = path / 'vcChannels.json'
-        if vcChannelsPath.exists():
-            pass
-        else:
+        if not vcChannelsPath.exists():
             with vcChannelsPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
@@ -280,7 +274,7 @@ class pvc(commands.Cog):
                                 y = x[str(ctx.guild.id)].copy()
                                 y[0].pop(str(owner), None)
                             json.dump(x, vcWrite)
-                            if x is None or x == "null":
+                            if x is None:
                                 x = "{}"
                             await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
                 except ValueError:
@@ -545,24 +539,20 @@ class pvc(commands.Cog):
             newWrite = {str(newOwner.id): int(channelid)}
             x = None
             vcEmpty = False
-            guild = ctx.guild.id
+            guild = ctx.guild
             if channelid is not None:
                 with open(str(vcOwnersPath), 'r') as vcOwners:
                     try:
                         x = json.load(vcOwners)
-                        for server, vcs in x.items():
-                            if server == str(ctx.guild.id):
-                                for i in vcs:
-                                    for vcOwnList, vcNameList in i.items():
-                                        if vcOwnList == str(ctx.author.id):
-                                            ownerObj = await self.bot.get_or_fetch_member(ctx.guild, vcOwnList)
-                                            if ownerObj.voice.channel.id == channelid:
-                                                await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, self.bot.get_channel(vcNameList).mention))
-                                                vcEmpty = True
-                                            else:
-                                                await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
-                            if vcEmpty:
-                                if str(ctx.guild.id) in x:
+                        vcObj = self.vcOwnerRead(guild.id, ctx.author.id)
+                        ownerObj = await self.bot.get_or_fetch_member(guild, ctx.author.id)
+                        if vcObj is not None:
+                            if ownerObj.voice.channel.id == channelid:
+                                await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
+                                vcEmpty = True
+                            else:
+                                 await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
+                            if vcEmpty and str(ctx.guild.id) in x:
                                     y = x[str(guild)].copy()
                                     y[0].pop(str(owner), None)
                                     y[0].update(newWrite)
