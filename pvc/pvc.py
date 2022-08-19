@@ -229,7 +229,7 @@ class pvc(commands.Cog):
                         await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
                         empty = asyncio.Future()
                         pvc.futureList[str(vcId)] = empty
-                        asyncio.ensure_future(self.checks(vcId, empty, ctx))
+                        asyncio.ensure_future(self.checks())
             except ValueError:
                 pass
             with open(str(vcOwnersPath), 'w') as vcWrite:
