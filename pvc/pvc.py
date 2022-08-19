@@ -96,15 +96,16 @@ class pvc(commands.Cog):
             print("read failed")
             return None
 
-    async def checks(self):
-        print(self.futureList)
-        while True:
-            for vcId, futa in self.futureList.items():
-                if futa.done() is not True:
-                    if len(self.bot.get_channel(int(vcId)).members) == 0:
-                        reason = "channel is empty"
-                        await pvc.delete(self, ctx, reason)
-                        futa.set_result("Channel deleted because it's empty")
+    async def checks(self, id, empty, ctx: commands.Context):
+        channel = self.bot.get_channel(id)
+        await asyncio.sleep(60)
+        if len(channel.members) == 0:
+            reason = "channel is empty"
+            await pvc.delete(self, ctx, reason)
+            if empty.done() is not True:
+                empty.set_result("Channel deleted because it's empty")
+        else:
+            await pvc.checks(self, id, empty, ctx)
 
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
@@ -229,7 +230,7 @@ class pvc(commands.Cog):
                         await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
                         empty = asyncio.Future()
                         pvc.futureList[str(vcId)] = empty
-                        asyncio.ensure_future(self.checks())
+                        asyncio.ensure_future(self.checks(vcId, empty, ctx))
             except ValueError:
                 pass
             with open(str(vcOwnersPath), 'w') as vcWrite:
@@ -243,6 +244,9 @@ class pvc(commands.Cog):
     @vc.command(name='delete', usage=" ['reason'] reason is optional but if included must be in quotes", help="Deletes your personal channel")
     async def delete(self, ctx: commands.Context, reason=None):
         global vcOwnersPath
+        for id, futa in pvc.futureList.items():
+            if int(id) == vcId and futa.done() is not True:
+                futa.set_result("Channel deleted because owner deleted it")
         noVC = True
         if reason is None:
             reason = "user deleted their own channel"
@@ -257,9 +261,6 @@ class pvc(commands.Cog):
                 if vc:
                     run = True
                     vcId = vc.id
-                    for id, futa in pvc.futureList.items():
-                        if int(id) == vcId and futa.done() is not True:
-                            futa.set_result("Channel deleted because owner deleted it")
             except ValueError:
                 await ctx.send("Failed to load vc Owners.")
         if run:
