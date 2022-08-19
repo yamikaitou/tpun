@@ -1,6 +1,5 @@
 from ast import Dict
-from types import GeneratorType
-from typing import Generator, Literal
+from typing import Literal
 from io import TextIOWrapper
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
@@ -87,7 +86,6 @@ class pvc(commands.Cog):
 
     def vcRoleRead(self, ctx: commands.Context):
         global vcRolesPath
-        rolesObj = []
         try:
             with open(str(vcRolesPath), 'r') as vcRoles:
                 x = json.load(vcRoles)
@@ -459,7 +457,6 @@ class pvc(commands.Cog):
         channelid = ctx.author.voice.channel.id
         newWrite = {newOwner: channelid}
         x = None
-        vcEmpty = False
         guild = ctx.guild.id
         if channelid is not None:
             with open(str(vcOwnersPath), 'r') as vcOwners:
@@ -495,7 +492,6 @@ class pvc(commands.Cog):
             channelid = ctx.author.voice.channel.id
             newWrite = {str(newOwner.id): int(channelid)}
             x = None
-            vcEmpty = False
             guild = ctx.guild
             if channelid is not None:
                 with open(str(vcOwnersPath), 'r') as vcOwners:
