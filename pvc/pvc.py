@@ -243,11 +243,6 @@ class pvc(commands.Cog):
     @vc.command(name='delete', usage=" ['reason'] reason is optional but if included must be in quotes", help="Deletes your personal channel")
     async def delete(self, ctx: commands.Context, reason=None):
         global vcOwnersPath
-        for id, futa in pvc.futureList.items():
-            if int(id) == vcId and futa.done() is not True:
-                futa.set_result("Channel deleted because owner deleted it")
-                futa[id] = None
-                break
         noVC = True
         if reason is None:
             reason = "user deleted their own channel"
@@ -262,6 +257,11 @@ class pvc(commands.Cog):
                 if vc:
                     run = True
                     vcId = vc.id
+                    for id, futa in pvc.futureList.items():
+                        if int(id) == vcId and futa.done() is not True:
+                            futa.set_result("Channel deleted because owner deleted it")
+                            futa[id] = None
+                            break
             except ValueError:
                 await ctx.send("Failed to load vc Owners.")
         if run:
