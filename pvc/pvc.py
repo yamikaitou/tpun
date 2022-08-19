@@ -83,19 +83,6 @@ class pvc(commands.Cog):
                 for i in vcs:
                     return i
 
-    def getVcList(self, guild):
-        global vcOwnersPath
-        try:
-            with open(str(vcOwnersPath), 'r') as vcOwners:
-                x = json.load(vcOwners)
-                for server, vcs in x.items():
-                    if server == str(guild):
-                        for i in vcs:
-                            return i
-        except ValueError:
-            print("read failed")
-            return None
-
     def vcChannelRead(self, ctx: commands.Context):
         global vcChannelsPath
         try:
