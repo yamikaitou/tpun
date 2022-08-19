@@ -194,6 +194,7 @@ class pvc(commands.Cog):
         dsChannel = self.vcChannelRead(ctx)
         roleList = self.vcRoleRead(ctx)
         guild = ctx.guild.id
+        x
         if ctx.message.channel.id == dsChannel.id:
             category = ctx.channel.category
             run: bool = True
@@ -345,49 +346,39 @@ class pvc(commands.Cog):
                 await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
     def getRegion(self, int):
-        if int == "0":
-            return None
-        elif int == "1":
-            return "us-west"
-        elif int == "2":
-            return "us-east"
-        elif int == "3":
-            return "us-south"
-        elif int == "4":
-            return "rotterdam"
-        elif int == "5":
-            return "singapore"
-        elif int == "6":
-            return "brazil"
-        elif int == "7":
-            return "hongkong"
-        elif int == "8":
-            return "india"
-        elif int == "9":
-            return "japan"
-        elif int == "10":
-            return "russia"
-        elif int == "11":
-            return "sydney"
-        elif int == "12":
-            int = "southafrica"
-        elif int == "13":
-            return "south-korea"
-        elif int == "":
-            return None
+        conditions = {
+            0: "Auto",
+            1: "us-west",
+            2: "us-east",
+            3: "us-south",
+            4: "rotterdam",
+            5: "singapore",
+            6: "brazil",
+            7: "hongkong",
+            8: "india",
+            9: "japan",
+            10: "russia",
+            11: "sydney",
+            12: "southafrica",
+            13: "south-korea"
+        }
+        if int in conditions.keys():
+            return conditions[int]
         else:
-            return "Something went wrong, please contact Nado#6969"
+            return None
 
     @vc.command(name="region", usage="<region number>", help="Changes the region of your vc. The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
     async def region(self, ctx: commands.Context, region):
         region1 = self.getRegion(region)
         voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
         if voiceChannel is not None:
-            if region1 != "Something went wrong, please contact Nado#6969":
-                await voiceChannel.edit(rtc_region=region1)
-            if region1 is None:
-                region1 = "Auto"
-            await ctx.send("{0} Your vc: {1} was set to region {2}".format(ctx.author.name, voiceChannel.mention, region1))
+            if region1 == "auto":
+                region1 = None
+                message = "auto"
+            else:
+                message = region1
+            await voiceChannel.edit(rtc_region=region1)
+            await ctx.send("{0} Your vc: {1} was set to region {2}".format(ctx.author.name, voiceChannel.mention, message))
         else:
             await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
