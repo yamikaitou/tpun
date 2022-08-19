@@ -100,6 +100,7 @@ class pvc(commands.Cog):
         channel = self.bot.get_channel(id)
         while empty.done() is not True:
             print(empty)
+            await asyncio.sleep(60)
             if empty.done() is True:
                 break
             if len(channel.members) == 0:
@@ -109,7 +110,6 @@ class pvc(commands.Cog):
                 pvc.futureList.pop(str(id), None)
                 break
             else:
-                await asyncio.sleep(60)
                 pass
 
     def pred(self, emojis, mess1, user: discord.Member):
