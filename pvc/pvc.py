@@ -78,6 +78,7 @@ class pvc(commands.Cog):
                 for server, vcs in x.items():
                     if server == str(guild):
                         for i in vcs:
+                            print(i)
                             return i
         except ValueError:
             print("read failed")
@@ -274,7 +275,7 @@ class pvc(commands.Cog):
         guild: discord.Guild = ctx.guild
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
         i = self.getVcList(guild)
-        for vcOwner, vcId in i.items():
+        for vcOwner, vcId in i[0].items():
             voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
             name: discord.Member = await guild.fetch_member(vcOwner)
             message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
