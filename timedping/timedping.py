@@ -43,7 +43,7 @@ class timedping(commands.Cog):
             return None
 
     def parsePingList(self, guild):
-        x = self.getPingList
+        x = self.getPingList()
         for server, rolesList in x.items():
             if server == str(guild):
                 return rolesList[0]
@@ -64,9 +64,13 @@ class timedping(commands.Cog):
                 roles = self.parsePingList(guild)
             for role, cooldown in roles.items():
                 if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
-                    for x, y in tempo.items():
-                        if x == str(role) and y > time.time():
-                            await message.reply("There is a {0} second cooldown in between uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown), int(y)))
+                    if role not in tempo.keys():
+                        await message.reply("<@&{0}>".format(int(role)))
+                        newTempo = {str(role): int(time.time() + cooldown)}
+                        tempo.update(newTempo)
+                    else:
+                        if tempo[role] > time.time():
+                            await message.reply("There is a {0} second cooldown in between uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown), int(tempo[role])))
                         else:
                             await message.reply("<@&{0}>".format(int(role)))
                             newTempo = {str(role): int(time.time() + cooldown)}
