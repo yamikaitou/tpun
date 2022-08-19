@@ -98,12 +98,15 @@ class pvc(commands.Cog):
 
     async def checks(self, id, empty, ctx: commands.Context):
         channel = self.bot.get_channel(id)
+        print(self.futureList)
         await asyncio.sleep(60)
         if len(channel.members) == 0:
             reason = "channel is empty"
             await pvc.delete(self, ctx, reason)
             if empty.done() is not True:
                 empty.set_result("Channel deleted because it's empty")
+                for str(id) in self.futureList.keys():
+                    self.futureList[str(id)] = None
         else:
             await pvc.checks(self, id, empty, ctx)
 
