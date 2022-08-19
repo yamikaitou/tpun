@@ -273,8 +273,7 @@ class pvc(commands.Cog):
     async def list(self, ctx: commands.Context):
         guild: discord.Guild = ctx.guild
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
-        i = self.getVcList(guild)
-        print(i)
+        i = self.getVcList(guild.id)
         for vcOwner, vcId in i.items():
             voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
             name: discord.Member = await guild.fetch_member(vcOwner)
