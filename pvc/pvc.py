@@ -352,7 +352,6 @@ class pvc(commands.Cog):
 
     def getRegion(self, int):
         conditions = {
-            0: "Auto",
             1: "us-west",
             2: "us-east",
             3: "us-south",
@@ -376,7 +375,7 @@ class pvc(commands.Cog):
         message = region1
         voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
         if voiceChannel is not None:
-            if region1 == "Auto":
+            if region1 is None:
                 region1 = None
                 message = "auto"
             await voiceChannel.edit(rtc_region=region1)
