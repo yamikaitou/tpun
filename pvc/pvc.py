@@ -62,7 +62,6 @@ class pvc(commands.Cog):
             return None
 
     def getVcList(self, guild):
-        global vcOwnersPath
         x = self.loadVcOwners()
         for server, vcs in x.items():
             if server == str(guild):
@@ -70,7 +69,6 @@ class pvc(commands.Cog):
                     return i
 
     def vcOwnerRead(self, guild, owner):
-        global vcOwnersPath
         i = self.getVcList(guild)
         for vcOwner, vcId in i.items():
             if vcOwner == str(owner):
