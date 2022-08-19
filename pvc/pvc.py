@@ -70,6 +70,19 @@ class pvc(commands.Cog):
             print("read failed")
             return None
 
+    def getVcList(self, guild):
+        global vcOwnersPath
+        try:
+            with open(str(vcOwnersPath), 'r') as vcOwners:
+                x = json.load(vcOwners)
+                for server, vcs in x.items():
+                    if server == str(guild):
+                        for i in vcs:
+                            return i
+        except ValueError:
+            print("read failed")
+            return None
+
     def vcChannelRead(self, ctx: commands.Context):
         global vcChannelsPath
         try:
@@ -260,20 +273,13 @@ class pvc(commands.Cog):
     async def list(self, ctx: commands.Context):
         guild: discord.Guild = ctx.guild
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
-        try:
-            with open(str(vcOwnersPath), 'r') as vcOwners:
-                x = json.load(vcOwners)
-                for server, vcs in x.items():
-                    if server == str(ctx.guild.id):
-                        for i in vcs:
-                            for vcOwner, vcId in i.items():
-                                voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
-                                name: discord.Member = await guild.fetch_member(vcOwner)
-                                message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
-                                embed.add_field(name="🔊", value=message, inline=True)
-            await ctx.send(embed=embed)
-        except ValueError:
-            print("vc owners read failed")
+        i = self.getVcList(guild)
+        for vcOwner, vcId in i.items():
+            voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
+            name: discord.Member = await guild.fetch_member(vcOwner)
+            message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
+            embed.add_field(name="🔊", value=message, inline=True)
+        await ctx.send(embed=embed)
 
     @vc.command(name="gui", help="Opens the vc creation gui")
     async def gui(self, ctx: commands.Context):
