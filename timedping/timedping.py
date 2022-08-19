@@ -43,7 +43,7 @@ class timedping(commands.Cog):
             return None
 
     def parsePingList(self, guild):
-        x = self.getPingList
+        x = self.getPingList()
         for server, rolesList in x.items():
             if server == str(guild):
                 return rolesList[0]
