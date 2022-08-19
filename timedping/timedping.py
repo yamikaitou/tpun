@@ -57,24 +57,22 @@ class timedping(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         global tempo
-        if message.guild is not None:
+        if message.guild is not None and "@" in message.content:
             guild = message.guild.id
             roles = {}
-            if "@" in message.content:
-                roles = self.parsePingList(guild)
+            roles = self.parsePingList(guild)
             for role, cooldown in roles.items():
                 if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
                     if role not in tempo.keys():
                         await message.reply("<@&{0}>".format(int(role)))
                         newTempo = {str(role): int(time.time() + cooldown)}
                         tempo.update(newTempo)
-                    else:
-                        if tempo[role] > time.time():
+                    elif tempo[role] > time.time():
                             await message.reply("There is a {0} second cooldown in between uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown), int(tempo[role])))
-                        else:
-                            await message.reply("<@&{0}>".format(int(role)))
-                            newTempo = {str(role): int(time.time() + cooldown)}
-                            tempo.update(newTempo)
+                    else:
+                        await message.reply("<@&{0}>".format(int(role)))
+                        newTempo = {str(role): int(time.time() + cooldown)}
+                        tempo.update(newTempo)
 
     @commands.group(name="tping", help="Base command for all timed ping commands")
     async def tping(self, ctx):
