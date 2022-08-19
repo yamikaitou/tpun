@@ -519,13 +519,11 @@ class pvc(commands.Cog):
                                         if ownerObj.voice is None or ownerObj.voice.channel.id != channelid:
                                             await ctx.send("{0} has claimed {1}".format(ctx.author.mention, self.bot.get_channel(vcNameList).mention))
                                             await self.bot.get_channel(vcNameList).set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                                            vcEmpty = True
+                                            y = x[str(guild)].copy()
+                                            y[0].pop(str(owner), None)
+                                            y[0].update(newWrite)
                                         else:
                                             await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
-                            if vcEmpty and str(ctx.guild.id) in x:
-                                y = x[str(guild)].copy()
-                                y[0].pop(str(owner), None)
-                                y[0].update(newWrite)
                 except ValueError:
                     await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
             with open(str(vcOwnersPath), 'w') as vcWrite:
@@ -552,17 +550,14 @@ class pvc(commands.Cog):
                         ownerObj = await self.bot.get_or_fetch_member(guild, ctx.author.id)
                         y = x[str(guild.id)].copy()
                         if vcObj is not None and vcObj.id == channelid:
-                            if ownerObj.voice.channel.id == channelid:
-                                if str(newOwner.id) not in y[0].keys():
-                                    await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
-                                    vcEmpty = True
-                                else:
-                                    await ctx.send("{0} already owns a vc".format(newOwner.display_name))
+                            if ownerObj.voice.channel.id == channelid and str(newOwner.id) not in y[0].keys() and str(guild.id) in x:
+                                await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
+                                y[0].pop(str(owner), None)
+                                y[0].update(newWrite)
+                            elif str(newOwner.id) in y[0].keys():
+                                await ctx.send("{0} already owns a vc".format(newOwner.display_name))
                             else:
-                                 await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
-                            if vcEmpty and str(guild.id) in x:
-                                    y[0].pop(str(owner), None)
-                                    y[0].update(newWrite)
+                                await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
                         else:
                             await ctx.send("You don't own this voice channel.")
                     except ValueError:
