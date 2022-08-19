@@ -65,8 +65,7 @@ class pvc(commands.Cog):
         x = self.loadVcOwners()
         for server, vcs in x.items():
             if server == str(guild):
-                for i in vcs:
-                    return i
+                return vcs[0]
 
     def vcOwnerRead(self, guild, owner):
         i = self.getVcList(guild)
