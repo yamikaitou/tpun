@@ -244,6 +244,9 @@ class pvc(commands.Cog):
     @vc.command(name='delete', usage=" ['reason'] reason is optional but if included must be in quotes", help="Deletes your personal channel")
     async def delete(self, ctx: commands.Context, reason=None):
         global vcOwnersPath
+        for id, futa in pvc.futureList.items():
+            if int(id) == vcId and futa.done() is not True:
+                futa.set_result("Channel deleted because owner deleted it")
         noVC = True
         if reason is None:
             reason = "user deleted their own channel"
@@ -266,17 +269,13 @@ class pvc(commands.Cog):
                     channel = self.bot.get_channel(vcId)
                     vcName = str(channel.name)
                     await channel.delete()
-                    for id, futa in pvc.futureList.items():
-                        if int(id) == vcId:
-                            if futa.done() is not True:
-                                futa.set_result("Channel deleted because owner deleted it")
-                            if str(ctx.guild.id) in x:
-                                y = x[str(ctx.guild.id)].copy()
-                                y[0].pop(str(owner), None)
-                            json.dump(x, vcWrite)
-                            if x is None:
-                                x = "{}"
-                            await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
+                    if str(ctx.guild.id) in x:
+                        y = x[str(ctx.guild.id)].copy()
+                        y[0].pop(str(owner), None)
+                    json.dump(x, vcWrite)
+                    if x is None:
+                        x = "{}"
+                    await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
                 except ValueError:
                     await ctx.send("Failed to delete your vc.")
         else:
