@@ -98,14 +98,13 @@ class pvc(commands.Cog):
 
     async def checks(self, id, empty, ctx: commands.Context):
         channel = self.bot.get_channel(id)
-        await asyncio.sleep(60)
-        if len(channel.members) == 0:
-            reason = "channel is empty"
-            await pvc.delete(self, ctx, reason)
-            if empty.done() is not True:
+        while empty.done() is not True:
+            print(empty)
+            await asyncio.sleep(60)
+            if len(channel.members) == 0:
+                reason = "channel is empty"
+                await pvc.delete(self, ctx, reason)
                 empty.set_result("Channel deleted because it's empty")
-        else:
-            await pvc.checks(self, id, empty, ctx)
 
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
@@ -247,6 +246,8 @@ class pvc(commands.Cog):
         for id, futa in pvc.futureList.items():
             if int(id) == vcId and futa.done() is not True:
                 futa.set_result("Channel deleted because owner deleted it")
+                futa[id] = None
+                break
         noVC = True
         if reason is None:
             reason = "user deleted their own channel"
