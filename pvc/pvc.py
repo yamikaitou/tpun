@@ -99,7 +99,7 @@ class pvc(commands.Cog):
     async def checks(self):
         print(self.futureList)
         while True:
-            for vcId, futa in self.futureList:
+            for vcId, futa in self.futureList.items():
                 if futa.done() is not True:
                     if len(self.bot.get_channel(vcId).members) == 0:
                         reason = "channel is empty"
