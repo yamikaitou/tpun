@@ -548,9 +548,12 @@ class pvc(commands.Cog):
                         ownerObj = await self.bot.get_or_fetch_member(guild, ctx.author.id)
                         y = x[str(guild.id)].copy()
                         if vcObj is not None and str(ctx.author.id) in y[0].keys():
-                            if ownerObj.voice.channel.id == channelid and str(newOwner.id) not in y[0].keys():
-                                await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
-                                vcEmpty = True
+                            if ownerObj.voice.channel.id == channelid:
+                                if str(newOwner.id) not in y[0].keys():
+                                    await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
+                                    vcEmpty = True
+                                else:
+                                    await ctx.send("{0} already owns a vc".format(newOwner.display_name))
                             else:
                                  await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
                             if vcEmpty and str(guild.id) in x:
