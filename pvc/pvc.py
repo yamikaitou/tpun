@@ -344,7 +344,7 @@ class pvc(commands.Cog):
             else:
                 await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
-    def getRegion(int):
+    def getRegion(self, int):
         if int == "0":
             return None
         elif int == "1":
