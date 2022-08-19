@@ -100,13 +100,17 @@ class pvc(commands.Cog):
         channel = self.bot.get_channel(id)
         while empty.done() is not True:
             print(empty)
-            await asyncio.sleep(60)
+            if empty.done() is True:
+                break
             if len(channel.members) == 0:
                 reason = "channel is empty"
                 await pvc.delete(self, ctx, reason)
                 empty.set_result("Channel deleted because it's empty")
                 pvc.futureList.pop(str(id), None)
                 break
+            else:
+                await asyncio.sleep(60)
+                pass
 
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
