@@ -99,8 +99,6 @@ class pvc(commands.Cog):
     async def checks(self, id, empty, ctx: commands.Context):
         channel = self.bot.get_channel(id)
         while empty.done() is not True:
-            print(empty)
-            print(self.futureList)
             await asyncio.sleep(60)
             if len(channel.members) == 0:
                 reason = "channel is empty"
