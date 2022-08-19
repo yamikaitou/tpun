@@ -369,19 +369,16 @@ class pvc(commands.Cog):
         }
         if int in conditions.keys():
             return conditions[int]
-        else:
-            return None
 
     @vc.command(name="region", usage="<region number>", help="Changes the region of your vc. The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
-    async def region(self, ctx: commands.Context, region):
+    async def region(self, ctx: commands.Context, region: int):
         region1 = self.getRegion(region)
+        message = region1
         voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
         if voiceChannel is not None:
-            if region1 == "auto":
+            if region1 == "Auto":
                 region1 = None
                 message = "auto"
-            else:
-                message = region1
             await voiceChannel.edit(rtc_region=region1)
             await ctx.send("{0} Your vc: {1} was set to region {2}".format(ctx.author.name, voiceChannel.mention, message))
         else:
