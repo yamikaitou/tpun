@@ -20,13 +20,7 @@ class pvc(commands.Cog):
     Private voice channel cog
     """
 
-    def __init__(self, bot: Red) -> None:
-        self.bot = bot
-        self.config = Config.get_conf(
-            self,
-            identifier=None,
-            force_registration=True,
-        )
+    def getpaths(self):
 
         global vcOwnersPath
         path = data_manager.cog_data_path(cog_instance=self)
@@ -52,6 +46,17 @@ class pvc(commands.Cog):
         else:
             with vcChannelsPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
+
+    def __init__(self, bot: Red) -> None:
+        self.bot = bot
+        self.config = Config.get_conf(
+            self,
+            identifier=None,
+            force_registration=True,
+        )
+        self.getpaths()
+
+
 
     futureList: Dict = {}
 
@@ -525,11 +530,10 @@ class pvc(commands.Cog):
                                             vcEmpty = True
                                         else:
                                             await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
-                            if vcEmpty:
-                                if str(ctx.guild.id) in x:
-                                    y = x[str(guild)].copy()
-                                    y[0].pop(str(owner), None)
-                                    y[0].update(newWrite)
+                            if vcEmpty and str(ctx.guild.id) in x:
+                                y = x[str(guild)].copy()
+                                y[0].pop(str(owner), None)
+                                y[0].update(newWrite)
                 except ValueError:
                     await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
             with open(str(vcOwnersPath), 'w') as vcWrite:
