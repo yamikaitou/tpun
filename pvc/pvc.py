@@ -54,34 +54,32 @@ class pvc(commands.Cog):
 
     futureList: Dict = {}
 
-    def vcOwnerRead(self, guild, owner):
-        global vcOwnersPath
+    def loadVcOwners():
         try:
             with open(str(vcOwnersPath), 'r') as vcOwners:
                 x = json.load(vcOwners)
+                return x
         except ValueError:
             print("read failed")
             return None
-        for server, vcs in x.items():
-            if server == str(guild):
-                for i in vcs:
-                    for vcOwner, vcId in i.items():
-                        if vcOwner == str(owner):
-                            voiceChannel = self.bot.get_channel(int(vcId))
-                            return voiceChannel
 
     def getVcList(self, guild):
         global vcOwnersPath
-        try:
-            with open(str(vcOwnersPath), 'r') as vcOwners:
-                x = json.load(vcOwners)
-        except ValueError:
-            print("read failed")
-            return None
+        x = self.loadVcOwners()
         for server, vcs in x.items():
             if server == str(guild):
                 for i in vcs:
                     return i
+
+    def vcOwnerRead(self, guild, owner):
+        global vcOwnersPath
+        i = self.getVcList(guild)
+        for vcOwner, vcId in i.items():
+            if vcOwner == str(owner):
+                voiceChannel = self.bot.get_channel(int(vcId))
+                return voiceChannel
+
+
 
     def vcChannelRead(self, ctx: commands.Context):
         global vcChannelsPath
