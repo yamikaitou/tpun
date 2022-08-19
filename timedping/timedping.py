@@ -62,15 +62,7 @@ class timedping(commands.Cog):
             roles = {}
             notInTempo = True
             if "@" in message.content:
-                try:
-                    with open(str(pingListPath), 'r') as pingList:
-                        x = json.load(pingList)
-                        for server, rolesList in x.items():
-                            if server == str(guild):
-                                for i in rolesList:
-                                    roles = i
-                except ValueError:
-                    print("pingList.json failed to read")
+                roles = self.parsePingList(guild)
             for role, cooldown in roles.items():
                 if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
                     for x, y in tempo.items():
