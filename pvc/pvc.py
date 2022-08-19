@@ -105,6 +105,8 @@ class pvc(commands.Cog):
                 reason = "channel is empty"
                 await pvc.delete(self, ctx, reason)
                 empty.set_result("Channel deleted because it's empty")
+                pvc.futureList.pop(str(id), None)
+                break
 
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
@@ -260,7 +262,7 @@ class pvc(commands.Cog):
                     for id, futa in pvc.futureList.items():
                         if int(id) == vcId and futa.done() is not True:
                             futa.set_result("Channel deleted because owner deleted it")
-                            futa[id] = None
+                            pvc.futureList.pop(str(vcId), None)
                             break
             except ValueError:
                 await ctx.send("Failed to load vc Owners.")
