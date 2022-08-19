@@ -199,7 +199,7 @@ class pvc(commands.Cog):
         dsChannel = self.vcChannelRead(ctx)
         roleList = self.vcRoleRead(ctx)
         guild = ctx.guild.id
-        x
+        x = None
         if ctx.message.channel.id == dsChannel.id:
             category = ctx.channel.category
             run: bool = True
