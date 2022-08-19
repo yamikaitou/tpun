@@ -72,8 +72,7 @@ class pvc(commands.Cog):
         i = self.getVcList(guild)
         for vcOwner, vcId in i.items():
             if vcOwner == str(owner):
-                voiceChannel = self.bot.get_channel(int(vcId))
-                return voiceChannel
+                return self.bot.get_channel(int(vcId))
 
     def vcChannelRead(self, ctx: commands.Context):
         global vcChannelsPath
