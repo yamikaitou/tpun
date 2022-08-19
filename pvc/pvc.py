@@ -52,7 +52,7 @@ class pvc(commands.Cog):
 
     futureList: Dict = {}
 
-    def loadVcOwners():
+    def loadVcOwners(self):
         try:
             with open(str(vcOwnersPath), 'r') as vcOwners:
                 x = json.load(vcOwners)
