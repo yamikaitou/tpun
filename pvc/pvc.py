@@ -20,13 +20,7 @@ class pvc(commands.Cog):
     Private voice channel cog
     """
 
-    def __init__(self, bot: Red) -> None:
-        self.bot = bot
-        self.config = Config.get_conf(
-            self,
-            identifier=None,
-            force_registration=True,
-        )
+    def getpaths(self):
 
         global vcOwnersPath
         path = data_manager.cog_data_path(cog_instance=self)
@@ -52,6 +46,17 @@ class pvc(commands.Cog):
         else:
             with vcChannelsPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
+
+    def __init__(self, bot: Red) -> None:
+        self.bot = bot
+        self.config = Config.get_conf(
+            self,
+            identifier=None,
+            force_registration=True,
+        )
+        self.getpaths()
+
+
 
     futureList: Dict = {}
 
@@ -194,6 +199,7 @@ class pvc(commands.Cog):
         dsChannel = self.vcChannelRead(ctx)
         roleList = self.vcRoleRead(ctx)
         guild = ctx.guild.id
+        x = None
         if ctx.message.channel.id == dsChannel.id:
             category = ctx.channel.category
             run: bool = True
@@ -207,21 +213,17 @@ class pvc(commands.Cog):
             try:
                 with open(str(vcOwnersPath), 'r') as vcOwners:
                     x = json.load(vcOwners)
-                    for server, vcs in x.items():
-                        if server == str(ctx.guild.id):
-                            for i in vcs:
-                                for owner, vcId in i.items():
-                                    if owner == str(owner):
-                                        await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(self.bot.get_channel(vcId).name)))
-                                        run = False
+                    vc = self.vcOwnerRead(guild, ctx.author.id)
+                    if vc:
+                        await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(vc.name)))
+                        run = False
                     if run:
                         channel = await ctx.guild.create_voice_channel(vcName, category=category)
                         await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                         for role in roleList:
                             await channel.set_permissions(ctx.guild.get_role(role), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                        if ctx.author.voice is not None:
-                            if ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
-                                await ctx.author.move_to(channel)
+                        if ctx.author.voice is not None and ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
+                            await ctx.author.move_to(channel)
                         vcId = channel.id
                         nC = {owner: vcId}
                         if str(guild) in x:
@@ -258,13 +260,10 @@ class pvc(commands.Cog):
         with open(str(vcOwnersPath), 'r') as vcOwners:
             try:
                 x = json.load(vcOwners)
-                for server, vcs in x.items():
-                    if server == str(ctx.guild.id):
-                        for i in vcs:
-                            for vcOwnlist, idList in i.items():
-                                if vcOwnlist == str(owner):
-                                    run = True
-                                    vcId = idList
+                vc = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
+                if vc:
+                    run = True
+                    vcId = vc.id
             except ValueError:
                 await ctx.send("Failed to load vc Owners.")
         if run:
@@ -277,15 +276,13 @@ class pvc(commands.Cog):
                         if int(id) == vcId:
                             if futa.done() is not True:
                                 futa.set_result("Channel deleted because owner deleted it")
-                            else:
-                                pass
-                        if str(ctx.guild.id) in x:
-                            y = x[str(ctx.guild.id)].copy()
-                            y[0].pop(str(owner), None)
-                        json.dump(x, vcWrite)
-                        if x is None:
-                            x = {}
-                        await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
+                            if str(ctx.guild.id) in x:
+                                y = x[str(ctx.guild.id)].copy()
+                                y[0].pop(str(owner), None)
+                            json.dump(x, vcWrite)
+                            if x is None or x == "null":
+                                x = "{}"
+                            await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
                 except ValueError:
                     await ctx.send("Failed to delete your vc.")
         else:
@@ -351,60 +348,36 @@ class pvc(commands.Cog):
             else:
                 await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
-    @vc.command(name="region", usage="<region number>", help="Changes the region of your vc. The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
-    async def region(self, ctx: commands.Context, region):
-        if region == "0":
-            region = None
-            text = "Auto"
-        elif region == "1":
-            region = "us-west"
-            text = "US West"
-        elif region == "2":
-            region = "us-east"
-            text = "US East"
-        elif region == "3":
-            region = "us-south"
-            text = "US South"
-        elif region == "4":
-            region = "rotterdam"
-            text = "Rotterdam"
-        elif region == "5":
-            region = "singapore"
-            text = "Singapore"
-        elif region == "6":
-            region = "brazil"
-            text = "Brazil"
-        elif region == "7":
-            region = "hongkong"
-            text = "Hong Kong"
-        elif region == "8":
-            region = "india"
-            text = "India"
-        elif region == "9":
-            region = "japan"
-            text = "Japan"
-        elif region == "10":
-            region = "russia"
-            text = "Russia"
-        elif region == "11":
-            region = "sydney"
-            text = "Sydney"
-        elif region == "12":
-            region = "southafrica"
-            text = "South Africa"
-        elif region == "13":
-            region = "south-korea"
-            text = "South Korea"
-        elif region == "":
-            region = None
-            text = "Auto"
-        else:
-            await ctx.send("Something went wrong, please contact Nado#6969")
+    def getRegion(self, int):
+        conditions = {
+            1: "us-west",
+            2: "us-east",
+            3: "us-south",
+            4: "rotterdam",
+            5: "singapore",
+            6: "brazil",
+            7: "hongkong",
+            8: "india",
+            9: "japan",
+            10: "russia",
+            11: "sydney",
+            12: "southafrica",
+            13: "south-korea"
+        }
+        if int in conditions.keys():
+            return conditions[int]
 
+    @vc.command(name="region", usage="<region number>", help="Changes the region of your vc. The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
+    async def region(self, ctx: commands.Context, region: int):
+        region1 = self.getRegion(region)
+        message = region1
         voiceChannel = self.vcOwnerRead(ctx.guild.id, ctx.author.id)
         if voiceChannel is not None:
-            await voiceChannel.edit(rtc_region=region)
-            await ctx.send("{0} Your vc: {1} was set to region {2}".format(ctx.author.name, voiceChannel.mention, text))
+            if region1 is None:
+                region1 = None
+                message = "auto"
+            await voiceChannel.edit(rtc_region=region1)
+            await ctx.send("{0} Your vc: {1} was set to region {2}".format(ctx.author.name, voiceChannel.mention, message))
         else:
             await ctx.send("{0} You have no vc created use t!vc create [Name] to create one.".format(ctx.author.name))
 
@@ -551,11 +524,10 @@ class pvc(commands.Cog):
                                             vcEmpty = True
                                         else:
                                             await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
-                            if vcEmpty:
-                                if str(ctx.guild.id) in x:
-                                    y = x[str(guild)].copy()
-                                    y[0].pop(str(owner), None)
-                                    y[0].update(newWrite)
+                            if vcEmpty and str(ctx.guild.id) in x:
+                                y = x[str(guild)].copy()
+                                y[0].pop(str(owner), None)
+                                y[0].update(newWrite)
                 except ValueError:
                     await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
             with open(str(vcOwnersPath), 'w') as vcWrite:
