@@ -59,16 +59,29 @@ class pvc(commands.Cog):
         try:
             with open(str(vcOwnersPath), 'r') as vcOwners:
                 x = json.load(vcOwners)
-                for server, vcs in x.items():
-                    if server == str(guild):
-                        for i in vcs:
-                            for vcOwner, vcId in i.items():
-                                if vcOwner == str(owner):
-                                    voiceChannel = self.bot.get_channel(int(vcId))
-                                    return voiceChannel
         except ValueError:
             print("read failed")
             return None
+        for server, vcs in x.items():
+            if server == str(guild):
+                for i in vcs:
+                    for vcOwner, vcId in i.items():
+                        if vcOwner == str(owner):
+                            voiceChannel = self.bot.get_channel(int(vcId))
+                            return voiceChannel
+
+    def getVcList(self, guild):
+        global vcOwnersPath
+        try:
+            with open(str(vcOwnersPath), 'r') as vcOwners:
+                x = json.load(vcOwners)
+        except ValueError:
+            print("read failed")
+            return None
+        for server, vcs in x.items():
+            if server == str(guild):
+                for i in vcs:
+                    return i
 
     def getVcList(self, guild):
         global vcOwnersPath
@@ -88,13 +101,12 @@ class pvc(commands.Cog):
         try:
             with open(str(vcChannelsPath), 'r') as vcChannels:
                 x = json.load(vcChannels)
-                for server, channel in x.items():
-                    if server == str(ctx.guild.id):
-                        return self.bot.get_channel(int(channel))
-
         except ValueError:
             print("read failed")
             return None
+        for server, channel in x.items():
+            if server == str(ctx.guild.id):
+                return self.bot.get_channel(int(channel))
 
     def vcRoleRead(self, ctx: commands.Context):
         global vcRolesPath
@@ -476,24 +488,22 @@ class pvc(commands.Cog):
             with open(str(vcOwnersPath), 'r') as vcOwners:
                 try:
                     x = json.load(vcOwners)
-                    for server, vcs in x.items():
-                        if server == str(guild):
-                            for i in vcs:
-                                for vcOwnList, vcNameList in i.items():
-                                    if int(vcNameList) == int(channelid):
-                                        owner = int(vcOwnList)
-                                        ownerObj = await self.bot.get_or_fetch_member(ctx.guild, owner)
-                                        if ownerObj.voice is None or ownerObj.voice.channel.id != channelid:
-                                            await ctx.send("{0} has claimed {1}".format(ctx.author.mention, self.bot.get_channel(vcNameList).mention))
-                                            await self.bot.get_channel(vcNameList).set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                                            y = x[str(guild)].copy()
-                                            y[0].pop(str(owner), None)
-                                            y[0].update(newWrite)
-                                            break
-                                        else:
-                                            await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
                 except ValueError:
-                    await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
+                    print("failed to load vcOwner.json")
+            i = self.getVcList(guild)
+            for vcOwnList, vcNameList in i.items():
+                if int(vcNameList) == int(channelid):
+                    owner = int(vcOwnList)
+                    ownerObj = await self.bot.get_or_fetch_member(ctx.guild, owner)
+                    if ownerObj.voice is None or ownerObj.voice.channel.id != channelid:
+                        await ctx.send("{0} has claimed {1}".format(ctx.author.mention, self.bot.get_channel(vcNameList).mention))
+                        await self.bot.get_channel(vcNameList).set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                        y = x[str(guild)].copy()
+                        y[0].pop(str(owner), None)
+                        y[0].update(newWrite)
+                        break
+                    else:
+                        await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
             with open(str(vcOwnersPath), 'w') as vcWrite:
                 try:
                     json.dump(x, vcWrite)
@@ -514,22 +524,22 @@ class pvc(commands.Cog):
                 with open(str(vcOwnersPath), 'r') as vcOwners:
                     try:
                         x = json.load(vcOwners)
-                        vcObj = self.vcOwnerRead(guild.id, ctx.author.id)
-                        ownerObj = await self.bot.get_or_fetch_member(guild, ctx.author.id)
-                        y = x[str(guild.id)].copy()
-                        if vcObj is not None and vcObj.id == channelid:
-                            if ownerObj.voice.channel.id == channelid and str(newOwner.id) not in y[0].keys() and str(guild.id) in x:
-                                await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
-                                y[0].pop(str(owner), None)
-                                y[0].update(newWrite)
-                            elif str(newOwner.id) in y[0].keys():
-                                await ctx.send("{0} already owns a vc".format(newOwner.display_name))
-                            else:
-                                await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
-                        else:
-                            await ctx.send("You don't own this voice channel.")
                     except ValueError:
-                        await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
+                        await print("vcOwners.json read failed")
+                vcObj = self.vcOwnerRead(guild.id, ctx.author.id)
+                ownerObj = await self.bot.get_or_fetch_member(guild, ctx.author.id)
+                y = x[str(guild.id)].copy()
+                if vcObj is not None and vcObj.id == channelid:
+                    if ownerObj.voice.channel.id == channelid and str(newOwner.id) not in y[0].keys() and str(guild.id) in x:
+                        await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
+                        y[0].pop(str(owner), None)
+                        y[0].update(newWrite)
+                    elif str(newOwner.id) in y[0].keys():
+                        await ctx.send("{0} already owns a vc".format(newOwner.display_name))
+                    else:
+                        await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
+                else:
+                    await ctx.send("You don't own this voice channel.")
                 with open(str(vcOwnersPath), 'w') as reputationWrite:
                     try:
                         json.dump(x, reputationWrite)
