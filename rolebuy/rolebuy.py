@@ -40,31 +40,43 @@ class rolebuy(commands.Cog):
             with roleCostPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
-    def roleListRead(self, guild: int, roleArg: discord.role):
+    def getRoleList(self):
         global roleListPath
         try:
             with open(str(roleListPath), 'r') as roleList:
                 x = json.load(roleList)
-                for server, rolesList in x.items():
-                    if server == str(guild):
-                        for i in rolesList:
-                            return i
+                return x
         except ValueError:
             print("roleList.json failed to read")
+            return None
 
-    def roleListCost(self, guild: int, roleArg: discord.role):
+    def roleListRead(self, guild: int, roleArg: discord.role):
+        x = self.getRoleList()
+        for server, rolesList in x.items():
+            if server == str(guild):
+                return rolesList[0]
+        
+    def getRoleCost(self):
         global roleCostPath
         try:
             with open(str(roleCostPath), 'r') as roleCost:
                 x = json.load(roleCost)
-                for server, rolesList in x.items():
-                    if server == str(guild):
-                        for i in rolesList:
-                            for role, cost in i.items():
-                                if role == roleArg.id:
-                                    return cost
         except ValueError:
             print("roleCost.json failed to read")
+            return None
+
+    def parseRoleCost(self, guild):
+        x = self.getRoleCost()
+        for server, rolesList in x.items():
+            if server == str(guild):
+                return rolesList[0]
+
+
+    def roleListCost(self, guild: int, roleArg: discord.role):
+        i = self.parseRoleCost(guild)
+        for role, cost in i.items():
+            if role == roleArg.id:
+                return cost
 
     async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
         # TODO: Replace this with the proper end user data removal handling.
