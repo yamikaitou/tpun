@@ -101,7 +101,7 @@ class pvc(commands.Cog):
         while True:
             for vcId, futa in self.futureList.items():
                 if futa.done() is not True:
-                    if len(self.bot.get_channel(vcId).members) == 0:
+                    if len(self.bot.get_channel(int(vcId)).members) == 0:
                         reason = "channel is empty"
                         await pvc.delete(self, ctx, reason)
                         futa.set_result("Channel deleted because it's empty")
