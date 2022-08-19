@@ -37,14 +37,14 @@ class timedping(commands.Cog):
         try:
             with open(str(pingListPath), 'r') as pingList:
                 x = json.load(pingList)
-                for server, rolesList in x.items():
-                    if server == str(guild):
-                        for i in rolesList:
-                            for role, cooldown in i.items():
-                                if role == roleArg.id:
-                                    return cooldown
         except ValueError:
             print("pingList.json failed to read")
+        for server, rolesList in x.items():
+            if server == str(guild):
+                for i in rolesList:
+                    for role, cooldown in i.items():
+                        if role == roleArg.id:
+                            return cooldown
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
