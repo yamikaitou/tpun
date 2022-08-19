@@ -556,8 +556,8 @@ class pvc(commands.Cog):
                                     y = x[str(guild.id)].copy()
                                     y[0].pop(str(owner), None)
                                     y[0].update(newWrite)
-                            else:
-                                await ctx.send("You don't own this voice channel.")
+                        else:
+                            await ctx.send("You don't own this voice channel.")
                     except ValueError:
                         await ctx.send("{0} is not a valid channel id for a personal vc.".format(channelid))
                 with open(str(vcOwnersPath), 'w') as reputationWrite:
