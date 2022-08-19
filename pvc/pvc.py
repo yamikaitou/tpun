@@ -282,8 +282,8 @@ class pvc(commands.Cog):
                             y = x[str(ctx.guild.id)].copy()
                             y[0].pop(str(owner), None)
                         json.dump(x, vcWrite)
-                        if x is None:
-                            x = {}
+                        if x is None or x == "null":
+                            x = "{}"
                         await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
                 except ValueError:
                     await ctx.send("Failed to delete your vc.")
