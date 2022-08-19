@@ -99,8 +99,6 @@ class pvc(commands.Cog):
     async def checks(self, id, empty, ctx: commands.Context):
         channel = self.bot.get_channel(id)
         while empty.done() is not True:
-            print(empty)
-            print(self.futureList)
             await asyncio.sleep(60)
             if len(channel.members) == 0:
                 reason = "channel is empty"
@@ -152,43 +150,6 @@ class pvc(commands.Cog):
     @commands.group(name='vc')
     async def vc(self, ctx: commands.Context):
         pass
-
-    @vc.command(name='help', help="Shows all the commands for t!vc")
-    async def help(self, ctx: commands.Context, arg):
-        if arg is None:
-            await ctx.send('That is not a valid command. Use t!vc to see a list of available commands')
-        elif arg == 'create':
-            await ctx.send("Creates a voice channel with <'name'> t!vc create <'Name'>. You can only have 1 vc. VC deletes after 1 minute of inactivity. You must join your vc within 1 minute or it will be deleted.")
-        elif arg == 'delete':
-            await ctx.send("Deletes your personal channel, requires a reason t!delete ['reason']. Channels delete on their own after 1 minute of being empty.")
-        elif arg == 'list':
-            await ctx.send("Lists all the owners of vc's")
-        elif arg == 'gui':
-            await ctx.send("Opens the vc creation gui. use t!vc gui")
-        elif arg == 'region':
-            await ctx.send("Use t!vc region <region> The list of avaliable regions are as follow 0=Auto, 1=US West, 2=US East, 3=US South, 4=EU West, 5=EU Central, 6=Brazil, 7=Hong Kong, 8=Brazil, 9=Japan, 10=Russia, 11=Sydney, 12=South Africa")
-        elif arg == 'name':
-            await ctx.send("t!vc name Returns the name of your vc")
-        elif arg == 'rename':
-            await ctx.send("t!vc rename <'name'> Name must be in quotes Renames your personal vc")
-        elif arg == 'lock':
-            await ctx.send("t!vc lock Changes your vc to invite only members can join use t!vc invite <@user> to invite someone")
-        elif arg == 'unlock':
-            await ctx.send("t!vc unlock All verified members can join your vc if unlocked")
-        elif arg == 'invite':
-            await ctx.send("t!vc invite <@user> Invites a user to your vc")
-        elif arg == 'limit':
-            await ctx.send("t!vc limit <number> Sets the limit for how many spots are in vc, use 0 to remove limit")
-        elif arg == 'request':
-            await ctx.send("t!vc request <@user> Sends a user a request to join their vc, request last 5 minutes. You can only request the vc owner to join.")
-        elif arg == 'kick':
-            await ctx.send("t!vc kick <@user> Kicks a user from your vc")
-        elif arg == 'unmute':
-            await ctx.send("t!vc unmute <@user> Unmutes a user inside your vc")
-        elif arg == 'mute':
-            await ctx.send("t!vc mute <@user> Mutes a user inside your vc")
-        else:
-            await ctx.send("That is not a valid command. Use t!vc to see a list of available commands")
 
     @vc.command(name='create', usage=" <'name'> name must be in quotes", help="Creates a voice channel with <'name'>. You can only have 1 vc. VC deletes after 1 minute of inactivity. You must join your vc within 1 minute or it will be deleted.")
     async def create(self, ctx: commands.Context, *, vcName):
