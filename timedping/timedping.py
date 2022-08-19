@@ -67,13 +67,12 @@ class timedping(commands.Cog):
                         await message.reply("<@&{0}>".format(int(role)))
                         newTempo = {str(role): int(time.time() + cooldown)}
                         tempo.update(newTempo)
-                    else:
-                        if tempo[role] > time.time():
+                    elif tempo[role] > time.time():
                             await message.reply("There is a {0} second cooldown in between uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown), int(tempo[role])))
-                        else:
-                            await message.reply("<@&{0}>".format(int(role)))
-                            newTempo = {str(role): int(time.time() + cooldown)}
-                            tempo.update(newTempo)
+                    else:
+                        await message.reply("<@&{0}>".format(int(role)))
+                        newTempo = {str(role): int(time.time() + cooldown)}
+                        tempo.update(newTempo)
 
     @commands.group(name="tping", help="Base command for all timed ping commands")
     async def tping(self, ctx):
