@@ -522,6 +522,7 @@ class pvc(commands.Cog):
                                             y = x[str(guild)].copy()
                                             y[0].pop(str(owner), None)
                                             y[0].update(newWrite)
+                                            break
                                         else:
                                             await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
                 except ValueError:
