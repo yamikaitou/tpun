@@ -105,8 +105,8 @@ class pvc(commands.Cog):
             await pvc.delete(self, ctx, reason)
             if empty.done() is not True:
                 empty.set_result("Channel deleted because it's empty")
-                for str(id) in self.futureList.keys():
-                    self.futureList[str(id)] = None
+                for id in self.futureList.keys():
+                    self.futureList[id] = None
         else:
             await pvc.checks(self, id, empty, ctx)
 
