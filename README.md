@@ -334,10 +334,37 @@
 <br />
 
 - `
-[p]buy <role mention>
+[p]rb buy <role mention>
 `
 
 ##### Buys 'role' and removes currency from user
+
+<br />
+<br />
+
+- `
+[p]rb add <role mention> <cost>
+`
+
+##### Adds 'role' to list of buyable roles for 'cost'
+
+<br />
+<br />
+
+- `
+[p]rb remove <role mention>
+`
+
+##### Removes 'role' from buyable roles
+
+<br />
+<br />
+
+- `
+[p]rb list
+`
+
+##### Lists the available buyable roles in server
 
 <br />
 <br />
