@@ -21,9 +21,5 @@ class pingeveryone(commands.Cog):
     @commands.admin_or_permissions()
     @commands.command(name="pingeveryone", help="This command just ping everyone")
     async def pingeveryone(self, ctx: commands.Context,):
-        guild: discord.Guild = ctx.guild
-        roles = await guild.fetch_roles()
-        for role in roles:
-            print(role.name)
-            if role.name == "@everyone":
-                await ctx.send(role.mention)
+        allowed_mentions = discord.AllowedMentions(everyone = True)
+        await ctx.send(content = "@everyone", allowed_mentions = allowed_mentions)
