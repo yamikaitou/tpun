@@ -5,7 +5,7 @@ from redbot.core.bot import Red
 from redbot.core.config import Config
 import discord
 import json
-
+import re
 
 class rep(commands.Cog):
     """
@@ -48,7 +48,7 @@ class rep(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         global jsonPath
-        if "thank you" in message.content or "thanks" in message.content or "Thank you" in message.content or "THANK YOU" in message.content or "Thank You" in message.content and message.mentions is not None:
+        if bool(re.search("thank", message.content, flags=re.I | re.X)) and message.mentions is not None:
             users = message.mentions
             names = []
             found: bool = False
