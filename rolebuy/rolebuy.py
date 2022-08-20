@@ -77,7 +77,7 @@ class rolebuy(commands.Cog):
                     await ctx.send("{0} You bought {1} for {2} currency".format(ctx.author.name, role.name, cost))
                 else:
                     await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs {2} currency"
-                        .format(ctx.author.name, role.name, cost)
+                     .format(ctx.author.name, role.name, cost)
                     )
             else:
                 await ctx.send("Sorry this role is not for sale, run rb list to find out with ones are.")
