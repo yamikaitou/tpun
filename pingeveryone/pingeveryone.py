@@ -22,7 +22,7 @@ class pingeveryone(commands.Cog):
     @commands.command(name="pingeveryone", help="This command just ping everyone")
     async def pingeveryone(self, ctx: commands.Context,):
         guild: discord.Guild = ctx.guild
-        roles = guild.fetch_roles()
+        roles = await guild.fetch_roles()
         for role in roles:
             print(role.name)
             if role.name == "everyone":
