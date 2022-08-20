@@ -51,6 +51,7 @@ class rep(commands.Cog):
         if "thank you" in message.content or "thanks" in message.content or "Thank you" in message.content or "THANK YOU" in message.content or "Thank You" in message.content and message.mentions is not None:
             users = message.mentions
             names = []
+            found: bool = False
             for user in users:
                 names.append(user.mention)
             x = self.getRep()
@@ -61,9 +62,11 @@ class rep(commands.Cog):
                         currentRep = userRep + 1
                         newWrite = {id: currentRep}
                         await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
-                    elif user.id != message.author.id:
-                        newWrite = {id: 1}
-                        await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
+                        found = True
+                        break
+                if not found:
+                    newWrite = {id: 1}
+                    await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
                 x.pop(str(id), None)
                 x.update(newWrite)
             self.writeRep(x)
