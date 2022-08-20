@@ -48,29 +48,25 @@ class rep(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         global jsonPath
-        if "thank you" in message.content or "thanks" in message.content or "Thank you" in message.content or "THANK YOU" in message.content or "Thank You" in message.content:
-            if message.mentions is not None:
-                users = message.mentions
-                names = []
-                newUser: Boolean = True
-                for user in users:
-                    names.append(user.mention)
-                for user in users:
-                    if user.id != message.author.id:
-                        id = user.id
-                        x = self.getRep()
-                        for userId, userRep in x.items():
-                            if userId == str(id):
-                                currentRep = userRep + 1
-                                newWrite = {id: currentRep}
-                                await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
-                                newUser = False
-                        if newUser:
-                            newWrite = {id: 1}
-                            await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
-                        x.pop(str(id), None)
-                        x.update(newWrite)
-                        self.writeRep(x)
+        if "thank you" in message.content or "thanks" in message.content or "Thank you" in message.content or "THANK YOU" in message.content or "Thank You" in message.content and message.mentions is not None:
+            users = message.mentions
+            names = []
+            for user in users:
+                names.append(user.mention)
+            x = self.getRep()
+            for user in users:
+                id = user.id
+                for userId, userRep in x.items():
+                    if user.id != message.author.id and userId == str(id):
+                        currentRep = userRep + 1
+                        newWrite = {id: currentRep}
+                        await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(currentRep)))
+                    elif user.id != message.author.id:
+                        newWrite = {id: 1}
+                        await message.channel.send("**+rep** {0} you now have: {1} Rep".format(user.name, str(1)))
+                x.pop(str(id), None)
+                x.update(newWrite)
+            self.writeRep(x)
 
     @commands.mod()
     @commands.command(name="repremove", help="Removes a amount from a users reputation")
