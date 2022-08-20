@@ -18,7 +18,7 @@ class pingeveryone(commands.Cog):
             force_registration=True,
         )
 
-    @commands.admin_or_permissions()
+    @commands.admin()
     @commands.command(name="pingeveryone", help="This command just ping everyone")
     async def pingeveryone(self, ctx: commands.Context,):
         allowed_mentions = discord.AllowedMentions(everyone = True)
