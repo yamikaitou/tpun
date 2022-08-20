@@ -431,5 +431,29 @@
 
 ##### set the male, female, non-binary and unverified roles to use for verification
 
+<div id="pingeveryone" align="center">
+
+## Pingeveryone
+
+<br />
+
+### Just a simple cog that adds a command to ping @everyone
+
+</div>
+
+<div align="right">
+
+[top](#coglist)
+
+</div>
+
+<br /> 
+
+- `
+[p]pingeveryone
+`
+
+##### Allows users with admin bot perms to ping everyone
+
 <br />
 <br />
