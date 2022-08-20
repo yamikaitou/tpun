@@ -232,7 +232,6 @@ class pvc(commands.Cog):
             await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
         else:
             await ctx.send("{0} You can't delete a VC if you don't have one.".format(ctx.author.name))
-                
 
     @vc.command(name='name', help="Returns the name of your vc")
     async def name(self, ctx: commands.Context):
