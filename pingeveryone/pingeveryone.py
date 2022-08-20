@@ -25,5 +25,5 @@ class pingeveryone(commands.Cog):
         roles = await guild.fetch_roles()
         for role in roles:
             print(role.name)
-            if role.name == "everyone":
+            if role.name == "@everyone":
                 await ctx.send(role.mention)
