@@ -68,7 +68,10 @@ class timedping(commands.Cog):
                         newTempo = {str(role): int(time.time() + cooldown)}
                         tempo.update(newTempo)
                     elif tempo[role] > time.time():
-                        await message.reply("There is a {0} second cooldown in between uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown), int(tempo[role])))
+                        await message.reply("There is a {0} second cooldown in between uses. There is <t:{1}:R>"
+                        .format(str(cooldown), int(tempo[role]))
+                        + "remaining in the cooldown"
+                        )
                     else:
                         await message.reply("<@&{0}>".format(int(role)))
                         newTempo = {str(role): int(time.time() + cooldown)}

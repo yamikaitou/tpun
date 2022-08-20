@@ -80,7 +80,9 @@ class rep(commands.Cog):
             if userId == str(user.id):
                 currentRep = userRep - amount
                 newWrite = {user.id: currentRep}
-                await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}".format(ctx.author.name, amount, user.name, currentRep))
+                await ctx.send("**-rep** {0} took away {1} rep from {2}. They now have {3}"
+                .format(ctx.author.name, amount, user.name, currentRep)
+                )
         if newWrite is not None:
             x.pop(str(user.id), None)
             x.update(newWrite)
