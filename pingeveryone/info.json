@@ -1,0 +1,20 @@
+{
+    "name": "PingEveryone",
+    "short": "TPUN Cog to Ping Everyone",
+    "description": "Team Punistic red cog just to test pinging everyone",
+    "end_user_data_statement": "This cog does not persistently store data about users.",
+    "install_msg": "Congrats",
+    "author": [
+        "Nado"
+    ],
+    "required_cogs": {},
+    "requirements": [],
+    "tags": [
+        "Everyone",
+        "Tpun"
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}

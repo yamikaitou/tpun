@@ -40,31 +40,21 @@ class rolebuy(commands.Cog):
             with roleCostPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
-    def roleListRead(self, guild: int, roleArg: discord.role):
+    def getRoleList(self):
         global roleListPath
         try:
             with open(str(roleListPath), 'r') as roleList:
                 x = json.load(roleList)
-                for server, rolesList in x.items():
-                    if server == str(guild):
-                        for i in rolesList:
-                            return i
+                return x
         except ValueError:
             print("roleList.json failed to read")
+            return None
 
-    def roleListCost(self, guild: int, roleArg: discord.role):
-        global roleCostPath
-        try:
-            with open(str(roleCostPath), 'r') as roleCost:
-                x = json.load(roleCost)
-                for server, rolesList in x.items():
-                    if server == str(guild):
-                        for i in rolesList:
-                            for role, cost in i.items():
-                                if role == roleArg.id:
-                                    return cost
-        except ValueError:
-            print("roleCost.json failed to read")
+    def roleListRead(self, guild: int):
+        x = self.getRoleList()
+        for server, rolesList in x.items():
+            if server == str(guild):
+                return rolesList[0]
 
     async def red_delete_data_for_user(self, *, requester: RequestType, user_id: int) -> None:
         # TODO: Replace this with the proper end user data removal handling.
@@ -78,16 +68,17 @@ class rolebuy(commands.Cog):
     async def buy(self, ctx: commands.Context, role: discord.Role):
         buyableRoles = []
         userAccount: bank.Account = await bank.get_account(ctx.author)
-        for roleList, cost in self.roleListRead(ctx.guild.id, role).items():
+        for roleList, cost in self.roleListRead(ctx.guild.id).items():
             buyableRoles.append(int(roleList))
-            print(buyableRoles)
             if role.id in buyableRoles:
                 if userAccount.balance >= cost:
                     await ctx.author.add_roles(role)
                     await bank.set_balance(ctx.author, userAccount.balance - cost)
                     await ctx.send("{0} You bought {1} for {2} currency".format(ctx.author.name, role.name, cost))
                 else:
-                    await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs {2} currency".format(ctx.author.name, role.name, cost))
+                    await ctx.send("I'm sorry {0} but you don't have enough to buy {1} it costs {2} currency"
+                        .format(ctx.author.name, role.name, cost)
+                    )
             else:
                 await ctx.send("Sorry this role is not for sale, run rb list to find out with ones are.")
 
@@ -97,18 +88,14 @@ class rolebuy(commands.Cog):
         global roleListPath
         guild = ctx.guild.id
         nC = {role.id: cost}
-        with open(str(roleListPath), 'r') as roleList:
-            try:
-                x = json.load(roleList)
-                if str(guild) in x:
-                    y = x[str(guild)].copy()
-                    y[0].update(nC)
-                else:
-                    x.update({str(guild): [{}]})
-                    y = x[str(guild)].copy()
-                    y[0].update(nC)
-            except ValueError:
-                print("roleList.json read failed")
+        x = self.getRoleList()
+        if str(guild) in x:
+            y = x[str(guild)].copy()
+            y[0].update(nC)
+        else:
+            x.update({str(guild): [{}]})
+            y = x[str(guild)].copy()
+            y[0].update(nC)
         with open(str(roleListPath), 'w') as roleList:
             try:
                 json.dump(x, roleList)
@@ -121,11 +108,7 @@ class rolebuy(commands.Cog):
     async def remove(self, ctx: commands.Context, role: discord.Role):
         global roleListPath
         guild = ctx.guild.id
-        with open(str(roleListPath), 'r') as roleList:
-            try:
-                x = json.load(roleList)
-            except ValueError:
-                print("Failed to read to pingList.json")
+        x = self.getRoleList()
         with open(str(roleListPath), 'w') as roleList:
             try:
                 if str(guild) in x:
@@ -140,19 +123,10 @@ class rolebuy(commands.Cog):
 
     @rb.command(name="list", help="Lists all the timed ping roles for the server")
     async def list(self, ctx: commands.Context):
-        global roleListPath
-        guild = ctx.guild.id
         roles = ""
-        with open(str(roleListPath), 'r') as roleList:
-            try:
-                x = json.load(roleList)
-                if str(guild) in x:
-                    y = x[str(guild)].copy()
-                    for i in y:
-                        for role, cost in i.items():
-                            roles = roles + "<@&{0}> with cost of {1} currency \n".format(role, cost)
-                    mess1 = await ctx.send(roles)
-                    await asyncio.sleep(120)
-                    await mess1.delete()
-            except ValueError:
-                print("Failed to read roleList.json")
+        i = self.roleListRead(ctx.guild.id)
+        for role, cost in i.items():
+            roles = roles + "<@&{0}> with cost of {1} currency \n".format(role, cost)
+        mess1 = await ctx.send(roles)
+        await asyncio.sleep(120)
+        await mess1.delete()

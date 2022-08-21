@@ -83,6 +83,10 @@
 - [Verifier](#verifier)
 
 <br />
+
+- [PingEveryone](#pingeveryone)
+
+<br />
 <br />
 
 <div id="pvc" align="center">
@@ -334,10 +338,37 @@
 <br />
 
 - `
-[p]buy <role mention>
+[p]rb buy <role mention>
 `
 
 ##### Buys 'role' and removes currency from user
+
+<br />
+<br />
+
+- `
+[p]rb add <role mention> <cost>
+`
+
+##### Adds 'role' to list of buyable roles for 'cost'
+
+<br />
+<br />
+
+- `
+[p]rb remove <role mention>
+`
+
+##### Removes 'role' from buyable roles
+
+<br />
+<br />
+
+- `
+[p]rb list
+`
+
+##### Lists the available buyable roles in server
 
 <br />
 <br />
@@ -403,6 +434,39 @@
 `
 
 ##### set the male, female, non-binary and unverified roles to use for verification
+
+<div id="pingeveryone" align="center">
+
+## Pingeveryone
+
+<br />
+
+### Just a simple cog that adds a command to ping @everyone and @here
+
+</div>
+
+<div align="right">
+
+[top](#coglist)
+
+</div>
+
+<br /> 
+
+- `
+[p]pingeveryone
+`
+
+##### Allows users with bot admin perms to ping everyone
+
+<br />
+<br />
+
+- `
+[p]pinghere
+`
+
+##### Allows users with bot admin perms to ping here
 
 <br />
 <br />
