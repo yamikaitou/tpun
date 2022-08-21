@@ -437,7 +437,7 @@
 
 <br />
 
-### Just a simple cog that adds a command to ping @everyone
+### Just a simple cog that adds a command to ping @everyone and @here
 
 </div>
 
@@ -453,7 +453,16 @@
 [p]pingeveryone
 `
 
-##### Allows users with admin bot perms to ping everyone
+##### Allows users with bot admin perms to ping everyone
+
+<br />
+<br />
+
+- `
+[p]pinghere
+`
+
+##### Allows users with bot admin perms to ping here
 
 <br />
 <br />
