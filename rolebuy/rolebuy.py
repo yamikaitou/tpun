@@ -60,12 +60,18 @@ class rolebuy(commands.Cog):
         # TODO: Replace this with the proper end user data removal handling.
         super().red_delete_data_for_user(requester=requester, user_id=user_id)
 
-    @commands.group(name="rb", help="Base command for all timed ping commands")
+    @commands.group(name="rb")
     async def rb(self, ctx):
+        """
+        Base command for all timed ping commands
+        """
         pass
 
-    @rb.command(name="buy", help="Buys a role for money")
+    @rb.command(name="buy")
     async def buy(self, ctx: commands.Context, role: discord.Role):
+        """
+        Buys a role for money
+        """
         buyableRoles = []
         userAccount: bank.Account = await bank.get_account(ctx.author)
         for roleList, cost in self.roleListRead(ctx.guild.id).items():
@@ -83,8 +89,11 @@ class rolebuy(commands.Cog):
                 await ctx.send("Sorry this role is not for sale, run rb list to find out with ones are.")
 
     @commands.guildowner_or_permissions()
-    @rb.command(name="add", usage="<role mention> <cooldown in seconds>", help="Adds a role to the buyable role list")
+    @rb.command(name="add")
     async def add(self, ctx: commands.Context, role: discord.Role, cost: int):
+        """
+        Adds a role to the buyable role list
+        """
         global roleListPath
         guild = ctx.guild.id
         nC = {role.id: cost}
@@ -104,8 +113,11 @@ class rolebuy(commands.Cog):
                 print("roleList.json write failed")
 
     @commands.guildowner_or_permissions()
-    @rb.command(name="remove", usage="<role mention>", help="Removes a role from the buyable role list")
+    @rb.command(name="remove")
     async def remove(self, ctx: commands.Context, role: discord.Role):
+        """
+        Removes a role from the buyable role list
+        """
         global roleListPath
         guild = ctx.guild.id
         x = self.getRoleList()
@@ -121,8 +133,11 @@ class rolebuy(commands.Cog):
                 print("Failed to write to roleList.json")
         await ctx.send("{0} was removed from the buyable role List".format(role.mention))
 
-    @rb.command(name="list", help="Lists all the timed ping roles for the server")
+    @rb.command(name="list")
     async def list(self, ctx: commands.Context):
+        """
+        Lists all the timed ping roles for the server
+        """
         roles = ""
         i = self.roleListRead(ctx.guild.id)
         for role, cost in i.items():

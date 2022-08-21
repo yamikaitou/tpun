@@ -72,8 +72,11 @@ class rep(commands.Cog):
             self.writeRep(x)
 
     @commands.mod()
-    @commands.command(name="repremove", help="Removes a amount from a users reputation")
+    @commands.command(name="repremove")
     async def repremove(self, ctx: commands.Context, user: discord.Member, amount: int):
+        """
+        Removes a amount from a users reputation
+        """
         newWrite = None
         x = self.getRep()
         for userId, userRep in x.items():
@@ -90,8 +93,11 @@ class rep(commands.Cog):
             await ctx.send("This user already has no reputation")
         self.writeRep(x)
 
-    @commands.command(name="checkrep", help="Displays a user's reputation")
+    @commands.command(name="checkrep")
     async def checkrep(self, ctx: commands.Context, user: discord.Member):
+        """
+        Displays a user's reputation
+        """
         userFound = False
         with open(str(jsonPath), 'r') as reputation:
             try:

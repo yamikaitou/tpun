@@ -45,8 +45,13 @@ class usergate(commands.Cog):
             await member.kick(reason="Account is under {0} days old".format(str(daysAmount)))
 
     @commands.guildowner_or_permissions()
-    @commands.command(name="usergate", usage="<days>", help="Sets the number of days a user's account must exist before joining server, if user does not meet requirement they will get kicked.")
+    @commands.command(name="usergate")
     async def usergate(self, ctx: commands.Context, days: int):
+        """
+        Usergate setup command
+
+        Sets the number of days a user's account must exist before joining server, if user does not meet requirement they will get kicked.
+        """
         global userGatePath
         guild = ctx.guild.id
         with open(str(userGatePath), 'r') as userGate:

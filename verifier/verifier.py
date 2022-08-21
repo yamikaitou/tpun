@@ -84,8 +84,11 @@ class verifier(commands.Cog):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
 
     @commands.admin()
-    @commands.command(name="verify", help="Opens the verification gui")
+    @commands.command(name="verify")
     async def verify(self, ctx: commands.Context, user: discord.Member):
+        """
+        Opens the verification gui
+        """
         description0: str = 'From below please choose the emoji that best identifies your gender'
         embed = discord.Embed(color=0xe02522, title='Verified emoji selector', description=description0)
         embed.set_footer(text="♂ : Male | ♀ : Female|💜 : Non Binary")
@@ -104,8 +107,11 @@ class verifier(commands.Cog):
             pass
 
     @commands.guildowner()
-    @commands.command(name="vsetup", help="Setup command for verify cog")
+    @commands.command(name="vsetup")
     async def setup(self, ctx: commands.Context):
+        """
+        Setup command for verify cog
+        """
         newWrite: dict = {}
         guild = ctx.guild.id
         try:
