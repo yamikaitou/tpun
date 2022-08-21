@@ -19,14 +19,6 @@ class pvc(commands.Cog):
     Private voice channel cog
     """
 
-    def __init__(self, bot: Red) -> None:
-        self.bot = bot
-        self.config = Config.get_conf(
-            self,
-            identifier=365398642334498816,
-            force_registration=True,
-        )
-
     def getpaths(self):
 
         global vcOwnersPath
@@ -52,7 +44,7 @@ class pvc(commands.Cog):
         self.bot = bot
         self.config = Config.get_conf(
             self,
-            identifier=None,
+            identifier=365398642334498816,
             force_registration=True,
         )
         self.getpaths()
