@@ -7,6 +7,7 @@ from redbot.core import data_manager
 import discord
 import json
 import asyncio
+import logging
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
@@ -17,37 +18,27 @@ class rolebuy(commands.Cog):
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
+        self.log = logging.getLogger('red.tpun.rolebuy')
         self.config = Config.get_conf(
             self,
             identifier=365398642334498816,
             force_registration=True,
         )
-        global roleListPath
         path = data_manager.cog_data_path(cog_instance=self)
-        roleListPath = path / 'roleList.json'
-        if roleListPath.exists():
+        self.roleListPath = path / 'roleList.json'
+        if self.roleListPath.exists():
             pass
         else:
-            with roleListPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
-        global roleCostPath
-        path = data_manager.cog_data_path(cog_instance=self)
-        roleCostPath = path / 'roleCost.json'
-        if roleCostPath.exists():
-            pass
-        else:
-            with roleCostPath.open("w", encoding="utf-8") as f:
+            with self.roleListPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
     def getRoleList(self):
-        global roleListPath
         try:
-            with open(str(roleListPath), 'r') as roleList:
+            with open(str(self.roleListPath), 'r') as roleList:
                 x = json.load(roleList)
                 return x
         except ValueError:
-            print("roleList.json failed to read")
+            self.log.exception("roleList.json failed to read")
             return None
 
     def roleListRead(self, guild: int):
@@ -94,7 +85,6 @@ class rolebuy(commands.Cog):
         """
         Adds a role to the buyable role list
         """
-        global roleListPath
         guild = ctx.guild.id
         nC = {role.id: cost}
         x = self.getRoleList()
@@ -105,12 +95,12 @@ class rolebuy(commands.Cog):
             x.update({str(guild): [{}]})
             y = x[str(guild)].copy()
             y[0].update(nC)
-        with open(str(roleListPath), 'w') as roleList:
+        with open(str(self.roleListPath), 'w') as roleList:
             try:
                 json.dump(x, roleList)
                 await ctx.send("{0} was added to the buyable roles list with cost {1} currency".format(role.mention, cost))
             except ValueError:
-                print("roleList.json write failed")
+                self.log.exception("roleList.json write failed")
 
     @commands.guildowner_or_permissions()
     @rb.command(name="remove")
@@ -118,10 +108,9 @@ class rolebuy(commands.Cog):
         """
         Removes a role from the buyable role list
         """
-        global roleListPath
         guild = ctx.guild.id
         x = self.getRoleList()
-        with open(str(roleListPath), 'w') as roleList:
+        with open(str(self.roleListPath), 'w') as roleList:
             try:
                 if str(guild) in x:
                     y = x[str(guild)].copy()
@@ -130,7 +119,7 @@ class rolebuy(commands.Cog):
                     if x is None:
                         x = {}
             except ValueError:
-                print("Failed to write to roleList.json")
+                self.log.exception("Failed to write to roleList.json")
         await ctx.send("{0} was removed from the buyable role List".format(role.mention))
 
     @rb.command(name="list")

@@ -11,6 +11,7 @@ import json
 import discord
 import asyncio
 import datetime
+import logging
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
@@ -19,40 +20,29 @@ class pvc(commands.Cog):
     Private voice channel cog
     """
 
+    def getpaths(self):
+        path = data_manager.cog_data_path(cog_instance=self)
+        self.vcOwnersPath = path / 'vcOwners.json'
+        if not self.vcOwnersPath.exists():
+            with self.vcOwnersPath.open("w", encoding="utf-8") as f:
+                f.write("{}")
+
+        self.vcRolesPath = path / 'vcRoles.json'
+        if not self.vcRolesPath.exists():
+            with self.vcRolesPath.open("w", encoding="utf-8") as f:
+                f.write("{}")
+
+        self.vcChannelsPath = path / 'vcChannels.json'
+        if not self.vcChannelsPath.exists():
+            with self.vcChannelsPath.open("w", encoding="utf-8") as f:
+                f.write("{}")
+
     def __init__(self, bot: Red) -> None:
         self.bot = bot
+        self.log = logging.getLogger('red.tpun.pvc')
         self.config = Config.get_conf(
             self,
             identifier=365398642334498816,
-            force_registration=True,
-        )
-
-    def getpaths(self):
-
-        global vcOwnersPath
-        path = data_manager.cog_data_path(cog_instance=self)
-        vcOwnersPath = path / 'vcOwners.json'
-        if not vcOwnersPath.exists():
-            with vcOwnersPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
-        global vcRolesPath
-        vcRolesPath = path / 'vcRoles.json'
-        if not vcRolesPath.exists():
-            with vcRolesPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
-        global vcChannelsPath
-        vcChannelsPath = path / 'vcChannels.json'
-        if not vcChannelsPath.exists():
-            with vcChannelsPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
-    def __init__(self, bot: Red) -> None:
-        self.bot = bot
-        self.config = Config.get_conf(
-            self,
-            identifier=None,
             force_registration=True,
         )
         self.getpaths()
@@ -61,11 +51,11 @@ class pvc(commands.Cog):
 
     def loadVcOwners(self):
         try:
-            with open(str(vcOwnersPath), 'r') as vcOwners:
+            with open(str(self.vcOwnersPath), 'r') as vcOwners:
                 x = json.load(vcOwners)
                 return x
         except ValueError:
-            print("read failed")
+            self.log.exception("read failed")
             return None
 
     def getVcList(self, guild):
@@ -81,37 +71,34 @@ class pvc(commands.Cog):
                 return self.bot.get_channel(int(vcId))
 
     def vcOwnerWrite(self, write):
-        global vcOwnersPath
         if write is None:
             write = "{}"
-        with open(str(vcOwnersPath), 'w') as vcWrite:
+        with open(str(self.vcOwnersPath), 'w') as vcWrite:
             try:
                 json.dump(write, vcWrite)
             except ValueError:
-                print("vcOwners.json write failed.")
+                self.log.exception("vcOwners.json write failed.")
 
     def vcChannelRead(self, ctx: commands.Context):
-        global vcChannelsPath
         try:
-            with open(str(vcChannelsPath), 'r') as vcChannels:
+            with open(str(self.vcChannelsPath), 'r') as vcChannels:
                 x = json.load(vcChannels)
         except ValueError:
-            print("read failed")
+            self.log.exception("read failed")
             return None
         for server, channel in x.items():
             if server == str(ctx.guild.id):
                 return self.bot.get_channel(int(channel))
 
     def vcRoleRead(self, ctx: commands.Context):
-        global vcRolesPath
         try:
-            with open(str(vcRolesPath), 'r') as vcRoles:
+            with open(str(self.vcRolesPath), 'r') as vcRoles:
                 x = json.load(vcRoles)
                 for server, roles in x.items():
                     if server == str(ctx.guild.id) and type(roles) == list:
                         return roles
         except ValueError:
-            print("read failed")
+            self.log.exception("read failed")
             return None
 
     async def checks(self, id, empty, ctx: commands.Context):
@@ -179,7 +166,6 @@ class pvc(commands.Cog):
 
         You can only have 1 vc. VC deletes after 1 minute of inactivity. You must join your vc within 1 minute or it will be deleted.
         """
-        global vcOwnersPath
         dsChannel = self.vcChannelRead(ctx)
         roleList = self.vcRoleRead(ctx)
         guild = ctx.guild.id
@@ -230,7 +216,6 @@ class pvc(commands.Cog):
 
         The reason is optional
         """
-        global vcOwnersPath
         if reason is None:
             reason = "user deleted their own channel"
         owner = ctx.author.id
@@ -506,7 +491,6 @@ class pvc(commands.Cog):
         """
         Claims a voice channel from another user if they're not in it.
         """
-        global vcOwnersPath
         owner: int = 0
         newOwner = str(ctx.author.id)
         channelid = ctx.author.voice.channel.id
@@ -536,7 +520,6 @@ class pvc(commands.Cog):
         """
         Transfers a voice channel to another user
         """
-        global vcOwnersPath
         owner = str(ctx.author.id)
         if ctx.author.voice is not None:
             channelid = ctx.author.voice.channel.id
@@ -569,14 +552,11 @@ class pvc(commands.Cog):
         """
         Set's up a channel for creating custom vc's in, please put this channel in the category you would like all custom vc's to be made in
         """
-        global vcRolesPath
-        global vcChannelsPath
-        global vcOwnersPath
         guild = ctx.guild.id
         run: bool = True
         x: TextIOWrapper
         y: TextIOWrapper
-        with open(str(vcOwnersPath), 'r') as vcChannels:
+        with open(str(self.vcOwnersPath), 'r') as vcChannels:
             try:
                 x = json.load(vcChannels)
                 for server, channel in x.items():
@@ -584,17 +564,17 @@ class pvc(commands.Cog):
                         run = False
             except ValueError:
                 run = False
-                print("vcchannel.json failed to read")
+                self.log.exception("vcchannel.json failed to read")
         if run:
             channel = await ctx.guild.create_text_channel("personal-vc-commands")
             mess0 = await ctx.send("Make sure to put the personal-vc-commands channel in the category you wish channels to be made in. You may rename the channel to whatever you wish.")
             newWrite = {str(guild): channel.id}
             x.update(newWrite)
-            with open(str(vcChannelsPath), 'w') as vcChannelsWrite:
+            with open(str(self.vcChannelsPath), 'w') as vcChannelsWrite:
                 try:
                     json.dump(x, vcChannelsWrite)
                 except ValueError:
-                    print("vcchannels.json write failed.")
+                    self.log.exception("vcchannels.json write failed.")
         mess1 = await ctx.send("Please ping any roles you wish to have permissions to join channels on creation. These roles will also be used for unlock/lock commands. If you wish to allow anyone to join on creation type 'none'.")
 
         def check(m):
@@ -608,28 +588,28 @@ class pvc(commands.Cog):
         else:
             roles.append(ctx.guild.id)
         await mess1.delete()
-        with open(str(vcRolesPath), 'r') as vcRoles:
+        with open(str(self.vcRolesPath), 'r') as vcRoles:
             try:
                 y = json.load(vcRoles)
                 y.update({str(guild): roles})
             except ValueError:
-                print("vcroles.json read failed.")
-        with open(str(vcRolesPath), 'w') as vcRolesWrite:
+                self.log.exception("vcroles.json read failed.")
+        with open(str(self.vcRolesPath), 'w') as vcRolesWrite:
             try:
                 json.dump(y, vcRolesWrite)
             except ValueError:
-                print("vcroles.json write failed.")
-        with open(str(vcOwnersPath), 'r') as vcOwnersRead:
+                self.log.exception("vcroles.json write failed.")
+        with open(str(self.vcOwnersPath), 'r') as vcOwnersRead:
             try:
                 x = json.load(vcOwnersRead)
             except ValueError:
-                print("vcOwners.json read failed")
-        with open(str(vcOwnersPath), 'w') as vcOwnersWrite:
+                self.log.exception("vcOwners.json read failed")
+        with open(str(self.vcOwnersPath), 'w') as vcOwnersWrite:
             try:
                 x.update({str(guild): [{}]})
                 json.dump(x, vcOwnersWrite)
             except ValueError:
-                print("vcOwners.json write failed")
+                self.log.exception("vcOwners.json write failed")
         mess2 = await ctx.send("Your settings are currently: {0} as the channel and {1} are the public roles that will be used.".format(channel.name, roles))
         await asyncio.sleep(30)
         await mess0.delete()
@@ -638,41 +618,39 @@ class pvc(commands.Cog):
     @commands.admin()
     @vc.command(name="clear_settings", help="Clears the personal vc commands channel allowing for fresh setup")
     async def clear_settings(self, ctx: commands.Context):
-        global vcChannelsPath
-        global vcRolesPath
         run: bool = False
         run2: bool = False
-        with open(str(vcChannelsPath), 'r') as vcChannels:
+        with open(str(self.vcChannelsPath), 'r') as vcChannels:
             try:
                 x = json.load(vcChannels)
                 for server, channel in x.items():
                     if server == str(ctx.guild.id):
                         run = True
             except ValueError:
-                print("vcchannel.json failed to read")
+                self.log.exception("vcchannel.json failed to read")
         if run:
             x.pop(str(ctx.guild.id), None)
-            with open(str(vcChannelsPath), 'w') as vcChannelsWrite:
+            with open(str(self.vcChannelsPath), 'w') as vcChannelsWrite:
                 try:
                     json.dump(x, vcChannelsWrite)
                 except ValueError:
-                    print("vcchannels.json write failed.")
+                    self.log.exception("vcchannels.json write failed.")
         else:
             await ctx.send("Your server is not setup yet")
-        with open(str(vcRolesPath), 'r') as vcRoles:
+        with open(str(self.vcRolesPath), 'r') as vcRoles:
             try:
                 y = json.load(vcRoles)
                 for server, channel in y.items():
                     if server == str(ctx.guild.id):
                         run2 = True
             except ValueError:
-                print("vcroles.json read failed.")
+                self.log.exception("vcroles.json read failed.")
         if run2:
             y.pop(str(ctx.guild.id), None)
-            with open(str(vcRolesPath), 'w') as vcRolesWrite:
+            with open(str(self.vcRolesPath), 'w') as vcRolesWrite:
                 try:
                     json.dump(y, vcRolesWrite)
                 except ValueError:
-                    print("vcroles.json write failed.")
+                    self.log.exception("vcroles.json write failed.")
         if run and run2:
             await ctx.send("Your server's vc data has been cleared.")

@@ -7,6 +7,7 @@ import time
 import asyncio
 import json
 import re
+import logging
 global tempo
 tempo: dict = {}
 
@@ -18,28 +19,27 @@ class timedping(commands.Cog):
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
+        self.log = logging.getLogger('red.tpun.timedping')
         self.config = Config.get_conf(
             self,
             identifier=365398642334498816,
             force_registration=True,
         )
-        global pingListPath
         path = data_manager.cog_data_path(cog_instance=self)
-        pingListPath = path / 'pingList.json'
-        if pingListPath.exists():
+        self.pingListPath = path / 'pingList.json'
+        if self.pingListPath.exists():
             pass
         else:
-            with pingListPath.open("w", encoding="utf-8") as f:
+            with self.pingListPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
     def getPingList(self):
-        global pingListPath
         try:
-            with open(str(pingListPath), 'r') as pingList:
+            with open(str(self.pingListPath), 'r') as pingList:
                 x = json.load(pingList)
                 return x
         except ValueError:
-            print("pingList.json failed to read")
+            self.log.exception("pingList.json failed to read")
             return None
 
     def parsePingList(self, guild):
@@ -91,10 +91,9 @@ class timedping(commands.Cog):
         """
         Adds a role to the timed ping list
         """
-        global pingListPath
         guild = ctx.guild.id
         nC = {role.id: cooldown}
-        with open(str(pingListPath), 'r') as pingList:
+        with open(str(self.pingListPath), 'r') as pingList:
             try:
                 x = json.load(pingList)
                 if str(guild) in x:
@@ -105,13 +104,13 @@ class timedping(commands.Cog):
                     y = x[str(guild)].copy()
                     y[0].update(nC)
             except ValueError:
-                print("pingList.json read failed")
-        with open(str(pingListPath), 'w') as pingList:
+                self.log.exception("pingList.json read failed")
+        with open(str(self.pingListPath), 'w') as pingList:
             try:
                 json.dump(x, pingList)
                 await ctx.send("{0} was added to the Timed Ping List with cooldown {1} seconds".format(role.mention, cooldown))
             except ValueError:
-                print("pingList.json write failed")
+                self.log.exception("pingList.json write failed")
 
     @commands.guildowner_or_permissions()
     @tping.command(name="remove")
@@ -119,14 +118,13 @@ class timedping(commands.Cog):
         """
         Removes a role from the timed ping list
         """
-        global pingListPath
         guild = ctx.guild.id
-        with open(str(pingListPath), 'r') as pingList:
+        with open(str(self.pingListPath), 'r') as pingList:
             try:
                 x = json.load(pingList)
             except ValueError:
-                print("Failed to read to pingList.json")
-        with open(str(pingListPath), 'w') as vcWrite:
+                self.log.exception("Failed to read to pingList.json")
+        with open(str(self.pingListPath), 'w') as vcWrite:
             try:
                 if str(guild) in x:
                     y = x[str(guild)].copy()
@@ -135,7 +133,7 @@ class timedping(commands.Cog):
                     if x is None:
                         x = {}
             except ValueError:
-                print("Failed to write to pingList.json")
+                self.log.exception("Failed to write to pingList.json")
         await ctx.send("{0} was removed from the Timed Ping List".format(role.mention))
 
     @commands.guildowner_or_permissions()
@@ -144,10 +142,9 @@ class timedping(commands.Cog):
         """
         Lists all the timed ping roles for the server
         """
-        global pingListPath
         guild = ctx.guild.id
         roles = ""
-        with open(str(pingListPath), 'r') as pingList:
+        with open(str(self.pingListPath), 'r') as pingList:
             try:
                 x = json.load(pingList)
                 if str(guild) in x:
@@ -159,4 +156,4 @@ class timedping(commands.Cog):
                     await asyncio.sleep(120)
                     await mess1.delete()
             except ValueError:
-                print("Failed to read pingList.json")
+                self.log.exception("Failed to read pingList.json")
