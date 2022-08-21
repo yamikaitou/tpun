@@ -32,53 +32,51 @@ class timedping(commands.Cog):
             with pingListPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
-    def pingListRead(self, guild: int, roleArg: discord.role):
+    def getPingList(self):
         global pingListPath
         try:
             with open(str(pingListPath), 'r') as pingList:
                 x = json.load(pingList)
-                for server, rolesList in x.items():
-                    if server == str(guild):
-                        for i in rolesList:
-                            for role, cooldown in i.items():
-                                if role == roleArg.id:
-                                    return cooldown
+                return x
         except ValueError:
             print("pingList.json failed to read")
+            return None
+
+    def parsePingList(self, guild):
+        x = self.getPingList()
+        for server, rolesList in x.items():
+            if server == str(guild):
+                return rolesList[0]
+
+    def pingListRead(self, guild: int, roleArg: discord.role):
+        i = self.parsePingList(guild)
+        for role, cooldown in i.items():
+            if role == roleArg.id:
+                return cooldown
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         global tempo
-        guild = message.guild.id
-        roles = {}
-        notInTempo = True
-        if "@" in message.content:
-            try:
-                with open(str(pingListPath), 'r') as pingList:
-                    x = json.load(pingList)
-                    for server, rolesList in x.items():
-                        if server == str(guild):
-                            for i in rolesList:
-                                roles = i
-            except ValueError:
-                print("pingList.json failed to read")
-        for role, cooldown in roles.items():
-            if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
-                for x, y in tempo.items():
-                    if x == str(role):
-                        notInTempo = False
-                        if y > time.time():
-                            await message.reply("There is a {0} hour cooldown in between uses. There is <t:{1}:R> remaining in the cooldown".format(str(cooldown), int(y)))
-                        else:
-                            await message.reply("<@&{0}>".format(role))
-                            newTempo = {str(role): int(time.time() + cooldown)}
-                            tempo.update(newTempo)
+        if message.guild is not None and "@" in message.content:
+            guild = message.guild.id
+            roles = {}
+            roles = self.parsePingList(guild)
+            for role, cooldown in roles.items():
+                if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)
+                ) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
+                    if role not in tempo.keys():
+                        await message.reply("<@&{0}>".format(int(role)))
+                        newTempo = {str(role): int(time.time() + cooldown)}
+                        tempo.update(newTempo)
+                    elif tempo[role] > time.time():
+                        await message.reply("There is a {0} second cooldown in between uses. There is <t:{1}:R>"
+                            .format(str(cooldown), int(tempo[role]))
+                            + "remaining in the cooldown"
+                        )
                     else:
-                        notInTempo = True
-                if notInTempo:
-                    await message.reply("<@&{0}>".format(int(role)))
-                    newTempo = {str(role): int(time.time() + cooldown)}
-                    tempo.update(newTempo)
+                        await message.reply("<@&{0}>".format(int(role)))
+                        newTempo = {str(role): int(time.time() + cooldown)}
+                        tempo.update(newTempo)
 
     @commands.group(name="tping", help="Base command for all timed ping commands")
     async def tping(self, ctx):

@@ -31,29 +31,37 @@ class verifier(commands.Cog):
             with verifiedRolesPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
+    def getRoleList(self):
+        try:
+            with open(str(verifiedRolesPath), 'r') as verifiedList:
+                x = json.load(verifiedList)
+                return x
+        except ValueError:
+            print("verifiedRoles.json failed to read")
+            return None
+
+    def parseRoleList(self, guild):
+        x = self.getRoleList()
+        for server, items in x.items():
+            if server == str(guild):
+                return items[0]
+
     async def emojiVerifier(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
         global verifiedRolesPath
         unverified: int = None
         male: int
         female: int
         nb: int
-        try:
-            with open(str(verifiedRolesPath), 'r') as verifiedList:
-                x = json.load(verifiedList)
-        except ValueError:
-            print("verifiedRoles.json failed to read")
-        for server, items in x.items():
-            if server == str(ctx.guild.id):
-                for i in items:
-                    for key, role in i.items():
-                        if key == "unverified":
-                            unverified = ctx.guild.get_role(int(role))
-                        elif key == "male":
-                            male = ctx.guild.get_role(int(role))
-                        elif key == "female":
-                            female = ctx.guild.get_role(int(role))
-                        elif key == "nb":
-                            nb = ctx.guild.get_role(int(role))
+        i = self.parseRoleList(ctx.guild.id)
+        for key, role in i.items():
+            if key == "unverified":
+                unverified = ctx.guild.get_role(int(role))
+            elif key == "male":
+                male = ctx.guild.get_role(int(role))
+            elif key == "female":
+                female = ctx.guild.get_role(int(role))
+            elif key == "nb":
+                nb = ctx.guild.get_role(int(role))
         role: discord.Role = None
         if emoji == "♂":
             role = male
