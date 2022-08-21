@@ -2,7 +2,7 @@
     "name": "TPUN Private Voice Channel",
     "short": "pvc",
     "description": "Team Punistic red cog for creating and managing private voice channels",
-    "end_user_data_statement": "This cog doespersistently storedata or metadata about users. It stores the user's id to keep track of the channels the user owns.",
+    "end_user_data_statement": "This cog does persistently storedata or metadata about users. It stores the user's id to keep track of the channels the user owns.",
     "install_msg": "Congrats",
     "author": [
         "Nado"
