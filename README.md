@@ -38,13 +38,13 @@
 <br />
 
 1. `
-[p]repo add tpun-cogs https://github.com/batman202012/tpun
+[p]repo add tpun https://github.com/batman202012/tpun
 `
 
 <br />
 
 2. `
-[p]cog install tpun-cogs <cog-folder-name>
+[p]cog install tpun <cog-folder-name>
 `
 
 <br />
