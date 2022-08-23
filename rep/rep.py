@@ -5,6 +5,7 @@ from redbot.core.config import Config
 import discord
 import json
 import re
+import logging
 
 
 class rep(commands.Cog):
@@ -14,22 +15,22 @@ class rep(commands.Cog):
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
+        self.log = logging.getLogger('red.tpun.rep')
         self.config = Config.get_conf(
             self,
             identifier=365398642334498816,
             force_registration=True,
         )
-        global jsonPath
         path = data_manager.cog_data_path(cog_instance=self)
-        jsonPath = path / 'reputation.json'
-        if jsonPath.exists():
+        self.jsonPath = path / 'reputation.json'
+        if self.jsonPath.exists():
             pass
         else:
-            with jsonPath.open("w", encoding="utf-8") as f:
+            with self.jsonPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
     def getRep(self):
-        with open(str(jsonPath), 'r') as reputation:
+        with open(str(self.jsonPath), 'r') as reputation:
             try:
                 x = json.load(reputation)
                 return x
@@ -39,15 +40,14 @@ class rep(commands.Cog):
                     return x
 
     def writeRep(self, write):
-        with open(str(jsonPath), 'w') as reputationWrite:
+        with open(str(self.jsonPath), 'w') as reputationWrite:
             try:
                 json.dump(write, reputationWrite)
             except ValueError:
-                print("reputation.json write failed.")
+                self.log.exception("reputation.json write failed.")
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        global jsonPath
         if bool(re.search("thank", message.content, flags=re.I | re.X)) and message.mentions is not None:
             users = message.mentions
             names = []
@@ -72,8 +72,11 @@ class rep(commands.Cog):
             self.writeRep(x)
 
     @commands.mod()
-    @commands.command(name="repremove", help="Removes a amount from a users reputation")
+    @commands.command(name="repremove")
     async def repremove(self, ctx: commands.Context, user: discord.Member, amount: int):
+        """
+        Removes a amount from a users reputation
+        """
         newWrite = None
         x = self.getRep()
         for userId, userRep in x.items():
@@ -90,10 +93,13 @@ class rep(commands.Cog):
             await ctx.send("This user already has no reputation")
         self.writeRep(x)
 
-    @commands.command(name="checkrep", help="Displays a user's reputation")
+    @commands.command(name="checkrep")
     async def checkrep(self, ctx: commands.Context, user: discord.Member):
+        """
+        Displays a user's reputation
+        """
         userFound = False
-        with open(str(jsonPath), 'r') as reputation:
+        with open(str(self.jsonPath), 'r') as reputation:
             try:
                 x = json.load(reputation)
                 for userId, userRep in x.items():
@@ -101,6 +107,6 @@ class rep(commands.Cog):
                         await ctx.send("{0} has {1} reputation".format(user.name, userRep))
                         userFound = True
             except ValueError:
-                print("reputation.json failed to read")
+                self.log.exception("reputation.json failed to read")
         if userFound is False:
             await ctx.send("{0} doesn't have a reputation.".format(user.name))

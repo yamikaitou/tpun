@@ -19,13 +19,19 @@ class pingeveryone(commands.Cog):
         )
 
     @commands.admin_or_permissions()
-    @commands.command(name="pingeveryone", help="This command just pings everyone")
-    async def pingeveryone(self, ctx: commands.Context,):
+    @commands.command(name="pingeveryone")
+    async def pingeveryone(self, ctx: commands.Context):
+        """
+        This command just pings everyone
+        """
         allowed_mentions = discord.AllowedMentions(everyone = True)
         await ctx.send(content = "@everyone", allowed_mentions = allowed_mentions)
 
     @commands.admin_or_permissions()
-    @commands.command(name="pinghere", help="This command just pings here")
-    async def pinghere(self, ctx: commands.Context,):
+    @commands.command(name="pinghere")
+    async def pinghere(self, ctx: commands.Context):
+        """
+        This command just pings here
+        """
         allowed_mentions = discord.AllowedMentions(everyone = True)
         await ctx.send(content = "@here", allowed_mentions = allowed_mentions)

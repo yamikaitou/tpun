@@ -8,6 +8,7 @@ import datetime
 from redbot.core import data_manager
 import json
 from redbot.core.utils.predicates import ReactionPredicate
+import logging
 
 
 class verifier(commands.Cog):
@@ -17,27 +18,27 @@ class verifier(commands.Cog):
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
+        self.log = logging.getLogger('red.tpun.verifier')
         self.config = Config.get_conf(
             self,
             identifier=365398642334498816,
             force_registration=True,
         )
-        global verifiedRolesPath
         path = data_manager.cog_data_path(cog_instance=self)
-        verifiedRolesPath = path / 'verifiedRoles.json'
-        if verifiedRolesPath.exists():
+        self.verifiedRolesPath = path / 'verifiedRoles.json'
+        if self.verifiedRolesPath.exists():
             pass
         else:
-            with verifiedRolesPath.open("w", encoding="utf-8") as f:
+            with self.verifiedRolesPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
 
     def getRoleList(self):
         try:
-            with open(str(verifiedRolesPath), 'r') as verifiedList:
+            with open(str(self.verifiedRolesPath), 'r') as verifiedList:
                 x = json.load(verifiedList)
                 return x
         except ValueError:
-            print("verifiedRoles.json failed to read")
+            self.log.exception("verifiedRoles.json failed to read")
             return None
 
     def parseRoleList(self, guild):
@@ -47,7 +48,6 @@ class verifier(commands.Cog):
                 return items[0]
 
     async def emojiVerifier(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
-        global verifiedRolesPath
         unverified: int = None
         male: int
         female: int
@@ -84,8 +84,11 @@ class verifier(commands.Cog):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
 
     @commands.admin()
-    @commands.command(name="verify", help="Opens the verification gui")
+    @commands.command(name="verify")
     async def verify(self, ctx: commands.Context, user: discord.Member):
+        """
+        Opens the verification gui
+        """
         description0: str = 'From below please choose the emoji that best identifies your gender'
         embed = discord.Embed(color=0xe02522, title='Verified emoji selector', description=description0)
         embed.set_footer(text="♂ : Male | ♀ : Female|💜 : Non Binary")
@@ -104,15 +107,18 @@ class verifier(commands.Cog):
             pass
 
     @commands.guildowner()
-    @commands.command(name="vsetup", help="Setup command for verify cog")
+    @commands.command(name="vsetup")
     async def setup(self, ctx: commands.Context):
+        """
+        Setup command for verify cog
+        """
         newWrite: dict = {}
         guild = ctx.guild.id
         try:
-            with open(str(verifiedRolesPath), 'r') as verifiedList:
+            with open(str(self.verifiedRolesPath), 'r') as verifiedList:
                 x = json.load(verifiedList)
         except ValueError:
-            print("verifiedRoles.json failed to read")
+            self.log.exception("verifiedRoles.json failed to read")
 
         def check(m):
             return m.channel == mess0.channel
@@ -150,8 +156,8 @@ class verifier(commands.Cog):
         else:
             y = [newWrite]
             x.update({str(guild): y})
-        with open(str(verifiedRolesPath), 'w') as verifiedRoles:
+        with open(str(self.verifiedRolesPath), 'w') as verifiedRoles:
             try:
                 json.dump(x, verifiedRoles)
             except ValueError:
-                print("verifierRoles.json write failed.")
+                self.log.exception("verifierRoles.json write failed.")
