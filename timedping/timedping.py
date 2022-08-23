@@ -8,8 +8,6 @@ import asyncio
 import json
 import re
 import logging
-global tempo
-tempo: dict = {}
 
 
 class timedping(commands.Cog):
@@ -22,9 +20,9 @@ class timedping(commands.Cog):
         self.log = logging.getLogger('red.tpun.timedping')
         self.config = Config.get_conf(
             self,
-            identifier=365398642334498816,
-            force_registration=True,
+            identifier=365398642334498816
         )
+        
         path = data_manager.cog_data_path(cog_instance=self)
         self.pingListPath = path / 'pingList.json'
         if self.pingListPath.exists():
@@ -32,6 +30,7 @@ class timedping(commands.Cog):
         else:
             with self.pingListPath.open("w", encoding="utf-8") as f:
                 f.write("{}")
+        self.tempo: dict = {}
 
     def getPingList(self):
         try:
@@ -56,7 +55,6 @@ class timedping(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
-        global tempo
         if message.guild is not None and "@" in message.content:
             guild = message.guild.id
             roles = {}
@@ -64,19 +62,19 @@ class timedping(commands.Cog):
             for role, cooldown in roles.items():
                 if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)
                 ) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
-                    if role not in tempo.keys():
+                    if role not in self.tempo.keys():
                         await message.reply("<@&{0}>".format(int(role)))
                         newTempo = {str(role): int(time.time() + cooldown)}
-                        tempo.update(newTempo)
-                    elif tempo[role] > time.time():
+                        self.tempo.update(newTempo)
+                    elif self.tempo[role] > time.time():
                         await message.reply("There is a {0} second cooldown in between uses. There is <t:{1}:R>"
-                            .format(str(cooldown), int(tempo[role]))
+                            .format(str(cooldown), int(self.tempo[role]))
                             + "remaining in the cooldown"
                         )
                     else:
                         await message.reply("<@&{0}>".format(int(role)))
                         newTempo = {str(role): int(time.time() + cooldown)}
-                        tempo.update(newTempo)
+                        self.tempo.update(newTempo)
 
     @commands.group(name="tping")
     async def tping(self, ctx):
