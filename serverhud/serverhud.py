@@ -56,33 +56,42 @@ class serverhud(commands.Cog):
         totmemId: int = await self.config.guild(guild).totmem.channel()
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
-            await channel.edit(name='❎ MEMBERS: {} ❎'.format(totmem))
+            prefix: str = await self.config.guild(guild).totmem.prefix()
+            Name: str = await self.config.guild(guild).totmem.name()
+            suffix: str = await self.config.guild(guild).totmem.suffix()
+            await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, totmem, suffix))
         
         newmemId: int = await self.config.guild(guild).newmem.channel()
         if newmemId != 0:
             channel: discord.ChannelType = guild.get_channel(newmemId)
-            prefix: str = ""
-            Name: str = "New Members"
-            suffix: str = ""
+            prefix: str = await self.config.guild(guild).newmem.prefix()
+            Name: str = await self.config.guild(guild).newmem.name()
+            suffix: str = await self.config.guild(guild).newmem.suffix()
             newmembers: int = 0
-            await channel.edit(name='{0} {1} : {2} {3}'.format(prefix, Name, newmembers, suffix))
+            await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, newmembers, suffix))
 
         truememId: int = await self.config.guild(guild).truemem.channel()
         if truememId != 0:
             channel: discord.ChannelType = guild.get_channel(truememId)
+            prefix: str = await self.config.guild(guild).truemem.prefix()
+            Name: str = await self.config.guild(guild).truemem.name()
+            suffix: str = await self.config.guild(guild).truemem.suffix()
             prefix: str = ""
             Name: str = "Users"
             suffix: str = ""
-            await channel.edit(name='{0} {1} : {2} {3}'.format(prefix, Name, true_member_count, suffix))
+            await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, true_member_count, suffix))
         
         totbotId: int = await self.config.guild(guild).totbot.channel()
         if totbotId != 0:
             channel: discord.ChannelType = guild.get_channel(totbotId)
+            prefix: str = await self.config.guild(guild).totbot.prefix()
+            Name: str = await self.config.guild(guild).totbot.name()
+            suffix: str = await self.config.guild(guild).totbot.suffix()
             prefix: str = ""
             Name: str = "Bots"
             suffix: str = ""
             bot_count: int = totmem - true_member_count
-            await channel.edit(name='{0} {1} : {2} {3}'.format(prefix, Name, bot_count, suffix))
+            await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, bot_count, suffix))
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
