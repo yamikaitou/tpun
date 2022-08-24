@@ -53,7 +53,7 @@ class serverhud(commands.Cog):
     async def members(self, guild: discord.Guild):
         true_member_count = len([m for m in guild.members if not m.bot])
         totmem = guild.member_count
-        totmemId = await self.config.guild(guild).totmem.channel()
+        totmemId = await self.config.guild(guild).totmem("channel")
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
             prefix: str = await self.config.guild(guild).totmem.prefix()
@@ -70,7 +70,7 @@ class serverhud(commands.Cog):
             newmembers: int = 0
             await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, newmembers, suffix))
 
-        truememId = await self.config.guild(guild).truemem.channel()
+        truememId = await self.config.guild(guild).truemem("channel")
         if truememId != 0:
             channel: discord.ChannelType = guild.get_channel(truememId)
             prefix: str = await self.config.guild(guild).truemem.prefix()
@@ -81,7 +81,7 @@ class serverhud(commands.Cog):
             suffix: str = ""
             await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, true_member_count, suffix))
         
-        totbotId = await self.config.guild(guild).totbot.channel()
+        totbotId = await self.config.guild(guild).totbot("channel")
         if totbotId != 0:
             channel: discord.ChannelType = guild.get_channel(totbotId)
             prefix: str = await self.config.guild(guild).totbot.prefix()
