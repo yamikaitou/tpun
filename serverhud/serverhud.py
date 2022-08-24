@@ -23,22 +23,42 @@ class serverhud(commands.Cog):
             identifier=365398642334498816
         )
         default_guild = {
-            "channeltotmem": 0,
-            "channelnewmem": 0,
-            "channeltruemem": 0,
-            "channeltotbot": 0
+            "totmem": {
+                "channel": 0,
+                "prefix": "",
+                "name": "Total Members",
+                "suffix": ""
+            },
+            "newmem": {
+                "channel": 0,
+                "prefix": "",
+                "name": "New Members",
+                "suffix": ""
+            },
+            "truemem": {
+                "channel": 0,
+                "prefix": "",
+                "name": "Total Users",
+                "suffix": ""
+            },
+            "totbot": {
+                "channel": 0,
+                "prefix": "",
+                "name": "Total Bots",
+                "suffix": ""
+            },
         }
         self.config.register_guild(**default_guild)
 
     async def members(self, guild: discord.Guild):
         true_member_count = len([m for m in guild.members if not m.bot])
         totmem = guild.member_count
-        totmemId: int = await self.config.guild(guild).channeltotmem()
+        totmemId: int = await self.config.guild(guild).totmem.channel()
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
             await channel.edit(name='❎ MEMBERS: {} ❎'.format(totmem))
         
-        newmemId: int = await self.config.guild(guild).channelnewmem()
+        newmemId: int = await self.config.guild(guild).newmem.channel()
         if newmemId != 0:
             channel: discord.ChannelType = guild.get_channel(newmemId)
             prefix: str = ""
@@ -47,7 +67,7 @@ class serverhud(commands.Cog):
             newmembers: int = 0
             await channel.edit(name='{0} {1} : {2} {3}'.format(prefix, Name, newmembers, suffix))
 
-        truememId: int = await self.config.guild(guild).channeltruemem()
+        truememId: int = await self.config.guild(guild).truemem.channel()
         if truememId != 0:
             channel: discord.ChannelType = guild.get_channel(truememId)
             prefix: str = ""
@@ -55,7 +75,7 @@ class serverhud(commands.Cog):
             suffix: str = ""
             await channel.edit(name='{0} {1} : {2} {3}'.format(prefix, Name, true_member_count, suffix))
         
-        totbotId: int = await self.config.guild(guild).channeltotbot()
+        totbotId: int = await self.config.guild(guild).totbot.channel()
         if totbotId != 0:
             channel: discord.ChannelType = guild.get_channel(totbotId)
             prefix: str = ""
@@ -92,17 +112,95 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).channelnewmem.set(channel)
+                    await self.config.guild(ctx.guild).newmem.channel.set(channel)
                     await ctx.send("The new member count channel has been set to <#{}>".format(channel))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).channeltotmem.set(channel)
+                    await self.config.guild(ctx.guild).totmem.channel.set(channel)
                     await ctx.send("The total member count channel has been set to <#{}>".format(channel))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).channeltotbot.set(channel)
+                    await self.config.guild(ctx.guild).totbot.channel.set(channel)
                     await ctx.send("The total bot count channel has been set to <#{}>".format(channel))
                 elif x == "truemem":
-                    await self.config.guild(ctx.guild).channeltruemem.set(channel)
+                    await self.config.guild(ctx.guild).truemem.channel.set(channel)
                     await ctx.send("The True member count channel has been set to <#{}>".format(channel))
+            else:
+                pass
+        pass
+
+    @serverhud.command(name="setprefix")
+    async def setprefix(self, ctx, type: int, *, prefix: str):
+        """
+        Sets the prefix for this type of info channel
+
+        For a list of channel types use [p]serverhud types
+        """
+        types = ["newmem", "totmem", "totbot", "truemem"]
+        for x in types:
+            if x == type:
+                if x == "newmem":
+                    await self.config.guild(ctx.guild).newmem.prefix.set(prefix)
+                    await ctx.send("The new member count prefix has been set to <#{}>".format(prefix))
+                elif x == "totmem":
+                    await self.config.guild(ctx.guild).totmem.prefix.set(prefix)
+                    await ctx.send("The total member count prefix has been set to <#{}>".format(prefix))
+                elif x == "totbot":
+                    await self.config.guild(ctx.guild).totbot.prefix.set(prefix)
+                    await ctx.send("The total bot count prefix has been set to <#{}>".format(prefix))
+                elif x == "truemem":
+                    await self.config.guild(ctx.guild).truemem.prefix.set(prefix)
+                    await ctx.send("The True member count prefix has been set to <#{}>".format(prefix))
+            else:
+                pass
+        pass
+
+    @serverhud.command(name="setsuffix")
+    async def setsuffix(self, ctx, type: int, *, suffix: str):
+        """
+        Sets the suffix for this type of info channel
+
+        For a list of channel types use [p]serverhud types
+        """
+        types = ["newmem", "totmem", "totbot", "truemem"]
+        for x in types:
+            if x == type:
+                if x == "newmem":
+                    await self.config.guild(ctx.guild).newmem.suffix.set(suffix)
+                    await ctx.send("The new member count suffix has been set to <#{}>".format(suffix))
+                elif x == "totmem":
+                    await self.config.guild(ctx.guild).totmem.suffix.set(suffix)
+                    await ctx.send("The total member count suffix has been set to <#{}>".format(suffix))
+                elif x == "totbot":
+                    await self.config.guild(ctx.guild).totbot.suffix.set(suffix)
+                    await ctx.send("The total bot count suffix has been set to <#{}>".format(suffix))
+                elif x == "truemem":
+                    await self.config.guild(ctx.guild).truemem.suffix.set(suffix)
+                    await ctx.send("The True member count suffix has been set to <#{}>".format(suffix))
+            else:
+                pass
+        pass
+
+    @serverhud.command(name="setname")
+    async def setname(self, ctx, type: int, *, name: str):
+        """
+        Sets the name for this type of info channel
+
+        For a list of channel types use [p]serverhud types
+        """
+        types = ["newmem", "totmem", "totbot", "truemem"]
+        for x in types:
+            if x == type:
+                if x == "newmem":
+                    await self.config.guild(ctx.guild).newmem.name.set(name)
+                    await ctx.send("The new member count name has been set to <#{}>".format(name))
+                elif x == "totmem":
+                    await self.config.guild(ctx.guild).totmem.name.set(name)
+                    await ctx.send("The total member count name has been set to <#{}>".format(suffix))
+                elif x == "totbot":
+                    await self.config.guild(ctx.guild).totbot.name.set(name)
+                    await ctx.send("The total bot count name has been set to <#{}>".format(name))
+                elif x == "truemem":
+                    await self.config.guild(ctx.guild).truemem.name.set(name)
+                    await ctx.send("The True member count name has been set to <#{}>".format(name))
             else:
                 pass
         pass
