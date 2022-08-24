@@ -120,16 +120,24 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).newmem.set({"channel": channel})
+                    newmemDict: dict = await self.config.guild(ctx.guild).newmem()
+                    newmemDict.update("channel", channel)
+                    await self.config.guild(ctx.guild).newmem.set(newmemDict)
                     await ctx.send("The new member count channel has been set to <#{}>".format(channel))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem.set({"channel": channel})
+                    totmemDict: dict = await self.config.guild(ctx.guild).totmem()
+                    totmemDict.update("channel", channel)
+                    await self.config.guild(ctx.guild).totmem.set(totmemDict)
                     await ctx.send("The total member count channel has been set to <#{}>".format(channel))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot.set({"channel": channel})
+                    totbotDict: dict = await self.config.guild(ctx.guild).totbot()
+                    totbotDict.update("channel", channel)
+                    await self.config.guild(ctx.guild).totbot.set(totbotDict)
                     await ctx.send("The total bot count channel has been set to <#{}>".format(channel))
                 elif x == "truemem":
-                    await self.config.guild(ctx.guild).truemem.set({"channel": channel})
+                    truememDict: dict = await self.config.guild(ctx.guild).truemem()
+                    truememDict.update("channel", channel)
+                    await self.config.guild(ctx.guild).truemem.set(truememDict)
                     await ctx.send("The True member count channel has been set to <#{}>".format(channel))
             else:
                 pass
@@ -146,16 +154,24 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).newmem.set({"prefix": prefix})
+                    newmemDict: dict = await self.config.guild(ctx.guild).newmem()
+                    newmemDict.update("prefix", prefix)
+                    await self.config.guild(ctx.guild).newmem.set(newmemDict)
                     await ctx.send("The new member count prefix has been set to {}".format(prefix))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem.set({"prefix": prefix})
+                    totmemDict: dict = await self.config.guild(ctx.guild).totmem()
+                    totmemDict.update("prefix", prefix)
+                    await self.config.guild(ctx.guild).totmem.set(totmemDict)
                     await ctx.send("The total member count prefix has been set to {}".format(prefix))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot.set({"prefix": prefix})
+                    totbotDict: dict = await self.config.guild(ctx.guild).totbot()
+                    totbotDict.update("prefix", prefix)
+                    await self.config.guild(ctx.guild).totbot.set(totbotDict)
                     await ctx.send("The total bot count prefix has been set to {}".format(prefix))
                 elif x == "truemem":
-                    await self.config.guild(ctx.guild).truemem.set({"prefix": prefix})
+                    truememDict: dict = await self.config.guild(ctx.guild).truemem()
+                    truememDict.update("prefix", prefix)
+                    await self.config.guild(ctx.guild).truemem.set(truememDict)
                     await ctx.send("The True member count prefix has been set to {}".format(prefix))
             else:
                 pass
