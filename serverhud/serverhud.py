@@ -41,7 +41,7 @@ class serverhud(commands.Cog):
         await asyncio.sleep(60)
 
     @commands.group(name="serverhud")
-    async def serverhud(self):
+    async def serverhud(self, ctx):
         """
         Base command for all server hud settings
         """
