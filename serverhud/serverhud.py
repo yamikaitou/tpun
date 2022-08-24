@@ -121,22 +121,22 @@ class serverhud(commands.Cog):
             if x == type:
                 if x == "newmem":
                     newmemDict: dict = await self.config.guild(ctx.guild).newmem()
-                    newmemDict.update("channel", channel)
+                    newmemDict.update({"channel": channel})
                     await self.config.guild(ctx.guild).newmem.set(newmemDict)
                     await ctx.send("The new member count channel has been set to <#{}>".format(channel))
                 elif x == "totmem":
                     totmemDict: dict = await self.config.guild(ctx.guild).totmem()
-                    totmemDict.update("channel", channel)
+                    totmemDict.update({"channel": channel})
                     await self.config.guild(ctx.guild).totmem.set(totmemDict)
                     await ctx.send("The total member count channel has been set to <#{}>".format(channel))
                 elif x == "totbot":
                     totbotDict: dict = await self.config.guild(ctx.guild).totbot()
-                    totbotDict.update("channel", channel)
+                    totbotDict.update({"channel": channel})
                     await self.config.guild(ctx.guild).totbot.set(totbotDict)
                     await ctx.send("The total bot count channel has been set to <#{}>".format(channel))
                 elif x == "truemem":
                     truememDict: dict = await self.config.guild(ctx.guild).truemem()
-                    truememDict.update("channel", channel)
+                    truememDict.update({"channel": channel})
                     await self.config.guild(ctx.guild).truemem.set(truememDict)
                     await ctx.send("The True member count channel has been set to <#{}>".format(channel))
             else:
