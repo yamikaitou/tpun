@@ -46,7 +46,6 @@ class serverhud(commands.Cog):
             suffix: str = ""
             newmembers: int = 0
             await channel.edit(name='{0} {1} : {2} {3}'.format(prefix, Name, newmembers, suffix))
-        await asyncio.sleep(300)
 
         truememId: int = await self.config.guild(guild).channeltruemem()
         if truememId != 0:
