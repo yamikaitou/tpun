@@ -32,7 +32,7 @@ class serverhud(commands.Cog):
     async def members(self, member: discord.Member):
         if self.config.guild(member.guild) is not None:
             channelId = await self.config.guild(member.guild).channeltotmem()
-            channel = await self.bot.get_channel(channelId)
+            channel = self.bot.get_channel(channelId)
             sum = 0
             sum += len(member.guild.members)
             await channel.edit(name='❎ MEMBERS: {} ❎'.format(int(sum)))
