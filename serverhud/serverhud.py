@@ -122,13 +122,13 @@ class serverhud(commands.Cog):
                     await self.config.guild(ctx.guild).newmem.set({"channel" : channel})
                     await ctx.send("The new member count channel has been set to <#{}>".format(channel))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem("channel").set({"channel" : channel})
+                    await self.config.guild(ctx.guild).totmem.set({"channel" : channel})
                     await ctx.send("The total member count channel has been set to <#{}>".format({"channel" : channel}))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot("channel").set({"channel" : channel})
+                    await self.config.guild(ctx.guild).totbot.set({"channel" : channel})
                     await ctx.send("The total bot count channel has been set to <#{}>".format({"channel" : channel}))
                 elif x == "truemem":
-                    await self.config.guild(ctx.guild).truemem("channel").set({"channel" : channel})
+                    await self.config.guild(ctx.guild).truemem.set({"channel" : channel})
                     await ctx.send("The True member count channel has been set to <#{}>".format({"channel" : channel}))
             else:
                 pass
