@@ -155,22 +155,22 @@ class serverhud(commands.Cog):
             if x == type:
                 if x == "newmem":
                     newmemDict: dict = await self.config.guild(ctx.guild).newmem()
-                    newmemDict.update("prefix", prefix)
+                    newmemDict.update({"prefix", prefix})
                     await self.config.guild(ctx.guild).newmem.set(newmemDict)
                     await ctx.send("The new member count prefix has been set to {}".format(prefix))
                 elif x == "totmem":
                     totmemDict: dict = await self.config.guild(ctx.guild).totmem()
-                    totmemDict.update("prefix", prefix)
+                    totmemDict.update({"prefix", prefix})
                     await self.config.guild(ctx.guild).totmem.set(totmemDict)
                     await ctx.send("The total member count prefix has been set to {}".format(prefix))
                 elif x == "totbot":
                     totbotDict: dict = await self.config.guild(ctx.guild).totbot()
-                    totbotDict.update("prefix", prefix)
+                    totbotDict.update({"prefix", prefix})
                     await self.config.guild(ctx.guild).totbot.set(totbotDict)
                     await ctx.send("The total bot count prefix has been set to {}".format(prefix))
                 elif x == "truemem":
                     truememDict: dict = await self.config.guild(ctx.guild).truemem()
-                    truememDict.update("prefix", prefix)
+                    truememDict.update({"prefix", prefix})
                     await self.config.guild(ctx.guild).truemem.set(truememDict)
                     await ctx.send("The True member count prefix has been set to {}".format(prefix))
             else:
