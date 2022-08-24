@@ -1,7 +1,7 @@
 {
-    "name": "Role Buy",
-    "short": "rolebuy",
-    "description": "TPUN Cog for buying roles and setting role prices",
+    "name": "Server Hud",
+    "short": "serverhud",
+    "description": "Team Punistic Cog for creating and customizing server info channels",
     "end_user_data_statement": "This cog does not persistently store any data or metadata about users.",
     "install_msg": "Congrats",
     "author": [
@@ -10,9 +10,10 @@
     "required_cogs": {},
     "requirements": [],
     "tags": [
-        "Role shop",
-        "shop"
-        "tpun"
+        "hud",
+        "info",
+        "channels",
+        "Tpun"
     ],
     "min_bot_version": "3.3.10",
     "hidden": false,
