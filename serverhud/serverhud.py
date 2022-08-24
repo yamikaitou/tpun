@@ -44,7 +44,7 @@ class serverhud(commands.Cog):
     async def serverhud(self):
         pass
 
-    @serverhud.commands(name="setchannel")
+    @serverhud.command(name="setchannel")
     async def setchannel(self, ctx, type: str, channel: discord.channel):
         """
         Sets the channel info type and location
@@ -65,7 +65,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
-    @serverhud.commands(name="types")
+    @serverhud.command(name="types")
     async def types(self, ctx, type: str, channel: discord.channel):
         """
         Lists of the different types of channels you can set
