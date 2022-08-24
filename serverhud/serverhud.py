@@ -23,16 +23,16 @@ class serverhud(commands.Cog):
             identifier=365398642334498816
         )
         default_guild = {
-            "channeltotmem": None,
-            "channelnewmem": None,
-            "channeltotbot": None
+            "channeltotmem": 0,
+            "channelnewmem": 0,
+            "channeltotbot": 0
         }
         self.config.register_guild(**default_guild)
 
     async def members(self, member: discord.Member):
         if self.config.guild(member.guild) is not None:
             channelId = await self.config.guild(member.guild).channeltotmem()
-            channel = self.bot.get_channel(channelId)
+            channel: int = self.bot.get_channel(channelId)
             sum = 0
             sum += len(member.guild.members)
             await channel.edit(name='❎ MEMBERS: {} ❎'.format(int(sum)))
