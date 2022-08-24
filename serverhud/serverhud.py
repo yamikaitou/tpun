@@ -40,7 +40,7 @@ class serverhud(commands.Cog):
             await channel.edit(name='❎ MEMBERS: {} ❎'.format(int(sum)))
         await asyncio.sleep(60)
 
-    @commands.group()
+    @commands.group(name="serverhud")
     async def serverhud(self):
         """
         Base command for all server hud settings
