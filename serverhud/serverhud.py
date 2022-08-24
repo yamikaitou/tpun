@@ -42,10 +42,13 @@ class serverhud(commands.Cog):
 
     @commands.group()
     async def serverhud(self):
+        """
+        Base command for all server hud settings
+        """
         pass
 
     @serverhud.command(name="setchannel")
-    async def setchannel(self, ctx, type: str, channel: discord.channel):
+    async def setchannel(self, ctx, type: str, channel: int):
         """
         Sets the channel info type and location
 
@@ -56,17 +59,20 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).newmem.set(channel.id)
+                    await self.config.guild(ctx.guild).newmem.set(channel)
+                    await ctx.send("The new member count channel has been set to <#{}>".format(channel))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem.set(channel.id)
+                    await self.config.guild(ctx.guild).totmem.set(channel)
+                    await ctx.send("The total member count channel has been set to <#{}>".format(channel))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot.set(channel.id)
+                    await self.config.guild(ctx.guild).totbot.set(channel)
+                    await ctx.send("The total bot count channel has been set to <#{}>".format(channel))
             else:
                 pass
         pass
 
     @serverhud.command(name="types")
-    async def types(self, ctx, type: str, channel: discord.channel):
+    async def types(self, ctx):
         """
         Lists of the different types of channels you can set
 
