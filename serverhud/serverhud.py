@@ -121,16 +121,16 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).newmem.channel.set(channel)
+                    await self.config.guild(ctx.guild).newmem("channel").set(channel)
                     await ctx.send("The new member count channel has been set to <#{}>".format(channel))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem.channel.set(channel)
+                    await self.config.guild(ctx.guild).totmem("channel").set(channel)
                     await ctx.send("The total member count channel has been set to <#{}>".format(channel))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot.channel.set(channel)
+                    await self.config.guild(ctx.guild).totbot("channel").set(channel)
                     await ctx.send("The total bot count channel has been set to <#{}>".format(channel))
                 elif x == "truemem":
-                    await self.config.guild(ctx.guild).truemem.channel.set(channel)
+                    await self.config.guild(ctx.guild).truemem("channel").set(channel)
                     await ctx.send("The True member count channel has been set to <#{}>".format(channel))
             else:
                 pass
@@ -147,16 +147,16 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).newmem.prefix.set(prefix)
+                    await self.config.guild(ctx.guild).newmem("prefix").set(prefix)
                     await ctx.send("The new member count prefix has been set to {}".format(prefix))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem.prefix.set(prefix)
+                    await self.config.guild(ctx.guild).totmem("prefix").set(prefix)
                     await ctx.send("The total member count prefix has been set to {}".format(prefix))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot.prefix.set(prefix)
+                    await self.config.guild(ctx.guild).totbot("prefix").set(prefix)
                     await ctx.send("The total bot count prefix has been set to {}".format(prefix))
                 elif x == "truemem":
-                    await self.config.guild(ctx.guild).truemem.prefix.set(prefix)
+                    await self.config.guild(ctx.guild).truemem("prefix").set(prefix)
                     await ctx.send("The True member count prefix has been set to {}".format(prefix))
             else:
                 pass
@@ -173,16 +173,16 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).newmem.suffix.set(suffix)
+                    await self.config.guild(ctx.guild).newmem("suffix").set(suffix)
                     await ctx.send("The new member count suffix has been set to {}".format(suffix))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem.suffix.set(suffix)
+                    await self.config.guild(ctx.guild).totmem("suffix").set(suffix)
                     await ctx.send("The total member count suffix has been set to {}".format(suffix))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot.suffix.set(suffix)
+                    await self.config.guild(ctx.guild).totbot("suffix").set(suffix)
                     await ctx.send("The total bot count suffix has been set to {}".format(suffix))
                 elif x == "truemem":
-                    await self.config.guild(ctx.guild).truemem.suffix.set(suffix)
+                    await self.config.guild(ctx.guild).truemem("suffix").set(suffix)
                     await ctx.send("The True member count suffix has been set to {}".format(suffix))
             else:
                 pass
@@ -199,16 +199,16 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).newmem.name.set(name)
+                    await self.config.guild(ctx.guild).newmem("name").set(name)
                     await ctx.send("The new member count name has been set to {}".format(name))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem.name.set(name)
+                    await self.config.guild(ctx.guild).totmem("name").set(name)
                     await ctx.send("The total member count name has been set to {}".format(suffix))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot.name.set(name)
+                    await self.config.guild(ctx.guild).totbot("name").set(name)
                     await ctx.send("The total bot count name has been set to {}".format(name))
                 elif x == "truemem":
-                    await self.config.guild(ctx.guild).truemem.name.set(name)
+                    await self.config.guild(ctx.guild).truemem("name").set(name)
                     await ctx.send("The True member count name has been set to {}".format(name))
             else:
                 pass
