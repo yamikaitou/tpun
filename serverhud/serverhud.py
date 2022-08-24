@@ -60,6 +60,7 @@ class serverhud(commands.Cog):
             prefix: str = totmemDict["prefix"]
             Name: str = totmemDict["name"]
             suffix: str = totmemDict["suffix"]
+            self.log.info(totmemId + " " + prefix + " " + Name + " " + suffix)
             await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, totmem, suffix))
         
         newmemObj = await self.config.guild(guild).newmem()
