@@ -58,39 +58,27 @@ class serverhud(commands.Cog):
         totmemId = totmemDict["channel"]
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
-            prefix: str = totmemDict["prefix"]
-            Name: str = totmemDict["name"]
-            suffix: str = totmemDict["suffix"]
-            await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, totmem, suffix))
+            await channel.edit(name='{0} {1}: {2} {3}'.format(totmemDict["prefix"], totmemDict["name"], totmemDict["suffix"], suffix))
         
         newmemObj = await self.config.guild(guild).newmem()
         newmemId = newmemObj["channel"]
         if newmemId != 0:
             channel: discord.ChannelType = guild.get_channel(newmemId)
-            prefix: str = newmemObj["prefix"]
-            Name: str = newmemObj["name"]
-            suffix: str = newmemObj["suffix"]
             newmembers: int = 0
-            await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, newmembers, suffix))
+            await channel.edit(name='{0} {1}: {2} {3}'.format(newmemObj["prefix"], newmemObj["name"], newmembers, newmemObj["suffix"]))
 
         truememObj = await self.config.guild(guild).truemem()
         truememId = truememObj["channel"]
         if truememId != 0:
             channel: discord.ChannelType = guild.get_channel(truememId)
-            prefix: str = truememObj["prefix"]
-            Name: str = truememObj["name"]
-            suffix: str = truememObj["suffix"]
-            await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, true_member_count, suffix))
+            await channel.edit(name='{0} {1}: {2} {3}'.format(truememObj["prefix"], truememObj["name"], true_member_count, truememObj["suffix"]))
 
         totbotObj = await self.config.guild(guild).totbot()
         totbotId = totbotObj["channel"]
         if totbotId != 0:
             channel: discord.ChannelType = guild.get_channel(totbotId)
-            prefix: str = totbotObj["prefix"]
-            Name: str = totbotObj["name"]
-            suffix: str = totbotObj["suffix"]
             bot_count: int = totmem - true_member_count
-            await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, bot_count, suffix))
+            await channel.edit(name='{0} {1}: {2} {3}'.format(totbotObj["prefix"], totbotObj["name"], bot_count, totbotObj["suffix"]))
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
