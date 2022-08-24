@@ -61,7 +61,7 @@ class serverhud(commands.Cog):
             suffix: str = await self.config.guild(guild).totmem.suffix()
             await channel.edit(name='{0} {1}: {2} {3}'.format(prefix, Name, totmem, suffix))
         
-        newmemId = await self.config.guild(guild).newmem.channel()
+        newmemId = await self.config.guild(guild).newmem("channel")
         if newmemId != 0:
             channel: discord.ChannelType = guild.get_channel(newmemId)
             prefix: str = await self.config.guild(guild).newmem.prefix()
