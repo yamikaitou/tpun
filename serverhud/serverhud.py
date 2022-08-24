@@ -64,13 +64,13 @@ class serverhud(commands.Cog):
         for x in types:
             if x == type:
                 if x == "newmem":
-                    await self.config.guild(ctx.guild).newmem.set(channel)
+                    await self.config.guild(ctx.guild).channelnewmem.set(channel)
                     await ctx.send("The new member count channel has been set to <#{}>".format(channel))
                 elif x == "totmem":
-                    await self.config.guild(ctx.guild).totmem.set(channel)
+                    await self.config.guild(ctx.guild).channeltotmem.set(channel)
                     await ctx.send("The total member count channel has been set to <#{}>".format(channel))
                 elif x == "totbot":
-                    await self.config.guild(ctx.guild).totbot.set(channel)
+                    await self.config.guild(ctx.guild).channeltotbot.set(channel)
                     await ctx.send("The total bot count channel has been set to <#{}>".format(channel))
             else:
                 pass
