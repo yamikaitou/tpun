@@ -54,6 +54,7 @@ class serverhud(commands.Cog):
         true_member_count = len([m for m in guild.members if not m.bot])
         totmem = guild.member_count
         totmemDict = await self.config.guild(guild).totmem()
+        print(totmemDict)
         totmemId = totmemDict["channel"]
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
