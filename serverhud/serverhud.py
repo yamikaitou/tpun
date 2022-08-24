@@ -30,12 +30,11 @@ class serverhud(commands.Cog):
         self.config.register_guild(**default_guild)
 
     async def members(self, guild: discord.Guild):
-        if self.config.guild(guild) is not None:
-            channelId: int = await self.config.guild(guild).channeltotmem()
-            channel: discord.ChannelType = guild.get_channel(channelId)
-            sum = 0
-            sum += len(guild.members)
-            await channel.edit(name='❎ MEMBERS: {} ❎'.format(int(sum)))
+        channelId: int = await self.config.guild(guild).channeltotmem()
+        channel: discord.ChannelType = guild.get_channel(channelId)
+        sum = 0
+        sum += len(guild.members)
+        await channel.edit(name='❎ MEMBERS: {} ❎'.format(int(sum)))
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -97,7 +96,7 @@ class serverhud(commands.Cog):
         join, leave
         """
         if event == "join" or event == "leave":
-            self.members(ctx.guild)
+            await self.members(ctx.guild)
             await ctx.send("The server channels being tested are: {0}".format(await self.config.guild(ctx.guild).channeltotmem()))
             await ctx.send("Test of the member join/leave event.")
         else:
