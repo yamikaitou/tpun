@@ -98,6 +98,7 @@ class serverhud(commands.Cog):
         """
         if event == "join" or event == "leave":
             self.members(ctx.guild)
+            await ctx.send("The server channels being tested are: {0}".format(await self.config.guild(ctx.guild).channeltotmem()))
             await ctx.send("Test of the member join/leave event.")
         else:
             await ctx.send("That is not a valid event do [p]help serverhud test for a list of events")
