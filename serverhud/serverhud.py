@@ -33,6 +33,7 @@ class serverhud(commands.Cog):
         channelId: int = await self.config.guild(guild).channeltotmem()
         channel: discord.ChannelType = guild.get_channel(channelId)
         await channel.edit(name='❎ MEMBERS: {} ❎'.format(guild.member_count))
+        await asyncio.sleep(300)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
