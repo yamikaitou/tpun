@@ -29,18 +29,17 @@ class serverhud(commands.Cog):
         }
         self.config.register_guild(**default_guild)
 
-    async def members(self, member: discord.Member):
-        if self.config.guild(member.guild) is not None:
-            channelId = await self.config.guild(member.guild).channeltotmem()
-            channel: int = self.bot.get_channel(channelId)
+    async def members(self, guild: discord.Guild):
+        if self.config.guild(guild) is not None:
+            channelId: int = await self.config.guild(guild).channeltotmem()
+            channel: discord.ChannelType = guild.get_channel(channelId)
             sum = 0
-            sum += len(member.guild.members)
+            sum += len(guild.members)
             await channel.edit(name='❎ MEMBERS: {} ❎'.format(int(sum)))
-        await asyncio.sleep(60)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        await self.members(member)
+        await self.members(member.guild)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
@@ -88,3 +87,17 @@ class serverhud(commands.Cog):
         mess = "The avaible types of channels are: new members from today (newmem), total members (totmem), total bots (totbot)"
         await ctx.send(mess)
         pass
+
+    @serverhud.command(name="test")
+    async def test(self, ctx, event):
+        """
+        Test the cog to insure functionality
+
+        You can test different events using this command:
+        join, leave
+        """
+        if event == "join" or event == "leave":
+            self.members(ctx.guild)
+            await ctx.send("Test of the member join/leave event.")
+        else:
+            await ctx.send("That is not a valid event do [p]help serverhud test for a list of events")
