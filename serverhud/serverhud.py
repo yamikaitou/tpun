@@ -137,7 +137,7 @@ class serverhud(commands.Cog):
         pass
 
     @serverhud.command(name="setprefix")
-    async def setprefix(self, ctx, type: int, *, prefix: str):
+    async def setprefix(self, ctx, type: str, *, prefix: str):
         """
         Sets the prefix for this type of info channel
 
@@ -163,7 +163,7 @@ class serverhud(commands.Cog):
         pass
 
     @serverhud.command(name="setsuffix")
-    async def setsuffix(self, ctx, type: int, *, suffix: str):
+    async def setsuffix(self, ctx, type: str, *, suffix: str):
         """
         Sets the suffix for this type of info channel
 
@@ -189,7 +189,7 @@ class serverhud(commands.Cog):
         pass
 
     @serverhud.command(name="setname")
-    async def setname(self, ctx, type: int, *, name: str):
+    async def setname(self, ctx, type: str, *, name: str):
         """
         Sets the name for this type of info channel
 
