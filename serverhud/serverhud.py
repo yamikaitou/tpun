@@ -29,16 +29,24 @@ class serverhud(commands.Cog):
         }
         self.config.register_guild(**default_guild)
 
-    @commands.Cog.listener()
-    async def on_member_join(self, member: discord.Member):
+    async def members(self, member: discord.Member):
         if self.config.guild(member.guild) is not None:
-            channel = await self.config.guild(member.guild).channeltotmem()
+            channelId = await self.config.guild(member.guild).channeltotmem()
+            channel = await self.bot.get_channel(channelId)
             totalMembers = totalMembers + 1
             activeGuilds = self.bot.guilds
             sum = 0
             sum += len(member.guild.members)
             await channel.edit(name='❎ MEMBERS: {} ❎'.format(int(sum)))
         await asyncio.sleep(60)
+
+    @commands.Cog.listener()
+    async def on_member_join(self, member):
+        await self.members()
+
+    @commands.Cog.listener()
+    async def on_member_remove(self, member):
+        await self.members()
 
     @commands.group(name="serverhud")
     async def serverhud(self, ctx):
@@ -52,7 +60,8 @@ class serverhud(commands.Cog):
         """
         Sets the channel info type and location
 
-        "For a list of channel types use [p]serverhud types
+        The command syntax is [p]serverhud setchannel <type> <channel id>
+        For a list of channel types use [p]serverhud types
         """
         
         types = ["newmem", "totmem", "totbot"]
