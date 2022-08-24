@@ -42,11 +42,11 @@ class serverhud(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        await self.members()
+        await self.members(member)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        await self.members()
+        await self.members(member)
 
     @commands.group(name="serverhud")
     async def serverhud(self, ctx):
