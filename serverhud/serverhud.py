@@ -31,7 +31,7 @@ class serverhud(commands.Cog):
         self.config.register_guild(**default_guild)
 
     async def members(self, guild: discord.Guild):
-        true_member_count = len([m for m in ctx.guild.members if not m.bot])
+        true_member_count = len([m for m in guild.members if not m.bot])
         totmem = guild.member_count
         totmemId: int = await self.config.guild(guild).channeltotmem()
         if totmemId != 0:
