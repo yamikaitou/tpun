@@ -145,10 +145,7 @@ class serverhud(commands.Cog):
                 for i in range(7):
                     mess = mess + stylefull
                 await channel.edit(name='{0} Max {1}'.format(boosterBarObj["prefix"], mess))
-                await asyncio.sleep(15)
-        print(boosterBarObj)
-        print(mess)
-            
+                await asyncio.sleep(15)     
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -409,7 +406,6 @@ class serverhud(commands.Cog):
             await self.config.guild(ctx.guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
             self.newMemGet = datetime.today()
-            print(str(ctx.guild.id) + ":" + str(len([m for m in memberList if not m.bot])) + str(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)])))
             await self.members(ctx.guild)
             await self.boosters(ctx.guild)
             await ctx.send("Test of the member join/leave event.")
