@@ -112,6 +112,7 @@ class serverhud(commands.Cog):
         boosterBarObj = await self.config.guild(guild).boosterbar()
         boosterBarId = boosterBarObj["channel"]
         mess = ""
+        style = boostBarObj["style"]
         if boosterBarId != 0:
             channel: discord.ChannelType = guild.get_channel(boosterBarId)
             if booster_count < 2:
@@ -324,6 +325,16 @@ class serverhud(commands.Cog):
             else:
                 pass
         pass
+
+    @serverhud.command(name="setstyle")
+    async def setstyle(self, ctx, *, style: str):
+        """
+        Set's the style of the booster bar
+        """
+        boosterBarDict: dict = await self.config.guild(ctx.guild).boosterbar()
+        boosterBarDict.update({"style": style})
+        await self.config.guild(ctx.guild).boosterbar.set(boosterBarDict)
+        await ctx.send("The Booster Bar style has been set to {}".format(style))
 
     @serverhud.command(name="types")
     async def types(self, ctx):
