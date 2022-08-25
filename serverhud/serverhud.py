@@ -119,7 +119,7 @@ class serverhud(commands.Cog):
                     mess = mess + "*"
                 for i in range(7 - booster_count):
                     mess = mess + "-"
-                    await channel.edit(name='{0} {1}'.format(boosterBarObj["prefix"], mess)
+                    await channel.edit(name='{0} {1}'.format(boosterBarObj["prefix"], mess))
             
 
     @commands.Cog.listener()
