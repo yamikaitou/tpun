@@ -192,7 +192,7 @@ class serverhud(commands.Cog):
         For a list of channel types use [p]serverhud types
         """
         
-        types = ["totmem", "totbot", "truemem", "booster", "boosterbar"]
+        types = ["newmem", "totmem", "totbot", "truemem", "booster", "boosterbar"]
         for x in types:
             if x == type:
                 if x == "newmem":
