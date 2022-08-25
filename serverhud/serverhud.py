@@ -125,26 +125,26 @@ class serverhud(commands.Cog):
                     mess = mess + stylefull
                 for i in range(2 - booster_count):
                     mess = mess + styleempty
-                await channel.edit(name='{0} Lvl 1 {1}'.format(boosterBarObj["prefix"], mess))
+                await channel.edit(name='{0}Lvl 1{1}'.format(boosterBarObj["prefix"], mess))
                 await asyncio.sleep(15)
             elif booster_count < 7:
-                for i in range(booster_count - 2):
+                for i in range(booster_count):
                     mess = mess + stylefull
-                for i in range(7 - (booster_count - 2)):
+                for i in range(7 - booster_count):
                     mess = mess + styleempty
-                await channel.edit(name='{0} Lvl 2 {1}'.format(boosterBarObj["prefix"], mess))
+                await channel.edit(name='{0}Lvl 2{1}'.format(boosterBarObj["prefix"], mess))
                 await asyncio.sleep(15)
             elif booster_count < 14:
-                for i in range(booster_count / 2):
+                for i in range(booster_count - 7):
                     mess = mess + stylefull
-                for i in range(7 - (booster_count / 2)):
+                for i in range(14 - booster_count):
                     mess = mess + styleempty
-                await channel.edit(name='{0} Lvl 3 {1}'.format(boosterBarObj["prefix"], mess))
+                await channel.edit(name='{0}Lvl 3{1}'.format(boosterBarObj["prefix"], mess))
                 await asyncio.sleep(15)
             elif booster_count > 14:
                 for i in range(7):
                     mess = mess + stylefull
-                await channel.edit(name='{0} Max {1}'.format(boosterBarObj["prefix"], mess))
+                await channel.edit(name='{0}Max{1}'.format(boosterBarObj["prefix"], mess))
                 await asyncio.sleep(15)     
 
     @commands.Cog.listener()
