@@ -65,6 +65,7 @@ class serverhud(commands.Cog):
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(totmemDict["prefix"], totmemDict["name"], totmem, totmemDict["suffix"]))
+        print(totmemDict)
 
         newmemObj = await self.config.guild(guild).newmem()
         newmemId = newmemObj["channel"]
@@ -72,12 +73,14 @@ class serverhud(commands.Cog):
             channel: discord.ChannelType = guild.get_channel(newmemId)
             newmembers: int = 0
             await channel.edit(name='{0} {1}: {2} {3}'.format(newmemObj["prefix"], newmemObj["name"], newmembers, newmemObj["suffix"]))
+        print(newmemObj)
 
         truememObj = await self.config.guild(guild).truemem()
         truememId = truememObj["channel"]
         if truememId != 0:
             channel: discord.ChannelType = guild.get_channel(truememId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(truememObj["prefix"], truememObj["name"], true_member_count, truememObj["suffix"]))
+        print(truememObj)
 
         totbotObj = await self.config.guild(guild).totbot()
         totbotId = totbotObj["channel"]
@@ -85,14 +88,16 @@ class serverhud(commands.Cog):
             channel: discord.ChannelType = guild.get_channel(totbotId)
             bot_count: int = totmem - true_member_count
             await channel.edit(name='{0} {1}: {2} {3}'.format(totbotObj["prefix"], totbotObj["name"], bot_count, totbotObj["suffix"]))
+        print(totbotObj)
 
     async def boosters(self, guild: discord.Guild):
         booster_count: int = guild.premium_subscription_count
         boosterObj = await self.config.guild(guild).booster()
-        boosterId= boosterObj["channel"]
-        if boosterObj != 0:
+        boosterId = boosterObj["channel"]
+        if boosterId != 0:
             channel: discord.ChannelType = guild.get_channel(boosterId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(boosterObj["prefix"], boosterObj["name"], booster_count, boosterObj["suffix"]))
+        print(boosterObj)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
