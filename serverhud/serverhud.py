@@ -114,12 +114,29 @@ class serverhud(commands.Cog):
         mess = ""
         if boosterBarId != 0:
             channel: discord.ChannelType = guild.get_channel(boosterBarId)
-            if booster_count < 7:
+            if booster_count < 2:
                 for i in range(booster_count):
                     mess = mess + "*"
-                for i in range(7 - booster_count):
+                for i in range(2 - booster_count):
                     mess = mess + "-"
-                    await channel.edit(name='{0} {1}'.format(boosterBarObj["prefix"], mess))
+                await channel.edit(name='{0} Lvl 1 {1}'.format(boosterBarObj["prefix"], mess))
+            elif booster_count < 7:
+                for i in range(booster_count - 2):
+                    mess = mess + "*"
+                for i in range(7 - (booster_count - 2)):
+                    mess = mess + "-"
+                await channel.edit(name='{0} Lvl 2 {1}'.format(boosterBarObj["prefix"], mess))
+            elif booster_count < 14:
+                for i in range(booster_count - 7):
+                    mess = mess + "*"
+                for i in range(14 - (booster_count - 2)):
+                    mess = mess + "-"
+                await channel.edit(name='{0} Lvl 3 {1}'.format(boosterBarObj["prefix"], mess))
+            elif booster_count > 14:
+                for i in range(7):
+                    mess = mess + "*"
+                await channel.edit(name='{0} Max {1}'.format(boosterBarObj["prefix"], mess))
+        print(mess)
             
 
     @commands.Cog.listener()
