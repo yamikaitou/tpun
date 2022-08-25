@@ -65,6 +65,7 @@ class serverhud(commands.Cog):
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(totmemDict["prefix"], totmemDict["name"], totmem, totmemDict["suffix"]))
+            pass
         print(totmemDict)
 
         newmemObj = await self.config.guild(guild).newmem()
@@ -73,6 +74,7 @@ class serverhud(commands.Cog):
             channel: discord.ChannelType = guild.get_channel(newmemId)
             newmembers: int = 0
             await channel.edit(name='{0} {1}: {2} {3}'.format(newmemObj["prefix"], newmemObj["name"], newmembers, newmemObj["suffix"]))
+            pass
         print(newmemObj)
 
         truememObj = await self.config.guild(guild).truemem()
@@ -80,6 +82,7 @@ class serverhud(commands.Cog):
         if truememId != 0:
             channel: discord.ChannelType = guild.get_channel(truememId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(truememObj["prefix"], truememObj["name"], true_member_count, truememObj["suffix"]))
+            pass
         print(truememObj)
 
         totbotObj = await self.config.guild(guild).totbot()
@@ -88,6 +91,7 @@ class serverhud(commands.Cog):
             channel: discord.ChannelType = guild.get_channel(totbotId)
             bot_count: int = totmem - true_member_count
             await channel.edit(name='{0} {1}: {2} {3}'.format(totbotObj["prefix"], totbotObj["name"], bot_count, totbotObj["suffix"]))
+            pass
         print(totbotObj)
 
     async def boosters(self, guild: discord.Guild):
@@ -97,6 +101,7 @@ class serverhud(commands.Cog):
         if boosterId != 0:
             channel: discord.ChannelType = guild.get_channel(boosterId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(boosterObj["prefix"], boosterObj["name"], booster_count, boosterObj["suffix"]))
+            pass
         print(boosterObj)
 
     @commands.Cog.listener()
