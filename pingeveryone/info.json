@@ -1,6 +1,6 @@
 {
     "name": "PingEveryone",
-    "short": "TPUN Cog to Ping Everyone",
+    "short": "pingeveryone",
     "description": "Team Punistic red cog just to ping everyone with the bot",
     "end_user_data_statement": "This cog does not persistently store data or meta-data about users.",
     "install_msg": "Congrats",
