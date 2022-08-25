@@ -89,7 +89,7 @@ class serverhud(commands.Cog):
     async def boosters(self, guild: discord.Guild):
         booster_count: int = guild.premium_subscription_count
         boosterObj = await self.config.guild(guild).booster()
-        boosterId: int = boosterObj["channel"]
+        boosterId= boosterObj["channel"]
         if boosterObj != 0:
             channel: discord.ChannelType = guild.get_channel(boosterId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(boosterObj["prefix"], boosterObj["name"], booster_count, boosterObj["suffix"]))
