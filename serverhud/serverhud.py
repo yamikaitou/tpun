@@ -388,7 +388,7 @@ class serverhud(commands.Cog):
 
         Use [p]serverhud setchannel <type> <channel mention>
         """
-        mess = "The avaible types of channels are: new members from today (newmem), total members (totmem), total bots (totbot), True Members (truemem), Server Boosters Count (booster)"
+        mess = "The avaible types of channels are: new members from today (newmem), total members (totmem), total bots (totbot), True Members (truemem), Server Boosters Count (booster), Booster Bar (boosterbar)"
         await ctx.send(mess)
         pass
 
