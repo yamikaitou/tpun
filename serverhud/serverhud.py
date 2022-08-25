@@ -109,7 +109,7 @@ class serverhud(commands.Cog):
             pass
         print(boosterObj)
 
-        boosterBarObj = await self.config.guild(guild).boosterBar()
+        boosterBarObj = await self.config.guild(guild).boosterbar()
         boosterBarId = boosterBarObj["channel"]
         mess = ""
         if boosterBarId != 0:
@@ -219,12 +219,12 @@ class serverhud(commands.Cog):
                     boosterDict: dict = await self.config.guild(ctx.guild).booster()
                     boosterDict.update({"prefix": prefix})
                     await self.config.guild(ctx.guild).booster.set(boosterDict)
-                    await ctx.send("The True member count prefix has been set to {}".format(prefix))
+                    await ctx.send("The Booster count prefix has been set to {}".format(prefix))
                 elif x == "boosterbar":
                     boosterBarDict: dict = await self.config.guild(ctx.guild).boosterbar()
                     boosterBarDict.update({"prefix": prefix})
                     await self.config.guild(ctx.guild).boosterbar.set(boosterBarDict)
-                    await ctx.send("The True member count prefix has been set to {}".format(prefix))
+                    await ctx.send("The Booster Bar prefix has been set to {}".format(prefix))
             else:
                 pass
         pass
@@ -263,7 +263,7 @@ class serverhud(commands.Cog):
                     boosterDict: dict = await self.config.guild(ctx.guild).booster()
                     boosterDict.update({"suffix": suffix})
                     await self.config.guild(ctx.guild).booster.set(boosterDict)
-                    await ctx.send("The True member count prefix has been set to {}".format(suffix))
+                    await ctx.send("The Booster count prefix has been set to {}".format(suffix))
             else:
                 pass
         pass
@@ -302,7 +302,7 @@ class serverhud(commands.Cog):
                     boosterDict: dict = await self.config.guild(ctx.guild).booster()
                     boosterDict.update({"name": name})
                     await self.config.guild(ctx.guild).booster.set(boosterDict)
-                    await ctx.send("The True member count prefix has been set to {}".format(name))
+                    await ctx.send("The Booster count prefix has been set to {}".format(name))
             else:
                 pass
         pass
