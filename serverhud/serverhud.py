@@ -57,7 +57,8 @@ class serverhud(commands.Cog):
             "boosterbar": {
                 "channel": 0,
                 "prefix": "",
-                "style": ""
+                "stylefull": "*",
+                "styleempty": "-"
             }
         }
         self.config.register_guild(**default_guild)
@@ -112,30 +113,31 @@ class serverhud(commands.Cog):
         boosterBarObj = await self.config.guild(guild).boosterbar()
         boosterBarId = boosterBarObj["channel"]
         mess = ""
-        style = boostBarObj["style"]
+        stylefull = boosterBarObj["stylefull"]
+        styleempty = boosterBarObj["styleempty"]
         if boosterBarId != 0:
             channel: discord.ChannelType = guild.get_channel(boosterBarId)
             if booster_count < 2:
                 for i in range(booster_count):
-                    mess = mess + "*"
+                    mess = mess + stylefull
                 for i in range(2 - booster_count):
-                    mess = mess + "-"
+                    mess = mess + styleempty
                 await channel.edit(name='{0} Lvl 1 {1}'.format(boosterBarObj["prefix"], mess))
             elif booster_count < 7:
                 for i in range(booster_count - 2):
-                    mess = mess + "*"
+                    mess = mess + stylefull
                 for i in range(7 - (booster_count - 2)):
-                    mess = mess + "-"
+                    mess = mess + styleempty
                 await channel.edit(name='{0} Lvl 2 {1}'.format(boosterBarObj["prefix"], mess))
             elif booster_count < 14:
                 for i in range(booster_count - 7):
-                    mess = mess + "*"
+                    mess = mess + stylefull
                 for i in range(14 - (booster_count - 2)):
-                    mess = mess + "-"
+                    mess = mess + styleempty
                 await channel.edit(name='{0} Lvl 3 {1}'.format(boosterBarObj["prefix"], mess))
             elif booster_count > 14:
                 for i in range(7):
-                    mess = mess + "*"
+                    mess = mess + stylefull
                 await channel.edit(name='{0} Max {1}'.format(boosterBarObj["prefix"], mess))
         print(boosterBarObj)
         print(mess)
@@ -327,14 +329,25 @@ class serverhud(commands.Cog):
         pass
 
     @serverhud.command(name="setstyle")
-    async def setstyle(self, ctx, *, style: str):
+    async def setstyle(self, ctx, type, *, style: str):
         """
         Set's the style of the booster bar
+
+        Valid types are full and empty
         """
-        boosterBarDict: dict = await self.config.guild(ctx.guild).boosterbar()
-        boosterBarDict.update({"style": style})
-        await self.config.guild(ctx.guild).boosterbar.set(boosterBarDict)
-        await ctx.send("The Booster Bar style has been set to {}".format(style))
+        if type == "full":
+            boosterBarDict: dict = await self.config.guild(ctx.guild).boosterbar()
+            boosterBarDict.update({"stylefull": style})
+            await self.config.guild(ctx.guild).boosterbar.set(boosterBarDict)
+            await ctx.send("The Booster Bar full style has been set to {}".format(style))
+        elif type == "empty":
+            boosterBarDict: dict = await self.config.guild(ctx.guild).boosterbar()
+            boosterBarDict.update({"styleempty": style})
+            await self.config.guild(ctx.guild).boosterbar.set(boosterBarDict)
+            await ctx.send("The Booster Bar empty style has been set to {}".format(style))
+        else:
+            await ctx.send("That is not a valid booster bar type")
+        
 
     @serverhud.command(name="types")
     async def types(self, ctx):
