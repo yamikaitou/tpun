@@ -157,6 +157,9 @@ class serverhud(commands.Cog):
             truememcount = await self.config.guild(member.guild).truememcount()
             newcount = truememcount + 1
             await self.config.guild(member.guild).truememcount.set(newcount)
+            newmemcount = self.config.guild(guild).newmemcount()
+            changeNewMem = newmemcount + 1
+            await self.config.guild(guild).newmemcount.set(changeNewMem)
         if self.newMemGet < (datetime.today() - timedelta(days=1)):
             truemem = self.config.guild(guild).truemem()
             memberList = guild.members
@@ -173,6 +176,9 @@ class serverhud(commands.Cog):
             truememcount = await self.config.guild(guild).truememcount()
             newcount = truememcount - 1
             await self.config.guild(guild).truememcount.set(newcount)
+            newmemcount = self.config.guild(guild).newmemcount()
+            changeNewMem = newmemcount - 1
+            await self.config.guild(guild).newmemcount.set(changeNewMem)
         if self.newMemGet < (datetime.today() - timedelta(days=1)):
             truemem = self.config.guild(guild).truemem()
             memberList = guild.members
