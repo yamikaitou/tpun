@@ -74,6 +74,7 @@ class serverhud(commands.Cog):
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
             await self.config.guild(guild).newmemget.set(datetime.today())
+            print(guild.id + ":" + len([m for m in memberList if not m.bot]) + len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
 
     async def members(self, guild: discord.Guild):
         true_member_count = await self.config.guild(guild).truememcount()
