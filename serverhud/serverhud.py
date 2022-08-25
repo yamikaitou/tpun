@@ -147,7 +147,7 @@ class serverhud(commands.Cog):
                     boosterDict: dict = await self.config.guild(ctx.guild).booster()
                     boosterDict.update({"channel": channel})
                     await self.config.guild(ctx.guild).booster.set(boosterDict)
-                    await ctx.send("The True member count channel has been set to <#{}>".format(channel))
+                    await ctx.send("The Booster count channel has been set to <#{}>".format(channel))
             else:
                 pass
         pass
@@ -159,7 +159,7 @@ class serverhud(commands.Cog):
 
         For a list of channel types use [p]serverhud types
         """
-        types = ["newmem", "totmem", "totbot", "truemem"]
+        types = ["newmem", "totmem", "totbot", "truemem", "booster"]
         for x in types:
             if x == type:
                 if x == "newmem":
@@ -198,7 +198,7 @@ class serverhud(commands.Cog):
 
         For a list of channel types use [p]serverhud types
         """
-        types = ["newmem", "totmem", "totbot", "truemem"]
+        types = ["newmem", "totmem", "totbot", "truemem", "booster"]
         for x in types:
             if x == type:
                 if x == "newmem":
@@ -237,7 +237,7 @@ class serverhud(commands.Cog):
 
         For a list of channel types use [p]serverhud types
         """
-        types = ["newmem", "totmem", "totbot", "truemem"]
+        types = ["newmem", "totmem", "totbot", "truemem", "booster"]
         for x in types:
             if x == type:
                 if x == "newmem":
@@ -276,7 +276,7 @@ class serverhud(commands.Cog):
 
         Use [p]serverhud setchannel <type> <channel mention>
         """
-        mess = "The avaible types of channels are: new members from today (newmem), total members (totmem), total bots (totbot), True Members (truemem)"
+        mess = "The avaible types of channels are: new members from today (newmem), total members (totmem), total bots (totbot), True Members (truemem), Server Boosters Count (booster)"
         await ctx.send(mess)
         pass
 
