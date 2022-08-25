@@ -58,8 +58,10 @@ class serverhud(commands.Cog):
         totmemId = totmemDict["channel"]
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
-            print(totmemDict["prefix"])
-            await channel.edit(name='{0} {1}: {2} {3}'.format(totmemDict["prefix"], totmemDict["name"], totmem, totmemDict["suffix"]))
+            if channel.voice:
+                await channel.edit(name='{0} {1}: {2} {3}'.format(totmemDict["prefix"], totmemDict["name"], totmem, totmemDict["suffix"]))
+            elif channel.text:
+                await channel.edit(name='{0}-{1}:-{2}-{3}'.format(totmemDict["prefix"], totmemDict["name"], totmem, totmemDict["suffix"]))
         
         newmemObj = await self.config.guild(guild).newmem()
         newmemId = newmemObj["channel"]
