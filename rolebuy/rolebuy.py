@@ -45,7 +45,7 @@ class rolebuy(commands.Cog):
         """
         Buys a role for money
         """
-        buyableRoles: dict = await self.config.guild(ctx.guild).buyableroles()
+        buyableRoles = await self.config.guild(ctx.guild).buyableroles()
         userAccount: bank.Account = await bank.get_account(ctx.author)
         if str(role.id) in buyableRoles.items():
             if userAccount.balance >= buyableRoles[role.id]:
@@ -65,7 +65,7 @@ class rolebuy(commands.Cog):
         """
         Adds a role to the buyable role list
         """
-        buyableRoles: dict = await self.config.guild(ctx.guild).buyableroles()
+        buyableRoles = await self.config.guild(ctx.guild).buyableroles()
         nC = {str(role.id): cost}
         buyableRoles.update(nC)
         await self.config.guild(ctx.guild).buyableroles.set(buyableRoles)
@@ -77,7 +77,7 @@ class rolebuy(commands.Cog):
         """
         Removes a role from the buyable role list
         """
-        buyableRoles: dict = await self.config.guild(ctx.guild).buyableroles()
+        buyableRoles = await self.config.guild(ctx.guild).buyableroles()
         if str(role.id) in buyableRoles.keys():
             buyableRoles.pop(str(role.id), None)
             await self.config.guild(ctx.guild).buyableroles.set(buyableRoles)
@@ -91,7 +91,7 @@ class rolebuy(commands.Cog):
         Lists all the timed ping roles for the server
         """
         roles = ""
-        i: dict = self.config.guild(ctx.guild).buyableroles()
+        i = self.config.guild(ctx.guild).buyableroles()
         print(i)
         for role, cost in i.items():
             roles = roles + "<@&{0}> with cost of {1} currency \n".format(role, cost)
