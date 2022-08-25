@@ -7,7 +7,7 @@ from redbot.core import data_manager
 import discord
 import asyncio
 import logging
-from datetime import datetime
+from datetime import date, datetime, timedelta
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
@@ -59,12 +59,23 @@ class serverhud(commands.Cog):
                 "prefix": "",
                 "stylefull": "*",
                 "styleempty": "-"
-            }
+            },
+            "truememcount": 0,
+            "newmemcount": 0,
+            "newmemget": datetime.today()
         }
         self.config.register_guild(**default_guild)
+        for guild in self.bot.guilds:
+            truemem = self.config.guild(guild).truemem()
+            memberList = guild.members
+            self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
+            self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
+            self.config.guild(guild).newmemget.set(datetime.today())
+
 
     async def members(self, guild: discord.Guild):
-        true_member_count = len([m for m in guild.members if not m.bot])
+        true_member_count = await self.config.guild(guild).truememcount()
+        newmembers = await self.config.guild(guild).newmemcount()
         totmem = guild.member_count
         totmemDict = await self.config.guild(guild).totmem()
         totmemId = totmemDict["channel"]
@@ -72,16 +83,13 @@ class serverhud(commands.Cog):
             channel: discord.ChannelType = guild.get_channel(totmemId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(totmemDict["prefix"], totmemDict["name"], totmem, totmemDict["suffix"]))
             pass
-        print(totmemDict)
 
         newmemObj = await self.config.guild(guild).newmem()
         newmemId = newmemObj["channel"]
         if newmemId != 0:
             channel: discord.ChannelType = guild.get_channel(newmemId)
-            newmembers: int = 0
             await channel.edit(name='{0} {1}: {2} {3}'.format(newmemObj["prefix"], newmemObj["name"], newmembers, newmemObj["suffix"]))
             pass
-        print(newmemObj)
 
         truememObj = await self.config.guild(guild).truemem()
         truememId = truememObj["channel"]
@@ -89,7 +97,6 @@ class serverhud(commands.Cog):
             channel: discord.ChannelType = guild.get_channel(truememId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(truememObj["prefix"], truememObj["name"], true_member_count, truememObj["suffix"]))
             pass
-        print(truememObj)
 
         totbotObj = await self.config.guild(guild).totbot()
         totbotId = totbotObj["channel"]
@@ -98,7 +105,6 @@ class serverhud(commands.Cog):
             bot_count: int = totmem - true_member_count
             await channel.edit(name='{0} {1}: {2} {3}'.format(totbotObj["prefix"], totbotObj["name"], bot_count, totbotObj["suffix"]))
             pass
-        print(totbotObj)
 
     async def boosters(self, guild: discord.Guild):
         booster_count: int = guild.premium_subscription_count
@@ -108,7 +114,6 @@ class serverhud(commands.Cog):
             channel: discord.ChannelType = guild.get_channel(boosterId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(boosterObj["prefix"], boosterObj["name"], booster_count, boosterObj["suffix"]))
             pass
-        print(boosterObj)
 
         boosterBarObj = await self.config.guild(guild).boosterbar()
         boosterBarId = boosterBarObj["channel"]
@@ -130,9 +135,9 @@ class serverhud(commands.Cog):
                     mess = mess + styleempty
                 await channel.edit(name='{0} Lvl 2 {1}'.format(boosterBarObj["prefix"], mess))
             elif booster_count < 14:
-                for i in range(booster_count - 7):
+                for i in range(booster_count / 2):
                     mess = mess + stylefull
-                for i in range(14 - (booster_count - 2)):
+                for i in range(7 - (booster_count / 2)):
                     mess = mess + styleempty
                 await channel.edit(name='{0} Lvl 3 {1}'.format(boosterBarObj["prefix"], mess))
             elif booster_count > 14:
@@ -145,11 +150,29 @@ class serverhud(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
+        if not member.bot:
+            truememcount = await self.config.guild(member.guild).truememcount()
+            newcount = truememcount + 1
+            await self.config.guild(member.guild).truememcount.set(newcount)
+        lastNewmem = await self.config.guild(member.guild).newmemget()
+        if lastNewmem < (datetime.today() - timedelta(days=1)):
+            memberList = member.guild.members
+            self.config.guild(member.guild).newmemget.set(datetime.today())
+            await self.config.guild(member.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
         await self.members(member.guild)
         await self.boosters(member.guild)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
+        if not member.bot:
+            truememcount = await self.config.guild(member.guild).truememcount()
+            newcount = truememcount - 1
+            await self.config.guild(member.guild).truememcount.set(newcount)
+        lastNewmem = await self.config.guild(member.guild).newmemget()
+        if lastNewmem < (datetime.today() - timedelta(days=1)):
+            memberList = member.guild.members
+            self.config.guild(member.guild).newmemget.set(datetime.today())
+            await self.config.guild(member.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
         await self.members(member.guild)
         await self.boosters(member.guild)
 
