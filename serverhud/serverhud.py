@@ -143,43 +143,37 @@ class serverhud(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
+        guild = member.guild
         if not member.bot:
             truememcount = await self.config.guild(member.guild).truememcount()
             newcount = truememcount + 1
             await self.config.guild(member.guild).truememcount.set(newcount)
-        lastNewmem = await self.config.guild(member.guild).newmemget()
-        if lastNewmem < (datetime.today() - timedelta(days=1)):
+        if self.newMemGet < (datetime.today() - timedelta(days=1)):
             truemem = self.config.guild(guild).truemem()
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            await self.config.guild(guild).newmemget.set(datetime.today())
             print(guild.id + ":" + len([m for m in memberList if not m.bot]) + len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            memberList = member.guild.members
-            self.config.guild(member.guild).newmemget.set(datetime.today())
-            await self.config.guild(member.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-        await self.members(member.guild)
-        await self.boosters(member.guild)
+            self.newMemGet = datetime.today()
+        await self.members(guild)
+        await self.boosters(guild)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
+        guild = member.guild
         if not member.bot:
-            truememcount = await self.config.guild(member.guild).truememcount()
+            truememcount = await self.config.guild(guild).truememcount()
             newcount = truememcount - 1
-            await self.config.guild(member.guild).truememcount.set(newcount)
-        lastNewmem = await self.config.guild(member.guild).newmemget()
-        if lastNewmem < (datetime.today() - timedelta(days=1)):
+            await self.config.guild(guild).truememcount.set(newcount)
+        if self.newMemGet < (datetime.today() - timedelta(days=1)):
             truemem = self.config.guild(guild).truemem()
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            await self.config.guild(guild).newmemget.set(datetime.today())
+            self.newMemGet = datetime.today()
             print(guild.id + ":" + len([m for m in memberList if not m.bot]) + len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            memberList = member.guild.members
-            self.config.guild(member.guild).newmemget.set(datetime.today())
-            await self.config.guild(member.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-        await self.members(member.guild)
-        await self.boosters(member.guild)
+        await self.members(guild)
+        await self.boosters(guild)
 
     @commands.group(name="serverhud")
     async def serverhud(self, ctx):
@@ -401,11 +395,8 @@ class serverhud(commands.Cog):
             memberList = ctx.guild.members
             await self.config.guild(ctx.guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            await self.config.guild(ctx.guild).newmemget.set(datetime.today())
+            self.newMemGet = datetime.today()
             print(ctx.guild.id + ":" + len([m for m in memberList if not m.bot]) + len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            memberList = ctx.guild.members
-            self.config.guild(ctx.guild).newmemget.set(datetime.today())
-            await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
             await self.members(ctx.guild)
             await self.boosters(ctx.guild)
             await ctx.send("Test of the member join/leave event.")
