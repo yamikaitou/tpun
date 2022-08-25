@@ -7,6 +7,7 @@ from redbot.core import data_manager
 import discord
 import asyncio
 import logging
+from datetime import datetime
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
@@ -47,6 +48,12 @@ class serverhud(commands.Cog):
                 "name": "Total Bots",
                 "suffix": ""
             },
+            "booster": {
+                "channel": 0,
+                "prefix": "",
+                "name": "Boosters",
+                "suffix": ""
+            }
         }
         self.config.register_guild(**default_guild)
 
@@ -54,12 +61,11 @@ class serverhud(commands.Cog):
         true_member_count = len([m for m in guild.members if not m.bot])
         totmem = guild.member_count
         totmemDict = await self.config.guild(guild).totmem()
-        print(totmemDict)
         totmemId = totmemDict["channel"]
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(totmemDict["prefix"], totmemDict["name"], totmem, totmemDict["suffix"]))
-        
+
         newmemObj = await self.config.guild(guild).newmem()
         newmemId = newmemObj["channel"]
         if newmemId != 0:
@@ -80,13 +86,23 @@ class serverhud(commands.Cog):
             bot_count: int = totmem - true_member_count
             await channel.edit(name='{0} {1}: {2} {3}'.format(totbotObj["prefix"], totbotObj["name"], bot_count, totbotObj["suffix"]))
 
+    async def boosters(self, guild: discord.Guild):
+        booster_count: int = guild.premium_subscription_count
+        boosterObj = await self.config.guild(guild).booster()
+        boosterId: int = boosterObj["channel"]
+        if boosterObj != 0:
+            channel: discord.ChannelType = guild.get_channel(boosterId)
+            await channel.edit(name='{0} {1}: {2} {3}'.format(boosterObj["prefix"], boosterObj["name"], booster_count, boosterObj["suffix"]))
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
         await self.members(member.guild)
+        await self.boosters(member.guild)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         await self.members(member.guild)
+        await self.boosters(member.guild)
 
     @commands.group(name="serverhud")
     async def serverhud(self, ctx):
@@ -104,7 +120,7 @@ class serverhud(commands.Cog):
         For a list of channel types use [p]serverhud types
         """
         
-        types = ["newmem", "totmem", "totbot", "truemem"]
+        types = ["totmem", "totbot", "truemem", "booster"]
         for x in types:
             if x == type:
                 if x == "newmem":
@@ -126,6 +142,11 @@ class serverhud(commands.Cog):
                     truememDict: dict = await self.config.guild(ctx.guild).truemem()
                     truememDict.update({"channel": channel})
                     await self.config.guild(ctx.guild).truemem.set(truememDict)
+                    await ctx.send("The True member count channel has been set to <#{}>".format(channel))
+                elif x == "booster":
+                    boosterDict: dict = await self.config.guild(ctx.guild).booster()
+                    boosterDict.update({"channel": channel})
+                    await self.config.guild(ctx.guild).booster.set(boosterDict)
                     await ctx.send("The True member count channel has been set to <#{}>".format(channel))
             else:
                 pass
@@ -161,6 +182,11 @@ class serverhud(commands.Cog):
                     truememDict.update({"prefix": prefix})
                     await self.config.guild(ctx.guild).truemem.set(truememDict)
                     await ctx.send("The True member count prefix has been set to {}".format(prefix))
+                elif x == "booster":
+                    boosterDict: dict = await self.config.guild(ctx.guild).booster()
+                    boosterDict.update({"prefix": prefix})
+                    await self.config.guild(ctx.guild).booster.set(boosterDict)
+                    await ctx.send("The True member count prefix has been set to {}".format(prefix))
             else:
                 pass
         pass
@@ -195,6 +221,11 @@ class serverhud(commands.Cog):
                     truememDict.update({"suffix": suffix})
                     await self.config.guild(ctx.guild).truemem.set(truememDict)
                     await ctx.send("The True member count suffix has been set to {}".format(suffix))
+                elif x == "booster":
+                    boosterDict: dict = await self.config.guild(ctx.guild).booster()
+                    boosterDict.update({"suffix": suffix})
+                    await self.config.guild(ctx.guild).booster.set(boosterDict)
+                    await ctx.send("The True member count prefix has been set to {}".format(suffix))
             else:
                 pass
         pass
@@ -229,6 +260,11 @@ class serverhud(commands.Cog):
                     truememDict.update({"name": name})
                     await self.config.guild(ctx.guild).truemem.set(truememDict)
                     await ctx.send("The True member count name has been set to {}".format(name))
+                elif x == "booster":
+                    boosterDict: dict = await self.config.guild(ctx.guild).booster()
+                    boosterDict.update({"name": name})
+                    await self.config.guild(ctx.guild).booster.set(boosterDict)
+                    await ctx.send("The True member count prefix has been set to {}".format(name))
             else:
                 pass
         pass
