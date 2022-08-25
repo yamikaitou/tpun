@@ -92,7 +92,7 @@ class rolebuy(commands.Cog):
         """
         roles = ""
         i: dict = self.config.guild(ctx.guild).buyableroles()
-        if i == {}:
+        if not i:
             mess1 = await ctx.send("There are no buyable roles set up")
         else:
             for role, cost in i.items():
