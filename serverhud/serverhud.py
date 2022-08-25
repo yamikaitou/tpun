@@ -153,7 +153,6 @@ class serverhud(commands.Cog):
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            print(guild.id + ":" + len([m for m in memberList if not m.bot]) + len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
             self.newMemGet = datetime.today()
         await self.members(guild)
         await self.boosters(guild)
@@ -171,7 +170,6 @@ class serverhud(commands.Cog):
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
             self.newMemGet = datetime.today()
-            print(guild.id + ":" + len([m for m in memberList if not m.bot]) + len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
         await self.members(guild)
         await self.boosters(guild)
 
@@ -396,7 +394,7 @@ class serverhud(commands.Cog):
             await self.config.guild(ctx.guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
             self.newMemGet = datetime.today()
-            print(ctx.guild.id + ":" + len([m for m in memberList if not m.bot]) + len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
+            print(str(ctx.guild.id) + ":" + str(len([m for m in memberList if not m.bot])) + str(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)])))
             await self.members(ctx.guild)
             await self.boosters(ctx.guild)
             await ctx.send("Test of the member join/leave event.")
