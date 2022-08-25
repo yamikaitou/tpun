@@ -397,6 +397,15 @@ class serverhud(commands.Cog):
         join, leave
         """
         if event == "join" or event == "leave":
+            truemem = self.config.guild(ctx.guild).truemem()
+            memberList = ctx.guild.members
+            await self.config.guild(ctx.guild).truememcount.set(len([m for m in memberList if not m.bot]))
+            await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
+            await self.config.guild(ctx.guild).newmemget.set(datetime.today())
+            print(ctx.guild.id + ":" + len([m for m in memberList if not m.bot]) + len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
+            memberList = ctx.guild.members
+            self.config.guild(ctx.guild).newmemget.set(datetime.today())
+            await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
             await self.members(ctx.guild)
             await self.boosters(ctx.guild)
             await ctx.send("Test of the member join/leave event.")
