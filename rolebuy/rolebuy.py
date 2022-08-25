@@ -46,8 +46,8 @@ class rolebuy(commands.Cog):
         """
         buyableRoles = await self.config.guild(ctx.guild).buyableroles()
         userAccount: bank.Account = await bank.get_account(ctx.author)
-        if str(role.id) in buyableRoles.items():
-            if userAccount.balance >= buyableRoles[role.id]:
+        if str(role.id) in buyableRoles.keys():
+            if userAccount.balance >= buyableRoles[str(role.id)]:
                 await ctx.author.add_roles(role)
                 await bank.set_balance(ctx.author, userAccount.balance - buyableRoles[str(role.id)])
                 await ctx.send("{0} You bought {1} for {2} currency".format(ctx.author.name, role.name, buyableRoles[str(role.id)]))
