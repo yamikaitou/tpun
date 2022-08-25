@@ -53,6 +53,11 @@ class serverhud(commands.Cog):
                 "prefix": "",
                 "name": "Boosters",
                 "suffix": ""
+            },
+            "boosterbar": {
+                "channel": 0,
+                "prefix": "",
+                "style": ""
             }
         }
         self.config.register_guild(**default_guild)
@@ -104,6 +109,19 @@ class serverhud(commands.Cog):
             pass
         print(boosterObj)
 
+        boosterBarObj = await self.config.guild(guild).boosterBar()
+        boosterBarId = boosterBarObj["channel"]
+        mess = ""
+        if boosterBarId != 0:
+            channel: discord.ChannelType = guild.get_channel(boosterBarId)
+            if booster_count < 7:
+                for i in range(booster_count):
+                    mess = mess + "*"
+                for i in range(7 - booster_count):
+                    mess = mess + "-"
+                    await channel.edit(name='{0} {1}'.format(boosterBarObj["prefix"], mess)
+            
+
     @commands.Cog.listener()
     async def on_member_join(self, member):
         await self.members(member.guild)
@@ -130,7 +148,7 @@ class serverhud(commands.Cog):
         For a list of channel types use [p]serverhud types
         """
         
-        types = ["totmem", "totbot", "truemem", "booster"]
+        types = ["totmem", "totbot", "truemem", "booster", "boosterbar"]
         for x in types:
             if x == type:
                 if x == "newmem":
@@ -158,6 +176,11 @@ class serverhud(commands.Cog):
                     boosterDict.update({"channel": channel})
                     await self.config.guild(ctx.guild).booster.set(boosterDict)
                     await ctx.send("The Booster count channel has been set to <#{}>".format(channel))
+                elif x == "boosterbar":
+                    boosterBarDict: dict = await self.config.guild(ctx.guild).boosterbar()
+                    boosterBarDict.update({"channel": channel})
+                    await self.config.guild(ctx.guild).boosterbar.set(boosterBarDict)
+                    await ctx.send("The Booster count channel has been set to <#{}>".format(channel))
             else:
                 pass
         pass
@@ -169,7 +192,7 @@ class serverhud(commands.Cog):
 
         For a list of channel types use [p]serverhud types
         """
-        types = ["newmem", "totmem", "totbot", "truemem", "booster"]
+        types = ["newmem", "totmem", "totbot", "truemem", "booster", "boosterbar"]
         for x in types:
             if x == type:
                 if x == "newmem":
@@ -196,6 +219,11 @@ class serverhud(commands.Cog):
                     boosterDict: dict = await self.config.guild(ctx.guild).booster()
                     boosterDict.update({"prefix": prefix})
                     await self.config.guild(ctx.guild).booster.set(boosterDict)
+                    await ctx.send("The True member count prefix has been set to {}".format(prefix))
+                elif x == "boosterbar":
+                    boosterBarDict: dict = await self.config.guild(ctx.guild).boosterbar()
+                    boosterBarDict.update({"prefix": prefix})
+                    await self.config.guild(ctx.guild).boosterbar.set(boosterBarDict)
                     await ctx.send("The True member count prefix has been set to {}".format(prefix))
             else:
                 pass
