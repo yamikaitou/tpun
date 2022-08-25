@@ -96,7 +96,7 @@ class rep(commands.Cog):
         Displays a user's reputation
         """
         userFound = False
-        x = self.config.reputation()
+        x = await self.config.reputation()
         for userId, userRep in x.items():
             if userId == str(user.id):
                 await ctx.send("{0} has {1} reputation".format(user.name, userRep))
