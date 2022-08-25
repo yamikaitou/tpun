@@ -21,8 +21,7 @@ class rolebuy(commands.Cog):
         self.log = logging.getLogger('red.tpun.rolebuy')
         self.config = Config.get_conf(
             self,
-            identifier=365398642334498816,
-            force_registration=True,
+            identifier=365398642334498816
         )
         default_guild = {
             "buyableroles": {}
@@ -91,7 +90,7 @@ class rolebuy(commands.Cog):
         Lists all the timed ping roles for the server
         """
         roles = ""
-        i = self.config.guild(ctx.guild).buyableroles()
+        i = await self.config.guild(ctx.guild).buyableroles()
         print(i)
         for role, cost in i.items():
             roles = roles + "<@&{0}> with cost of {1} currency \n".format(role, cost)
