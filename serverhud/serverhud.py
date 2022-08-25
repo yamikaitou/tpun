@@ -192,6 +192,7 @@ class serverhud(commands.Cog):
         """
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setchannel")
     async def setchannel(self, ctx, type: str, channel: int):
         """
@@ -238,6 +239,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setprefix")
     async def setprefix(self, ctx, type: str, *, prefix: str):
         """
@@ -282,6 +284,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setsuffix")
     async def setsuffix(self, ctx, type: str, *, suffix: str):
         """
@@ -321,6 +324,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setname")
     async def setname(self, ctx, type: str, *, name: str):
         """
@@ -360,6 +364,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setstyle")
     async def setstyle(self, ctx, type, *, style: str):
         """
@@ -381,6 +386,7 @@ class serverhud(commands.Cog):
             await ctx.send("That is not a valid booster bar type")
         
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="types")
     async def types(self, ctx):
         """
@@ -392,6 +398,7 @@ class serverhud(commands.Cog):
         await ctx.send(mess)
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="test")
     async def test(self, ctx, event):
         """
