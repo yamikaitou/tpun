@@ -92,6 +92,7 @@ class rolebuy(commands.Cog):
         """
         roles = ""
         i: dict = self.config.guild(ctx.guild).buyableroles()
+        print(i)
         for role, cost in i.items():
             roles = roles + "<@&{0}> with cost of {1} currency \n".format(role, cost)
         mess1 = await ctx.send(roles)
