@@ -75,6 +75,7 @@ class serverhud(commands.Cog):
         if totmemId != 0:
             channel: discord.ChannelType = guild.get_channel(totmemId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(totmemDict["prefix"], totmemDict["name"], totmem, totmemDict["suffix"]))
+            await asyncio.sleep(15)
             pass
 
         newmemObj = await self.config.guild(guild).newmem()
@@ -82,6 +83,7 @@ class serverhud(commands.Cog):
         if newmemId != 0:
             channel: discord.ChannelType = guild.get_channel(newmemId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(newmemObj["prefix"], newmemObj["name"], newmembers, newmemObj["suffix"]))
+            await asyncio.sleep(15)
             pass
 
         truememObj = await self.config.guild(guild).truemem()
@@ -89,6 +91,7 @@ class serverhud(commands.Cog):
         if truememId != 0:
             channel: discord.ChannelType = guild.get_channel(truememId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(truememObj["prefix"], truememObj["name"], true_member_count, truememObj["suffix"]))
+            await asyncio.sleep(15)
             pass
 
         totbotObj = await self.config.guild(guild).totbot()
@@ -97,6 +100,7 @@ class serverhud(commands.Cog):
             channel: discord.ChannelType = guild.get_channel(totbotId)
             bot_count: int = totmem - true_member_count
             await channel.edit(name='{0} {1}: {2} {3}'.format(totbotObj["prefix"], totbotObj["name"], bot_count, totbotObj["suffix"]))
+            await asyncio.sleep(15)
             pass
 
     async def boosters(self, guild: discord.Guild):
@@ -106,6 +110,7 @@ class serverhud(commands.Cog):
         if boosterId != 0:
             channel: discord.ChannelType = guild.get_channel(boosterId)
             await channel.edit(name='{0} {1}: {2} {3}'.format(boosterObj["prefix"], boosterObj["name"], booster_count, boosterObj["suffix"]))
+            await asyncio.sleep(15)
             pass
 
         boosterBarObj = await self.config.guild(guild).boosterbar()
@@ -121,22 +126,26 @@ class serverhud(commands.Cog):
                 for i in range(2 - booster_count):
                     mess = mess + styleempty
                 await channel.edit(name='{0} Lvl 1 {1}'.format(boosterBarObj["prefix"], mess))
+                await asyncio.sleep(15)
             elif booster_count < 7:
                 for i in range(booster_count - 2):
                     mess = mess + stylefull
                 for i in range(7 - (booster_count - 2)):
                     mess = mess + styleempty
                 await channel.edit(name='{0} Lvl 2 {1}'.format(boosterBarObj["prefix"], mess))
+                await asyncio.sleep(15)
             elif booster_count < 14:
                 for i in range(booster_count / 2):
                     mess = mess + stylefull
                 for i in range(7 - (booster_count / 2)):
                     mess = mess + styleempty
                 await channel.edit(name='{0} Lvl 3 {1}'.format(boosterBarObj["prefix"], mess))
+                await asyncio.sleep(15)
             elif booster_count > 14:
                 for i in range(7):
                     mess = mess + stylefull
                 await channel.edit(name='{0} Max {1}'.format(boosterBarObj["prefix"], mess))
+                await asyncio.sleep(15)
         print(boosterBarObj)
         print(mess)
             
