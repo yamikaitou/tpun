@@ -401,7 +401,6 @@ class serverhud(commands.Cog):
         join, leave
         """
         if event == "join" or event == "leave":
-            truemem = self.config.guild(ctx.guild).truemem()
             memberList = ctx.guild.members
             await self.config.guild(ctx.guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
