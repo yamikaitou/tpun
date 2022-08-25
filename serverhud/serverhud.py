@@ -136,7 +136,8 @@ class serverhud(commands.Cog):
                 for i in range(7):
                     mess = mess + "*"
                 await channel.edit(name='{0} Max {1}'.format(boosterBarObj["prefix"], mess))
-            print(mess)
+        print(boosterBarObj)
+        print(mess)
             
 
     @commands.Cog.listener()
