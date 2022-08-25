@@ -109,5 +109,6 @@ class rep(commands.Cog):
         """
         Migrates data from json to redbot config
         """
-        x = self.getRep()
+        x = self.getRep
+        print(x)
         await self.config.reputation.set(x)
