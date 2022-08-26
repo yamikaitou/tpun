@@ -23,35 +23,17 @@ class verifier(commands.Cog):
             self,
             identifier=365398642334498816
         )
-        path = data_manager.cog_data_path(cog_instance=self)
-        self.verifiedRolesPath = path / 'verifiedRoles.json'
-        if self.verifiedRolesPath.exists():
-            pass
-        else:
-            with self.verifiedRolesPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
-    def getRoleList(self):
-        try:
-            with open(str(self.verifiedRolesPath), 'r') as verifiedList:
-                x = json.load(verifiedList)
-                return x
-        except ValueError:
-            self.log.exception("verifiedRoles.json failed to read")
-            return None
-
-    def parseRoleList(self, guild):
-        x = self.getRoleList()
-        for server, items in x.items():
-            if server == str(guild):
-                return items[0]
+        default_guild = {
+            "verifierroles": {}
+        }
+        self.config.register_guild(**default_guild)
 
     async def emojiVerifier(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
         unverified: int = None
         male: int
         female: int
         nb: int
-        i = self.parseRoleList(ctx.guild.id)
+        i = await self.config.guild(ctx.guild).verifierroles()
         for key, role in i.items():
             if key == "unverified":
                 unverified = ctx.guild.get_role(int(role))
@@ -112,12 +94,8 @@ class verifier(commands.Cog):
         Setup command for verify cog
         """
         newWrite: dict = {}
-        guild = ctx.guild.id
-        try:
-            with open(str(self.verifiedRolesPath), 'r') as verifiedList:
-                x = json.load(verifiedList)
-        except ValueError:
-            self.log.exception("verifiedRoles.json failed to read")
+        guild = ctx.guild
+        x = await self.config.guild(guild).verifierroles()
 
         def check(m):
             return m.channel == mess0.channel
@@ -146,17 +124,5 @@ class verifier(commands.Cog):
             for i in msg3.role_mentions:
                 newWrite.update({"nb": i.id})
         await mess3.delete()
-        if str(guild) in x:
-            y = x[str(guild)].copy()
-            for key, role in newWrite:
-                if role in y[0]:
-                    y[0].pop(key, None)
-            y[0].update(newWrite)
-        else:
-            y = [newWrite]
-            x.update({str(guild): y})
-        with open(str(self.verifiedRolesPath), 'w') as verifiedRoles:
-            try:
-                json.dump(x, verifiedRoles)
-            except ValueError:
-                self.log.exception("verifierRoles.json write failed.")
+        x.update(newWrite)
+        await self.config.guild(guild).verifierroles.set(x)
