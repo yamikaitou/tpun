@@ -177,7 +177,7 @@ class serverhud(commands.Cog):
             changeNewMem = newmemcount - 1
             await self.config.guild(guild).newmemcount.set(changeNewMem)
         if self.newMemGet < (datetime.today() - timedelta(days=1)):
-            truemem = self.config.guild(guild).truemem()
+            truemem = await self.config.guild(guild).truemem()
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
