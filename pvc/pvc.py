@@ -85,7 +85,7 @@ class pvc(commands.Cog):
             await asyncio.sleep(60)
             if len(channel.members) == 0:
                 reason = "channel is empty"
-                await pvc.delete(self, ctx, reason)
+                await pvc.delete(ctx, reason)
                 pvc.futureList.pop(str(id), None)
                 break
             else:
@@ -106,10 +106,10 @@ class pvc(commands.Cog):
                 await self.create(ctx, *"no activity")
             await mess1.delete()
         elif emoji == "📱":
-            await self.create(ctx, *"{}'s social channel".format(ctx.author.name))
+            await self.create(ctx, "{}'s social channel".format(ctx.author.name))
             await mess1.delete()
         elif emoji == "❓":
-            await self.create(ctx, *"{}'s private vc".format(ctx.author.name))
+            await self.create(ctx, "{}'s private vc".format(ctx.author.name))
             await self.lock(ctx)
             await mess1.delete()
 
