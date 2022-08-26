@@ -20,23 +20,6 @@ class pvc(commands.Cog):
     Private voice channel cog
     """
 
-    def getpaths(self):
-        path = data_manager.cog_data_path(cog_instance=self)
-        self.vcOwnersPath = path / 'vcOwners.json'
-        if not self.vcOwnersPath.exists():
-            with self.vcOwnersPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
-        self.vcRolesPath = path / 'vcRoles.json'
-        if not self.vcRolesPath.exists():
-            with self.vcRolesPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
-        self.vcChannelsPath = path / 'vcChannels.json'
-        if not self.vcChannelsPath.exists():
-            with self.vcChannelsPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
     def __init__(self, bot: Red) -> None:
         self.bot = bot
         self.log = logging.getLogger('red.tpun.pvc')
@@ -50,17 +33,7 @@ class pvc(commands.Cog):
             "roles": []
         }
         self.config.register_guild(**default_guild)
-        self.getpaths()
     futureList: Dict = {}
-
-    def loadVcOwners(self):
-        try:
-            with open(str(self.vcOwnersPath), 'r') as vcOwners:
-                x = json.load(vcOwners)
-                return x
-        except ValueError:
-            self.log.exception("read failed")
-            return None
 
     async def getVcList(self, guild):
         x = await self.config.guild(guild).owners()
