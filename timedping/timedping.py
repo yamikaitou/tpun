@@ -26,6 +26,7 @@ class timedping(commands.Cog):
             "pingableroles": {}
         }
         self.config.register_guild(**default_guild)
+        self.tempo: dict = {}
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):

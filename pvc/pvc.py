@@ -58,7 +58,7 @@ class pvc(commands.Cog):
             await asyncio.sleep(60)
             if len(channel.members) == 0:
                 reason = "channel is empty"
-                await pvc.delete(ctx, reason)
+                await pvc.delete(ctx)
                 pvc.futureList.pop(str(id), None)
                 break
             else:
