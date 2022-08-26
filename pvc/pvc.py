@@ -45,12 +45,12 @@ class pvc(commands.Cog):
             identifier=365398642334498816,
             force_registration=True,
         )
-        default_global = {
+        default_guild = {
             "channel": 0,
             "owners": {},
             "roles": []
         }
-        self.config.register_global(**default_global)
+        self.config.register_global(**default_guild)
         self.getpaths()
     futureList: Dict = {}
 
