@@ -28,16 +28,12 @@ class verifier(commands.Cog):
         }
         self.config.register_guild(**default_guild)
 
-    async def parseRoleList(self, guild):
-        x = await self.config.guild(guild).verifierroles()
-        return x
-
     async def emojiVerifier(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
         unverified: int = None
         male: int
         female: int
         nb: int
-        i = self.parseRoleList(ctx.guild)
+        i = await self.config.guild(ctx.guild).verifierroles()
         for key, role in i.items():
             if key == "unverified":
                 unverified = ctx.guild.get_role(int(role))
