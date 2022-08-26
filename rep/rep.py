@@ -25,24 +25,6 @@ class rep(commands.Cog):
         }
         self.config.register_global(**default_global)
 
-        path = data_manager.cog_data_path(cog_instance=self)
-        self.jsonPath = path / 'reputation.json'
-        if self.jsonPath.exists():
-            pass
-        else:
-            with self.jsonPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-
-    def getRep(self):
-        with open(str(self.jsonPath), 'r') as reputation:
-            try:
-                x = json.load(reputation)
-                return x
-            except ValueError:
-                if x is None:
-                    x = {}
-                    return x
-
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if bool(re.search("thank", message.content, flags=re.I | re.X)) and message.mentions is not None:
@@ -103,12 +85,3 @@ class rep(commands.Cog):
                 userFound = True
         if userFound is False:
             await ctx.send("{0} doesn't have a reputation.".format(user.name))
-
-    @commands.command(name="migrate")
-    async def migrate(self, ctx: commands.Context):
-        """
-        Migrates data from json to redbot config
-        """
-        x = self.getRep()
-        print(x)
-        await self.config.reputation.set(x)
