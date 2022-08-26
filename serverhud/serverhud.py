@@ -154,11 +154,11 @@ class serverhud(commands.Cog):
             truememcount = await self.config.guild(member.guild).truememcount()
             newcount = truememcount + 1
             await self.config.guild(member.guild).truememcount.set(newcount)
-            newmemcount = self.config.guild(guild).newmemcount()
+            newmemcount = await self.config.guild(guild).newmemcount()
             changeNewMem = newmemcount + 1
             await self.config.guild(guild).newmemcount.set(changeNewMem)
         if self.newMemGet < (datetime.today() - timedelta(days=1)):
-            truemem = self.config.guild(guild).truemem()
+            truemem = await self.config.guild(guild).truemem()
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
@@ -192,6 +192,7 @@ class serverhud(commands.Cog):
         """
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setchannel")
     async def setchannel(self, ctx, type: str, channel: int):
         """
@@ -238,6 +239,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setprefix")
     async def setprefix(self, ctx, type: str, *, prefix: str):
         """
@@ -282,6 +284,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setsuffix")
     async def setsuffix(self, ctx, type: str, *, suffix: str):
         """
@@ -321,6 +324,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setname")
     async def setname(self, ctx, type: str, *, name: str):
         """
@@ -360,6 +364,7 @@ class serverhud(commands.Cog):
                 pass
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="setstyle")
     async def setstyle(self, ctx, type, *, style: str):
         """
@@ -381,6 +386,7 @@ class serverhud(commands.Cog):
             await ctx.send("That is not a valid booster bar type")
         
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="types")
     async def types(self, ctx):
         """
@@ -388,10 +394,11 @@ class serverhud(commands.Cog):
 
         Use [p]serverhud setchannel <type> <channel mention>
         """
-        mess = "The avaible types of channels are: new members from today (newmem), total members (totmem), total bots (totbot), True Members (truemem), Server Boosters Count (booster)"
+        mess = "The avaible types of channels are: new members from today (newmem), total members (totmem), total bots (totbot), True Members (truemem), Server Boosters Count (booster), Booster Bar (boosterbar)"
         await ctx.send(mess)
         pass
 
+    @commands.guildowner_or_permissions()
     @serverhud.command(name="test")
     async def test(self, ctx, event):
         """
