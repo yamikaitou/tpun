@@ -33,8 +33,8 @@ class timedping(commands.Cog):
             guild = message.guild
             roles = await self.config.guild(guild).pingableroles()
             for role, cooldown in roles.items():
-                if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)
-                ) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
+                if bool(re.search(guild.get_role(int(role)).name, message.content, flags=re.I | re.X)
+                ) or bool(re.search(guild.get_role(int(role)).name, message.content, flags=re.I)):
                     if role not in self.tempo.keys():
                         await message.reply("<@&{0}>".format(int(role)))
                         newTempo = {str(role): int(time.time() + cooldown)}
@@ -75,7 +75,7 @@ class timedping(commands.Cog):
         """
         Removes a role from the timed ping list
         """
-        guild = ctx.guild.id
+        guild = ctx.guild
         pingableRoles = await self.config.guild(guild).pingableroles()
         pingableRoles.pop(str(role.id), None)
         await self.config.guild(guild).pingableroles.set()
@@ -87,7 +87,7 @@ class timedping(commands.Cog):
         """
         Lists all the timed ping roles for the server
         """
-        guild = ctx.guild.id
+        guild = ctx.guild
         roles = ""
         pingableRoles = await self.config.guild(guild).pingableroles()
         for role, cooldown in pingableRoles.items():
