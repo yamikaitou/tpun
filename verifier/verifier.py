@@ -5,8 +5,6 @@ import discord
 import asyncio
 from redbot.core.utils.menus import start_adding_reactions
 import datetime
-from redbot.core import data_manager
-import json
 from redbot.core.utils.predicates import ReactionPredicate
 import logging
 

@@ -1,13 +1,10 @@
 from ast import Dict
 from typing import Literal
-from io import TextIOWrapper
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
-from redbot.core import data_manager
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
-import json
 import discord
 import asyncio
 import datetime

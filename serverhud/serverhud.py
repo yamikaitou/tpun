@@ -3,11 +3,10 @@ from typing import Literal
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
-from redbot.core import data_manager
 import discord
 import asyncio
 import logging
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]
 
 
