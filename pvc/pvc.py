@@ -49,7 +49,7 @@ class pvc(commands.Cog):
             "owners": {},
             "roles": []
         }
-        self.config.register_global(**default_guild)
+        self.config.register_guild(**default_guild)
         self.getpaths()
     futureList: Dict = {}
 

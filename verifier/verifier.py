@@ -21,8 +21,7 @@ class verifier(commands.Cog):
         self.log = logging.getLogger('red.tpun.verifier')
         self.config = Config.get_conf(
             self,
-            identifier=365398642334498816,
-            force_registration=True,
+            identifier=365398642334498816
         )
         path = data_manager.cog_data_path(cog_instance=self)
         self.verifiedRolesPath = path / 'verifiedRoles.json'

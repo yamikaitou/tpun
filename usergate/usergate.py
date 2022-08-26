@@ -24,7 +24,7 @@ class usergate(commands.Cog):
         default_guild = {
             "usergate": 0
         }
-        self.config.register_global(**default_guild)
+        self.config.register_guild(**default_guild)
 
     @commands.Cog.listener()
     async def on_member_join(self, member: discord.Member):
