@@ -146,7 +146,7 @@ class pvc(commands.Cog):
         """
         dsChannel = await self.vcChannelRead(ctx)
         roleList = await self.vcRoleRead(ctx)
-        guild = ctx.guild.id
+        guild = ctx.guild
         owners = await self.config.guild(guild).owners()
         if ctx.message.channel.id == dsChannel.id:
             category = ctx.channel.category
@@ -158,15 +158,15 @@ class pvc(commands.Cog):
                 if vcName == "no activity":
                     await ctx.send("You can't create a game vc if you're not playing a game.")
                     run = False
-            vc = await self.vcOwnerRead(guild, ctx.author.id)
+            vc = await self.vcOwnerRead(guild.id, ctx.author.id)
             if vc:
                 await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(vc.name)))
                 run = False
             if run:
-                channel = await ctx.guild.create_voice_channel(vcName, category=category)
+                channel = await guild.create_voice_channel(vcName, category=category)
                 await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                 for role in roleList:
-                    await channel.set_permissions(ctx.guild.get_role(role), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                    await channel.set_permissions(guild.get_role(role), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                 if ctx.author.voice is not None and ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
                     await ctx.author.move_to(channel)
                 vcId = channel.id
