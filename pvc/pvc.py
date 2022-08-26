@@ -99,7 +99,7 @@ class pvc(commands.Cog):
             if ctx.message.author.activity is not None:
                 for activity in ctx.message.author.activities:
                     if activity.type == discord.activity.ActivityType.playing:
-                        await self.create(ctx, str(activity.name))
+                        await self.create(ctx, "{}".format(str(activity.name)))
                     else:
                         await self.create(ctx, "no activity")
             else:
@@ -115,7 +115,7 @@ class pvc(commands.Cog):
 
     async def emojiRequest(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
         if emoji == "✅":
-            voiceChannel = await self.vcOwnerRead(self, ctx.guild, user.id)
+            voiceChannel = await self.vcOwnerRead(ctx.guild, user.id)
             if voiceChannel is not None:
                 await voiceChannel.set_permissions(ctx.author, read_messages=True, send_messages=True, read_message_history=True, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=True, reason="{0} accepted {1}'s request to join their vc: {2}".format(user.name, ctx.author.name, voiceChannel.name))
                 if ctx.author.voice is not None:
@@ -418,8 +418,8 @@ class pvc(commands.Cog):
                     if user.voice.channel.id == voiceChannel.id:
                         await user.move_to(None)
                         await ctx.send("{0} was kicked from your vc: {1}".format(user.name, voiceChannel.mention))
-                else:
-                    await ctx.send("{0} You have no vc created use {1}vc create <Name> to create one.".format(ctx.author.name, ctx.prefix))
+            else:
+                await ctx.send("{0} You have no vc created use {1}vc create <Name> to create one.".format(ctx.author.name, ctx.prefix))
 
     @vc.command(name="mute")
     async def mute(self, ctx: commands.Context, user: discord.Member):
