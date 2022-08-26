@@ -432,7 +432,7 @@ class pvc(commands.Cog):
             voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
             if voiceChannel is not None:
                 await voiceChannel.set_permissions(user, view_channel=True, read_messages=True, send_messages=False, read_message_history=True, use_voice_activation=True, stream=False, connect=True, speak=False, reason="{0} muted {1} in their vc: {2}".format(ctx.author.name, user.name, voiceChannel.name))
-                if user.voice.channel.id == voiceChannel.idt:
+                if user.voice.channel.id == voiceChannel.id:
                     await user.move_to(voiceChannel)
                 await ctx.send("{0} was muted in your vc: {1}".format(user.name, voiceChannel.mention))
             else:
