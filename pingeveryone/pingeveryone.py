@@ -12,11 +12,6 @@ class pingeveryone(commands.Cog):
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
-        self.config = Config.get_conf(
-            self,
-            identifier=365398642334498816,
-            force_registration=True,
-        )
 
     @commands.admin_or_permissions()
     @commands.command(name="pingeveryone")
