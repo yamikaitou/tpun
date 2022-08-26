@@ -94,25 +94,6 @@ class pvc(commands.Cog):
     def pred(self, emojis, mess1, user: discord.Member):
         return ReactionPredicate.with_emojis(emojis, mess1, user)
 
-    async def emojisorter(self, ctx: commands.Context, emoji, mess1):
-        if emoji == "🎮":
-            if ctx.message.author.activity is not None:
-                for activity in ctx.message.author.activities:
-                    if activity.type == discord.activity.ActivityType.playing:
-                        await self.create(ctx, "{}".format(str(activity.name)))
-                    else:
-                        await self.create(ctx, "no activity")
-            else:
-                await self.create(ctx, "no activity")
-            await mess1.delete()
-        elif emoji == "📱":
-            await self.create(ctx, "{}'s social channel".format(ctx.author.name))
-            await mess1.delete()
-        elif emoji == "❓":
-            await self.create(ctx, "{}'s private vc".format(ctx.author.name))
-            await self.lock(ctx)
-            await mess1.delete()
-
     async def emojiRequest(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
         if emoji == "✅":
             voiceChannel = await self.vcOwnerRead(ctx.guild, user.id)
@@ -233,29 +214,6 @@ class pvc(commands.Cog):
             message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
             embed.add_field(name="🔊", value=message, inline=True)
         await ctx.send(embed=embed)
-
-    @vc.command(name="gui")
-    async def gui(self, ctx: commands.Context):
-        """
-        Opens the vc creation gui
-        """
-        dsChannel = await self.vcChannelRead(ctx)
-        if ctx.message.channel.id == dsChannel.id:
-            embed = discord.Embed(color=0xe02522, title='Voice Channel Creator', description='Creates a personal voice channel.')
-            embed.set_footer(text='This gui is opened by {0}vc gui. It allows you to create your own voice channel that will delete itself after 1 minute of being empty. You can delete it by using {0}vc delete [reason]. 🎮 for game channel, 📱 for social channel, ❓ for other channel'.format(ctx.prefix))
-            embed.timestamp = datetime.datetime.utcnow()
-            mess1 = await ctx.channel.send(embed=embed)
-            emojis = ["🎮", "❓", "📱"]
-            start_adding_reactions(mess1, emojis)
-            try:
-                result = await ctx.bot.wait_for("reaction_add", timeout=180.0, check=self.pred(emojis, mess1, ctx.author))
-                emoji = str(result[0])
-                await self.emojisorter(ctx, emoji, mess1)
-            except asyncio.TimeoutError:
-                await ctx.channel.send('Voice channel gui timed out.')
-                await mess1.delete()
-            else:
-                pass
 
     @vc.command(name="rename")
     async def rename(self, ctx: commands.Context, *, rename=None):
