@@ -186,7 +186,7 @@ class pvc(commands.Cog):
         """
         Opens the vc creation gui
         """
-        dsChannel = self.vcChannelRead(ctx)
+        dsChannel = await self.vcChannelRead(ctx)
         if ctx.message.channel.id == dsChannel.id:
             embed = discord.Embed(color=0xe02522, title='Voice Channel Creator', description='Creates a personal voice channel.')
             embed.set_footer(text='This gui is opened by {0}vc gui. It allows you to create your own voice channel that will delete itself after 1 minute of being empty. You can delete it by using {0}vc delete [reason]. 🎮 for game channel, 📱 for social channel, ❓ for other channel'.format(ctx.prefix))
