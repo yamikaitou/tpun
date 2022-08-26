@@ -429,7 +429,7 @@ class pvc(commands.Cog):
         if user is None:
             await ctx.send("{0} Please mention a user to mute.".format(ctx.author.name))
         else:
-            voiceChannel = self.vcOwnerRead(ctx.guild, ctx.author.id)
+            voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
             if voiceChannel is not None:
                 await voiceChannel.set_permissions(user, view_channel=True, read_messages=True, send_messages=False, read_message_history=True, use_voice_activation=True, stream=False, connect=True, speak=False, reason="{0} muted {1} in their vc: {2}".format(ctx.author.name, user.name, voiceChannel.name))
                 if user.voice.channel.id == voiceChannel.idt:
@@ -496,7 +496,7 @@ class pvc(commands.Cog):
                 vcObj = await self.vcOwnerRead(guild, ctx.author.id)
                 ownerObj = await self.bot.get_or_fetch_member(guild, ctx.author.id)
                 if vcObj is not None and vcObj.id == channelid:
-                    if ownerObj.voice.channel.id == channelid and str(newOwner.id) not in y[0].keys() and str(guild.id) in x:
+                    if ownerObj.voice.channel.id == channelid and str(newOwner.id) not in x.keys():
                         await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
                         x.pop(str(owner), None)
                         x.update(newWrite)
