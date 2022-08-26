@@ -87,6 +87,10 @@
 - [PingEveryone](#pingeveryone)
 
 <br />
+
+- [ServerHud](#serverhud)
+
+<br />
 <br />
 
 <div id="pvc" align="center">
@@ -127,15 +131,6 @@
 
 <br />
 <br />
-
-- `
-[p]vc gui
-`
-
-##### Opens a gui for voice channel creation
-
-<br />
-<br /> 
 
 - `
 [p]vc delete
@@ -467,6 +462,88 @@
 `
 
 ##### Allows users with bot admin perms to ping here
+
+<br />
+<br />
+
+<div id="serverhud" align="center">
+
+## Server Hud
+
+<br />
+
+### A Cog for creating customizable voice channel stats
+
+</div>
+
+<div align="right">
+
+[top](#coglist)
+
+</div>
+
+<br /> 
+
+- `
+[p]serverhud setchannel <type> <channel id>
+`
+
+##### Sets 'channel id' to be the serverhud 'type'
+
+<br />
+<br />
+
+- `
+[p]serverhud types
+`
+
+##### Lists the types of avaliable server hud
+
+<br />
+<br />
+
+- `
+[p]serverhud setprefix <type> <prefix>
+`
+
+##### Sets channel 'type' to have the 'prefix'
+
+<br />
+<br />
+
+- `
+[p]serverhud setsuffix <type> <suffix>
+`
+
+##### Sets channel 'type' to have the 'suffix'
+
+<br />
+<br />
+
+- `
+[p]serverhud setname <type> <name>
+`
+
+##### Sets channel 'type' to have the 'name'
+
+<br />
+<br />
+
+- `
+[p]serverhud setstyle <type> <style>
+`
+
+##### Sets the booster bar to use 'style' for either type: 'empty' or 'full'
+##### ex: full * empty -: with 6 boosts = Lvl1******-
+
+<br />
+<br />
+
+- `
+[p]serverhud test <event>
+`
+
+##### Tests the serverhud for various events 'join' and 'leave'
 
 <br />
 <br />
