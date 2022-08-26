@@ -1,11 +1,9 @@
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
-from redbot.core import data_manager
 import discord
 import time
 import asyncio
-import json
 import re
 import logging
 
@@ -35,7 +33,7 @@ class timedping(commands.Cog):
             roles = await self.config.guild(guild).pingableroles()
             for role, cooldown in roles.items():
                 if bool(re.search(guild.get_role(int(role)).name, message.content, flags=re.I | re.X)
-                ) or bool(re.search(guild.get_role(int(role)).name, message.content, flags=re.I)):
+                    ) or bool(re.search(guild.get_role(int(role)).name, message.content, flags=re.I)):
                     if role not in self.tempo.keys():
                         await message.reply("<@&{0}>".format(int(role)))
                         newTempo = {str(role): int(time.time() + cooldown)}

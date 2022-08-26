@@ -1,11 +1,9 @@
 from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
-from redbot.core import data_manager
 import discord
 import datetime
 import time
-import json
 import logging
 
 

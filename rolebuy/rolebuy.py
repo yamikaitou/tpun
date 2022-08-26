@@ -3,9 +3,7 @@ from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
 from redbot.core import bank
-from redbot.core import data_manager
 import discord
-import json
 import asyncio
 import logging
 RequestType = Literal["discord_deleted_user", "owner", "user", "user_strict"]

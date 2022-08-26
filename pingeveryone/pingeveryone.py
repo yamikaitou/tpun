@@ -19,8 +19,8 @@ class pingeveryone(commands.Cog):
         """
         This command just pings everyone
         """
-        allowed_mentions = discord.AllowedMentions(everyone = True)
-        await ctx.send(content = "@everyone", allowed_mentions = allowed_mentions)
+        allowed_mentions = discord.AllowedMentions(everyone=True)
+        await ctx.send(content="@everyone", allowed_mentions=allowed_mentions)
 
     @commands.admin_or_permissions()
     @commands.command(name="pinghere")
@@ -29,4 +29,4 @@ class pingeveryone(commands.Cog):
         This command just pings here
         """
         allowed_mentions = discord.AllowedMentions(everyone = True)
-        await ctx.send(content = "@here", allowed_mentions = allowed_mentions)
+        await ctx.send(content="@here", allowed_mentions=allowed_mentions)
