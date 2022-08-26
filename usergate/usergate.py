@@ -19,8 +19,7 @@ class usergate(commands.Cog):
         self.log = logging.getLogger('red.tpun.usergate')
         self.config = Config.get_conf(
             self,
-            identifier=365398642334498816,
-            force_registration=True,
+            identifier=365398642334498816
         )
         default_guild = {
             "usergate": 0
