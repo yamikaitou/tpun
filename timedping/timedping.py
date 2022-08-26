@@ -22,43 +22,16 @@ class timedping(commands.Cog):
             self,
             identifier=365398642334498816
         )
-        
-        path = data_manager.cog_data_path(cog_instance=self)
-        self.pingListPath = path / 'pingList.json'
-        if self.pingListPath.exists():
-            pass
-        else:
-            with self.pingListPath.open("w", encoding="utf-8") as f:
-                f.write("{}")
-        self.tempo: dict = {}
-
-    def getPingList(self):
-        try:
-            with open(str(self.pingListPath), 'r') as pingList:
-                x = json.load(pingList)
-                return x
-        except ValueError:
-            self.log.exception("pingList.json failed to read")
-            return None
-
-    def parsePingList(self, guild):
-        x = self.getPingList()
-        for server, rolesList in x.items():
-            if server == str(guild):
-                return rolesList[0]
-
-    def pingListRead(self, guild: int, roleArg: discord.role):
-        i = self.parsePingList(guild)
-        for role, cooldown in i.items():
-            if role == roleArg.id:
-                return cooldown
+        default_guild = {
+            "pingableroles": {}
+        }
+        self.config.register_guild(**default_guild)
 
     @commands.Cog.listener()
     async def on_message(self, message: discord.Message):
         if message.guild is not None and "@" in message.content:
-            guild = message.guild.id
-            roles = {}
-            roles = self.parsePingList(guild)
+            guild = message.guild
+            roles = await self.config.guild(guild).pingableroles()
             for role, cooldown in roles.items():
                 if bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I | re.X)
                 ) or bool(re.search(message.guild.get_role(int(role)).name, message.content, flags=re.I)):
@@ -89,26 +62,12 @@ class timedping(commands.Cog):
         """
         Adds a role to the timed ping list
         """
-        guild = ctx.guild.id
+        guild = ctx.guild
         nC = {role.id: cooldown}
-        with open(str(self.pingListPath), 'r') as pingList:
-            try:
-                x = json.load(pingList)
-                if str(guild) in x:
-                    y = x[str(guild)].copy()
-                    y[0].update(nC)
-                else:
-                    x.update({str(guild): [{}]})
-                    y = x[str(guild)].copy()
-                    y[0].update(nC)
-            except ValueError:
-                self.log.exception("pingList.json read failed")
-        with open(str(self.pingListPath), 'w') as pingList:
-            try:
-                json.dump(x, pingList)
-                await ctx.send("{0} was added to the Timed Ping List with cooldown {1} seconds".format(role.mention, cooldown))
-            except ValueError:
-                self.log.exception("pingList.json write failed")
+        pingableRoles = await self.config.guild(guild).pingableroles()
+        pingableRoles.update(nC)
+        await self.config.guild(guild).pingableroles.set(pingableRoles)
+        await ctx.send("{0} was added to the Timed Ping List with cooldown {1} seconds".format(role.mention, cooldown))
 
     @commands.guildowner_or_permissions()
     @tping.command(name="remove")
@@ -117,21 +76,9 @@ class timedping(commands.Cog):
         Removes a role from the timed ping list
         """
         guild = ctx.guild.id
-        with open(str(self.pingListPath), 'r') as pingList:
-            try:
-                x = json.load(pingList)
-            except ValueError:
-                self.log.exception("Failed to read to pingList.json")
-        with open(str(self.pingListPath), 'w') as vcWrite:
-            try:
-                if str(guild) in x:
-                    y = x[str(guild)].copy()
-                    y[0].pop(str(role.id), None)
-                    json.dump(x, vcWrite)
-                    if x is None:
-                        x = {}
-            except ValueError:
-                self.log.exception("Failed to write to pingList.json")
+        pingableRoles = await self.config.guild(guild).pingableroles()
+        pingableRoles.pop(str(role.id), None)
+        await self.config.guild(guild).pingableroles.set()
         await ctx.send("{0} was removed from the Timed Ping List".format(role.mention))
 
     @commands.guildowner_or_permissions()
@@ -142,16 +89,9 @@ class timedping(commands.Cog):
         """
         guild = ctx.guild.id
         roles = ""
-        with open(str(self.pingListPath), 'r') as pingList:
-            try:
-                x = json.load(pingList)
-                if str(guild) in x:
-                    y = x[str(guild)].copy()
-                    for i in y:
-                        for role, cooldown in i.items():
-                            roles = roles + "<@&{0}> with cooldown {1} seconds \n".format(role, cooldown)
-                    mess1 = await ctx.send(roles)
-                    await asyncio.sleep(120)
-                    await mess1.delete()
-            except ValueError:
-                self.log.exception("Failed to read pingList.json")
+        pingableRoles = await self.config.guild(guild).pingableroles()
+        for role, cooldown in pingableRoles.items():
+            roles = roles + "<@&{0}> with cooldown {1} seconds \n".format(role, cooldown)
+        mess1 = await ctx.send(roles)
+        await asyncio.sleep(120)
+        await mess1.delete()
