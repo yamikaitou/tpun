@@ -99,11 +99,11 @@ class pvc(commands.Cog):
             if ctx.message.author.activity is not None:
                 for activity in ctx.message.author.activities:
                     if activity.type == discord.activity.ActivityType.playing:
-                        await self.create(ctx, *"{}".format(str(activity.name)))
+                        await self.create(ctx, "{}".format(str(activity.name)))
                     else:
-                        await self.create(ctx, *"no activity")
+                        await self.create(ctx, "no activity")
             else:
-                await self.create(ctx, *"no activity")
+                await self.create(ctx, "no activity")
             await mess1.delete()
         elif emoji == "📱":
             await self.create(ctx, "{}'s social channel".format(ctx.author.name))
