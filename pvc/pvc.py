@@ -57,7 +57,6 @@ class pvc(commands.Cog):
         while empty.done() is not True:
             await asyncio.sleep(60)
             if len(channel.members) == 0:
-                reason = "channel is empty"
                 await pvc.delete(self, ctx)
                 pvc.futureList.pop(str(id), None)
                 break
@@ -141,8 +140,6 @@ class pvc(commands.Cog):
 
         The reason is optional
         """
-        if reason is None:
-            reason = "user deleted their own channel"
         owner = ctx.author.id
         x = await self.config.guild(ctx.guild).owners()
         vc = await self.vcOwnerRead(ctx.guild, ctx.author.id)
@@ -154,6 +151,10 @@ class pvc(commands.Cog):
                     pvc.futureList.pop(str(vcId), None)
                     break
             channel = self.bot.get_channel(vcId)
+            if len(channel.members) == 0 and reason is None:
+                reason = "channel is empty"
+            elif reason is None:
+                reason = "user deleted their own channel"
             vcName = str(channel.name)
             await channel.delete()
             x.pop(str(owner), None)
