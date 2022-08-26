@@ -203,8 +203,7 @@
 ##### Invites a 'user' to join your private voice channel
 
 <br />
-<br /> 
-<h5>
+<br />
 
 - `
 [p]vc limit <int>
