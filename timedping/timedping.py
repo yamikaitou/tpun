@@ -91,6 +91,10 @@ class timedping(commands.Cog):
         pingableRoles = await self.config.guild(guild).pingableroles()
         for role, cooldown in pingableRoles.items():
             roles = roles + "<@&{0}> with cooldown {1} seconds \n".format(role, cooldown)
+        if roles != "":
+            mess1 = await ctx.send(roles)
+        else:
+            mess1 = await ctx.send("There are no pingable roles set up yet")
         mess1 = await ctx.send(roles)
         await asyncio.sleep(120)
         await mess1.delete()
