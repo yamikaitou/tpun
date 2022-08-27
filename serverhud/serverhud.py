@@ -60,7 +60,6 @@ class serverhud(commands.Cog):
             },
             "truememcount": 0,
             "newmemcount": 0,
-            "newmemget": datetime.today()
         }
         self.config.register_guild(**default_guild)
 
@@ -155,11 +154,9 @@ class serverhud(commands.Cog):
             newmemcount = await self.config.guild(guild).newmemcount()
             changeNewMem = newmemcount + 1
             await self.config.guild(guild).newmemcount.set(changeNewMem)
-        if self.newMemGet < (datetime.today() - timedelta(days=1)):
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            self.newMemGet = datetime.today()
         await self.members(guild)
         await self.boosters(guild)
 
@@ -173,20 +170,18 @@ class serverhud(commands.Cog):
             newmemcount = await self.config.guild(guild).newmemcount()
             changeNewMem = newmemcount - 1
             await self.config.guild(guild).newmemcount.set(changeNewMem)
-        if self.newMemGet < (datetime.today() - timedelta(days=1)):
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            self.newMemGet = datetime.today()
         await self.members(guild)
         await self.boosters(guild)
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
         if before.guild.premium_subscriber_role not in before.roles and after.guild.premium_subscriber_role in after.roles:
-            await self.booster(before.guild)
+            await self.boosters(before.guild)
         elif before.guild.premium_subscriber_role in before.roles and after.guild.premium_subscriber_role not in after.roles:
-            await self.booster(before.guild)
+            await self.boosters(before.guild)
 
 
     @commands.group(name="serverhud")
@@ -414,7 +409,6 @@ class serverhud(commands.Cog):
             memberList = ctx.guild.members
             await self.config.guild(ctx.guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            self.newMemGet = datetime.today()
             await self.members(ctx.guild)
             await self.boosters(ctx.guild)
             await ctx.send("Test of the member join/leave event.")
