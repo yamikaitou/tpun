@@ -148,12 +148,6 @@ class serverhud(commands.Cog):
     async def on_member_join(self, member):
         guild = member.guild
         if not member.bot:
-            truememcount = await self.config.guild(member.guild).truememcount()
-            newcount = truememcount + 1
-            await self.config.guild(member.guild).truememcount.set(newcount)
-            newmemcount = await self.config.guild(guild).newmemcount()
-            changeNewMem = newmemcount + 1
-            await self.config.guild(guild).newmemcount.set(changeNewMem)
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
@@ -164,12 +158,6 @@ class serverhud(commands.Cog):
     async def on_member_remove(self, member):
         guild = member.guild
         if not member.bot:
-            truememcount = await self.config.guild(guild).truememcount()
-            newcount = truememcount - 1
-            await self.config.guild(guild).truememcount.set(newcount)
-            newmemcount = await self.config.guild(guild).newmemcount()
-            changeNewMem = newmemcount - 1
-            await self.config.guild(guild).newmemcount.set(changeNewMem)
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
