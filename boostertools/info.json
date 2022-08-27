@@ -1,0 +1,21 @@
+{
+    "name": "Booster Tools",
+    "short": "boostertools",
+    "description": "Team Punistic red cog for managing boosters when they start boosting and after they stop",
+    "end_user_data_statement": "This cog does not persistently store data or meta-data about users.",
+    "install_msg": "Congrats",
+    "author": [
+        "Nado"
+    ],
+    "required_cogs": {},
+    "requirements": [],
+    "tags": [
+        "booster",
+        "roles",
+        "Tpun"
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}
