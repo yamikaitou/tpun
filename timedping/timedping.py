@@ -95,6 +95,5 @@ class timedping(commands.Cog):
             mess1 = await ctx.send(roles)
         else:
             mess1 = await ctx.send("There are no pingable roles set up yet")
-        mess1 = await ctx.send(roles)
         await asyncio.sleep(120)
         await mess1.delete()
