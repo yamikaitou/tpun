@@ -1,4 +1,3 @@
-from imaplib import Commands
 from typing import Literal
 from redbot.core import commands
 from redbot.core.bot import Red
@@ -144,7 +143,7 @@ class serverhud(commands.Cog):
                 for i in range(7):
                     mess = mess + stylefull
                 await channel.edit(name='{0}Max{1}'.format(boosterBarObj["prefix"], mess))
-                await asyncio.sleep(15)     
+                await asyncio.sleep(15)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -157,7 +156,6 @@ class serverhud(commands.Cog):
             changeNewMem = newmemcount + 1
             await self.config.guild(guild).newmemcount.set(changeNewMem)
         if self.newMemGet < (datetime.today() - timedelta(days=1)):
-            truemem = await self.config.guild(guild).truemem()
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
@@ -176,13 +174,20 @@ class serverhud(commands.Cog):
             changeNewMem = newmemcount - 1
             await self.config.guild(guild).newmemcount.set(changeNewMem)
         if self.newMemGet < (datetime.today() - timedelta(days=1)):
-            truemem = await self.config.guild(guild).truemem()
             memberList = guild.members
             await self.config.guild(guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
             self.newMemGet = datetime.today()
         await self.members(guild)
         await self.boosters(guild)
+
+    @commands.Cog.listener()
+    async def on_member_update(self, before, after):
+        if before.guild.premium_subscriber_role not in before.roles and after.guild.premium_subscriber_role in after.roles:
+            await self.booster(before.guild)
+        elif before.guild.premium_subscriber_role in before.roles and after.guild.premium_subscriber_role not in after.roles:
+            await self.booster(before.guild)
+
 
     @commands.group(name="serverhud")
     async def serverhud(self, ctx):
@@ -200,7 +205,7 @@ class serverhud(commands.Cog):
         The command syntax is [p]serverhud setchannel <type> <channel id>
         For a list of channel types use [p]serverhud types
         """
-        
+
         types = ["newmem", "totmem", "totbot", "truemem", "booster", "boosterbar"]
         for x in types:
             if x == type:
@@ -383,7 +388,6 @@ class serverhud(commands.Cog):
             await ctx.send("The Booster Bar empty style has been set to {}".format(style))
         else:
             await ctx.send("That is not a valid booster bar type")
-        
 
     @commands.guildowner_or_permissions()
     @serverhud.command(name="types")
