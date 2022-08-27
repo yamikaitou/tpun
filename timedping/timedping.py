@@ -77,7 +77,7 @@ class timedping(commands.Cog):
         guild = ctx.guild
         pingableRoles = await self.config.guild(guild).pingableroles()
         pingableRoles.pop(str(role.id), None)
-        await self.config.guild(guild).pingableroles.set()
+        await self.config.guild(guild).pingableroles.set(pingableRoles)
         await ctx.send("{0} was removed from the Timed Ping List".format(role.mention))
 
     @commands.guildowner_or_permissions()
