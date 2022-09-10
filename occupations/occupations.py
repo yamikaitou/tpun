@@ -108,4 +108,7 @@ class occupations(commands.Cog):
         """
         title = await self.config.member(ctx.author).title()
         salary = await self.config.member(ctx.author).salary()
-        await ctx.send("Your current job is {0} and your salary is {1}".format(title, str(salary)))
+        if title != "":
+            await ctx.reply("Your current job is {0} and your salary is {1}".format(title, str(salary)))
+        else:
+            await ctx.reply("You do not have a job yet.")
