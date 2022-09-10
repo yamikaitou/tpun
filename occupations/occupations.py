@@ -84,7 +84,7 @@ class occupations(commands.Cog):
         try:
             result = await ctx.bot.wait_for("reaction_add", timeout=300.0, check=self.pred(emojis, mess, ctx.author))
             emoji = str(result[0])
-            await self.emojiRequest(ctx, emoji, mess, titleList)
+            await self.jobChooser(ctx, emoji, mess, titleList)
         except asyncio.TimeoutError:
             await ctx.channel.send('This request timed out.')
             await mess.delete()
