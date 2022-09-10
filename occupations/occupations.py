@@ -71,7 +71,14 @@ class occupations(commands.Cog):
         else:
             await mess.reply("I'm sorry but you didn't qualify for the job. Guess it's back to searching.")
 
-    @commands.command(name="jobboard")
+    @commands.group(name="job")
+    async def job(self, ctx: commands.Context):
+        """
+        Base command for occupation related commands
+        """
+        pass
+
+    @job.command(name="board")
     async def jobboard(self, ctx: commands.Context, *, search: str = ""):
         """
         Displays the job board with a list of jobs
@@ -105,7 +112,7 @@ class occupations(commands.Cog):
         else:
             pass
 
-    @commands.command(name="currentjob")
+    @job.command(name="current")
     async def currentjob(self, ctx: commands.Context):
         """
         Displays the user's current job
@@ -116,3 +123,11 @@ class occupations(commands.Cog):
             await ctx.reply("Your current job is {0} and your salary is {1}".format(title, str(salary)))
         else:
             await ctx.reply("You do not have a job yet.")
+
+    @job.command(name="quit")
+    async def quitjob(self, ctx: commands.Context):
+        """
+        Quits your current job
+        """
+        await self.config.member(ctx.author).title.set(None)
+        await self.config.member(ctx.author).salary.set(None)
