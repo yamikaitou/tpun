@@ -130,7 +130,7 @@ class occupations(commands.Cog):
         #check cooldown for job searching
         cooldown = await self.config.member(ctx.author).cooldown()
         if cooldown is None:
-            cooldown = datetime.utcfromtimestamp(0.0)
+            cooldown = datetime.utcfromtimestamp(1302872043.0)
         else:
             cooldown = parser.parse(cooldown)
         if cooldown.timestamp() + 300.0 < datetime.utcnow().timestamp():
