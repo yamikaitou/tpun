@@ -142,9 +142,9 @@ class occupations(commands.Cog):
             job3 = random.randint(0, (len(jobList)-1))
             job4 = random.randint(0, (len(jobList)-1))
             job1 = jobList[job1]
-            job2 = jobList[job1]
-            job3 = jobList[job1]
-            job4 = jobList[job1]
+            job2 = jobList[job2]
+            job3 = jobList[job3]
+            job4 = jobList[job4]
         #display 4 jobs in an embed
         embed = await self.create_embed(titleList)
         mess = await ctx.send(embed=embed)
