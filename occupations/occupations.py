@@ -136,12 +136,11 @@ class occupations(commands.Cog):
             titleList: dict = {}
             for job in jobResults:
                 titleList.update({job["title"]:job["salary_max"]})
-            job1 = random.randint(0, 250)
-            job2 = random.randint(0, 250)
-            job3 = random.randint(0, 250)
-            job4 = random.randint(0, 250)
             jobList = list(titleList)
-            self.log.info(len(jobList))
+            job1 = random.randint(0, (len(jobList)-1))
+            job2 = random.randint(0, (len(jobList)-1))
+            job3 = random.randint(0, (len(jobList)-1))
+            job4 = random.randint(0, (len(jobList)-1))
             job1 = jobList[job1]
             job2 = jobList[job1]
             job3 = jobList[job1]
