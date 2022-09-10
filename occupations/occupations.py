@@ -24,7 +24,7 @@ class occupations(commands.Cog):
         p = inflect.engine()
         for title, salary in jobs.items():
             message = "Title: " + title + " " + " ⌇ " + " Salary: " + str(salary)
-            embed.add_field(name=":{0}:".format(p.number_to_words(iteration)), value=message, inline=True)
+            embed.add_field(name=":{0}:".format(p.number_to_words(iteration)), value=message, inline=False)
             iteration = iteration + 1
         return embed
 
