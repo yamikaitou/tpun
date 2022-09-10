@@ -36,7 +36,7 @@ class occupations(commands.Cog):
             "cooldown": ""
         }
         default_guild = {
-            "maxsalary": 0,
+            "maxsalary": 100000,
             "chancescalar": 1.0,
             "timediff": 3600.0
         }
@@ -228,7 +228,7 @@ class occupations(commands.Cog):
             if chance < 0:
                 chance = 0
             message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, chance)
-            await ctx.reply(message)
+        await ctx.reply(message)
 
     @commands.guildowner_or_permissions()
     @job.command(name="cooldown")
