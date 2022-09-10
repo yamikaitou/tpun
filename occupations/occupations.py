@@ -194,6 +194,7 @@ class occupations(commands.Cog):
         await self.config.member(ctx.author).salary.set(None)
         await ctx.reply("You quit your job. Better search for a new one soon...")
 
+    @commands.guildowner_or_permissions()
     @job.command(name="maxsalary")
     async def maxsalary(self, ctx: commands.Context, salary: int = 10000):
         """
@@ -210,6 +211,7 @@ class occupations(commands.Cog):
             message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, chance)
         await ctx.reply(message)
 
+    @commands.guildowner_or_permissions()
     @job.command(name="chancescalar")
     async def chancescalar(self, ctx: commands.Context, scalar: float = 1.0):
         """
@@ -228,6 +230,7 @@ class occupations(commands.Cog):
             message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, chance)
             await ctx.reply(message)
 
+    @commands.guildowner_or_permissions()
     @job.command(name="cooldown")
     async def cooldown(self, ctx: commands.Context, seconds: float = 1.0):
         """
