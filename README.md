@@ -562,7 +562,7 @@
 
 </div>
 
-#### The amount made for timespend in vc is
+#### The amount made for time spent in vc is
 
 ##### pay = (timespent[in seconds] / 2,592,000[one month in seconds]) * salary[Members Salary] * 100 * 0.27
 
