@@ -49,7 +49,7 @@ class occupations(commands.Cog):
         iteration = 1
         p = inflect.engine()
         for title, salary in jobs.items():
-            message = "Title: " + title + " \n " + " Salary: " + str(int(salary))
+            message = "Title: " + title + " \n " + " Salary: " + str(int(salary)) + "Currency/Hr: " + str(((24*30) * int(salary) * 100) * 0.27)
             embed.add_field(name=":{0}:".format(p.number_to_words(iteration)), value=message, inline=False)
             iteration = iteration + 1
         return embed
@@ -110,7 +110,7 @@ class occupations(commands.Cog):
             #pay user based on how long they were in vc
             salary = await self.config.member(member).salary()
             pay = int(((secondsInVc / (60*60*24*30)) * int(salary) * 100) * 0.27)
-            self.log.info("{0} was paid {1} for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
+            self.log.info("{0} was paid {1} currency for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
             await bank.deposit_credits(member, pay)
         else:
             self.log.warn("Something went wrong in on_voice_update")
