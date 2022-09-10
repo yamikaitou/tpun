@@ -131,3 +131,4 @@ class occupations(commands.Cog):
         """
         await self.config.member(ctx.author).title.set(None)
         await self.config.member(ctx.author).salary.set(None)
+        await ctx.reply("You quit your job. Better search for a new one soon...")
