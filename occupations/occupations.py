@@ -44,7 +44,7 @@ class occupations(commands.Cog):
         self.config.register_guild(**default_guild)
 
     async def create_embed(self, jobs: dict):
-        description="A list of avalaible jobs below\nThe High the salary the less chance of getting the job"
+        description="A list of avalaible jobs below\nThe higher the salary the less chance of getting the job"
         embed = discord.Embed(title="Job Board", description=description, color=0xc72327)
         iteration = 1
         p = inflect.engine()
