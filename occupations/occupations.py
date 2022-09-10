@@ -186,9 +186,9 @@ class occupations(commands.Cog):
         await self.config.guild(ctx.guild).maxsalary.set(salary)
         wages = [20000, 40000, 75000, 100000, 125000, 150000]
         chanceScalar = await self.config.guild(ctx.guild).chancescalar()
-        message = "The max salary was set to {0}".format(salary)
+        message = "The max salary was set to `{0}`".format(salary)
         for wage in wages:
-            message = message + "\nThe current chance to get a {0} salary job is {1}%".format(wage, 1 - ((wage / salary) * chanceScalar))
+            message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, 1 - ((wage / salary) * chanceScalar))
         await ctx.reply(message)
 
     @job.command(name="chancescalar")
@@ -201,7 +201,7 @@ class occupations(commands.Cog):
         await self.config.guild(ctx.guild).chancescalar.set(scalar)
         wages = [20000, 40000, 75000, 100000, 125000, 150000]
         maxsalary = await self.config.guild(ctx.guild).maxsalary()
-        message = "The chance scalar was set to {0}".format(scalar)
+        message = "The chance scalar was set to `{0}`".format(scalar)
         for wage in wages:
-            message = message + "\nThe current chance to get a {0} salary job is {1}%".format(wage, 1 - ((wage / maxsalary) * scalar))
+            message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, 1 - ((wage / maxsalary) * scalar))
         await ctx.reply(message)
