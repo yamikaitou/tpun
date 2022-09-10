@@ -140,7 +140,7 @@ class occupations(commands.Cog):
             job2 = random.randint(0, 250)
             job3 = random.randint(0, 250)
             job4 = random.randint(0, 250)
-            jobList = list(jobDict)
+            jobList = list(titleList)
             job1 = jobList[job1]
             job2 = jobList[job1]
             job3 = jobList[job1]
