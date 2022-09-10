@@ -130,8 +130,21 @@ class occupations(commands.Cog):
             for job in jobResults:
                 titleList.update({job["title"]:job["salary_max"]})
         else:
-            #response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=20&what={2}&full_time=1&content-type=application/json".format(app_id, api_key, search))
-            await ctx.send("Please include search terms")
+            response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(app_id, api_key, search))
+            jobs = response.json()
+            jobResults: list = jobs["results"]
+            titleList: dict = {}
+            for job in jobResults:
+                titleList.update({job["title"]:job["salary_max"]})
+            job1 = random.randint(0, 250)
+            job2 = random.randint(0, 250)
+            job3 = random.randint(0, 250)
+            job4 = random.randint(0, 250)
+            jobList = list(jobDict)
+            job1 = jobList[job1]
+            job2 = jobList[job1]
+            job3 = jobList[job1]
+            job4 = jobList[job1]
         #display 4 jobs in an embed
         embed = await self.create_embed(titleList)
         mess = await ctx.send(embed=embed)
