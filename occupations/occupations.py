@@ -41,11 +41,12 @@ class occupations(commands.Cog):
         self.config.register_guild(**default_guild)
 
     async def create_embed(self, jobs: dict):
-        embed = discord.Embed(title="Job Board", description="A list of avalaible jobs below", color=0xc72327)
+        description="A list of avalaible jobs below\nThe High the salary the less chance of getting the job"
+        embed = discord.Embed(title="Job Board", description=description, color=0xc72327)
         iteration = 1
         p = inflect.engine()
         for title, salary in jobs.items():
-            message = "Title: " + title + " \n " + " Salary: " + str(salary)
+            message = "Title: " + title + " \n " + " Salary: " + str(int(salary))
             embed.add_field(name=":{0}:".format(p.number_to_words(iteration)), value=message, inline=False)
             iteration = iteration + 1
         return embed
