@@ -130,7 +130,7 @@ class occupations(commands.Cog):
         #check cooldown for job searching
         cooldown = await self.config.member(ctx.author).cooldown()
         if cooldown is None:
-            cooldown = datetime.utcnow().timestamp() - 5
+            cooldown = datetime.utcfromtimestamp(0.0)
         else:
             cooldown = parser.parse(cooldown)
         if cooldown.timestamp() + 300.0 < datetime.utcnow().timestamp():
@@ -198,7 +198,6 @@ class occupations(commands.Cog):
         """
         Command for setting the max salary
         """
-        
         await self.config.guild(ctx.guild).maxsalary.set(salary)
         wages = [20000, 40000, 75000, 100000, 125000, 150000]
         chanceScalar = await self.config.guild(ctx.guild).chancescalar()
