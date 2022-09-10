@@ -32,10 +32,11 @@ class occupations(commands.Cog):
             "title": "",
             "salary": 0.0,
             "vcstarttime": "",
+            "cooldown": ""
         }
         default_guild = {
             "maxsalary": 0,
-            "chancescalar": 1.0
+            "chancescalar": 1.0,
         }
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
@@ -83,6 +84,11 @@ class occupations(commands.Cog):
             await mess.reply("Congrats you got the job as {0}, your new salary is {1}".format(jobName, jobSalary))
         else:
             await mess.reply("I'm sorry but you didn't qualify for the job. Guess it's back to searching.")
+        #start cooldown for job searching
+        time_format = '%Y %m %d %H:%M:%S %z'
+        utc_zone = tz.gettz('UTC')
+        time = datetime.utcnow()
+        await self.config.member(ctx.author).cooldown.set(time.strftime(time_format))
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
@@ -120,41 +126,47 @@ class occupations(commands.Cog):
         """
         Displays the job board with a list of jobs
         """
-        app_id = "1cf735c8"
-        api_key = "07f06d440a5df3423f00659899be7bf5"
-        #use api to get random jobs, if not possible use List
-        response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(app_id, api_key))
-        jobs = response.json()
-        jobResults: list = jobs["results"]
-        titleList: dict = {}
-        for job in jobResults:
-            titleList.update({job["title"]:job["salary_max"]})
-        jobList = list(titleList)
-        #choose 4 jobs from the list we get back at random
-        job1 = random.randint(0, (len(jobList)-1))
-        job2 = random.randint(0, (len(jobList)-1))
-        job3 = random.randint(0, (len(jobList)-1))
-        job4 = random.randint(0, (len(jobList)-1))
-        job1 = jobList[job1]
-        job2 = jobList[job2]
-        job3 = jobList[job3]
-        job4 = jobList[job4]
-        titleList = {job1:titleList[job1], job2:titleList[job2], job3:titleList[job3], job4:titleList[job4]}
-        #display 4 jobs in an embed
-        embed = await self.create_embed(titleList)
-        mess = await ctx.send(embed=embed)
-        #wait for user to emoji react to choose one
-        emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]
-        start_adding_reactions(mess, emojis)
-        try:
-            result = await ctx.bot.wait_for("reaction_add", timeout=300.0, check=self.pred(emojis, mess, ctx.author))
-            emoji = str(result[0])
-            await self.jobChooser(ctx, emoji, mess, titleList)
-        except asyncio.TimeoutError:
-            await ctx.send('This request timed out.')
-            await mess.delete()
+        #check cooldown for job searching
+        cooldown = await self.config.member(ctx.author).cooldown()
+        cooldown = parser.parse(cooldown)
+        if cooldown.time() + 300 < datetime.utcnow().time():
+            app_id = "1cf735c8"
+            api_key = "07f06d440a5df3423f00659899be7bf5"
+            #use api to get random jobs, if not possible use List
+            response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(app_id, api_key))
+            jobs = response.json()
+            jobResults: list = jobs["results"]
+            titleList: dict = {}
+            for job in jobResults:
+                titleList.update({job["title"]:job["salary_max"]})
+            jobList = list(titleList)
+            #choose 4 jobs from the list we get back at random
+            job1 = random.randint(0, (len(jobList)-1))
+            job2 = random.randint(0, (len(jobList)-1))
+            job3 = random.randint(0, (len(jobList)-1))
+            job4 = random.randint(0, (len(jobList)-1))
+            job1 = jobList[job1]
+            job2 = jobList[job2]
+            job3 = jobList[job3]
+            job4 = jobList[job4]
+            titleList = {job1:titleList[job1], job2:titleList[job2], job3:titleList[job3], job4:titleList[job4]}
+            #display 4 jobs in an embed
+            embed = await self.create_embed(titleList)
+            mess = await ctx.send(embed=embed)
+            #wait for user to emoji react to choose one
+            emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]
+            start_adding_reactions(mess, emojis)
+            try:
+                result = await ctx.bot.wait_for("reaction_add", timeout=300.0, check=self.pred(emojis, mess, ctx.author))
+                emoji = str(result[0])
+                await self.jobChooser(ctx, emoji, mess, titleList)
+            except asyncio.TimeoutError:
+                await ctx.send('This request timed out.')
+                await mess.delete()
+            else:
+                pass
         else:
-            pass
+            await ctx.send("Sorry you're job search is on hold, this can take up to 5 minutes")
 
     @job.command(name="current")
     async def currentjob(self, ctx: commands.Context):
