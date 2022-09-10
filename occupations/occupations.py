@@ -18,6 +18,16 @@ class occupations(commands.Cog):
         self.bot = bot
         self
 
+    async def create_embed(self, jobs: dict):
+        embed = discord.Embed(title="Job Board", description="A list of avalaible jobs below", color=0xc72327)
+        interation = 1
+        p = inflect.engine()
+        for title, salary in jobs.items():
+            iteration = iteration + 1
+            message = "Title: " + title + " " + " ⌇ " + " Salary: " + salary
+            embed.add_field(name=":{0}:".format(p.number_to_words(iteration)), value=message, inline=True)
+            
+
     @commands.command(name="jobboard")
     async def jobboard(self, ctx: commands.Context, *, search: str = ""):
         """
