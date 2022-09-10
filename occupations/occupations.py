@@ -129,10 +129,10 @@ class occupations(commands.Cog):
         #check cooldown for job searching
         cooldown = await self.config.member(ctx.author).cooldown()
         if cooldown is None:
-            cooldown = datetime.utcnow().time() - 5
+            cooldown = datetime.utcnow().timetuple() - 5
         else:
             cooldown = parser.parse(cooldown)
-        if cooldown.time() + 300 < datetime.utcnow().time():
+        if cooldown.timetuple() + 300 < datetime.utcnow().timetuple():
             app_id = "1cf735c8"
             api_key = "07f06d440a5df3423f00659899be7bf5"
             #use api to get random jobs, if not possible use List
