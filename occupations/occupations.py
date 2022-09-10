@@ -41,16 +41,16 @@ class occupations(commands.Cog):
         jobSalary = ""
         if emoji == "1️⃣":
             jobName = jobList[0]
-            jobSalary = jobDict[jobList[0]]
+            jobSalary = jobs[jobList[0]]
         elif emoji == "2️⃣":
             jobName = jobList[1]
-            jobSalary = jobDict[jobList[1]]
+            jobSalary = jobs[jobList[1]]
         elif emoji == "3️⃣":
             jobName = jobList[2]
-            jobSalary = jobDict[jobList[2]]
+            jobSalary = jobs[jobList[2]]
         elif emoji == "4️⃣":
             jobName = jobList[3]
-            jobSalary = jobDict[jobList[3]]
+            jobSalary = jobs[jobList[3]]
         #Add chance of failing to get job perentage based on salary
 
         #Write Chosen job to config
