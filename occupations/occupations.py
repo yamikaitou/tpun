@@ -12,6 +12,7 @@ import random
 import inflect
 import asyncio
 from datetime import datetime
+import time
 from dateutil import tz, parser
 import time
 
@@ -129,10 +130,10 @@ class occupations(commands.Cog):
         #check cooldown for job searching
         cooldown = await self.config.member(ctx.author).cooldown()
         if cooldown is None:
-            cooldown = datetime.utcnow().timetuple() - 5
+            cooldown = datetime.utcnow().timestamp() - 5
         else:
             cooldown = parser.parse(cooldown)
-        if cooldown.timetuple() + 300 < datetime.utcnow().timetuple():
+        if cooldown.timestamp() + 300.0 < datetime.utcnow().timestamp():
             app_id = "1cf735c8"
             api_key = "07f06d440a5df3423f00659899be7bf5"
             #use api to get random jobs, if not possible use List
