@@ -147,10 +147,10 @@ class occupations(commands.Cog):
                 titleList.update({job["title"]:job["salary_max"]})
             jobList = list(titleList)
             #choose 4 jobs from the list we get back at random
-            job1 = jobList[self.random_generator(jobList)]
-            job2 = jobList[self.random_generator(jobList)]
-            job3 = jobList[self.random_generator(jobList)]
-            job4 = jobList[self.random_generator(jobList)]
+            job1 = await jobList[self.random_generator(jobList)]
+            job2 = await jobList[self.random_generator(jobList)]
+            job3 = await jobList[self.random_generator(jobList)]
+            job4 = await jobList[self.random_generator(jobList)]
             titleList = {job1:titleList[job1], job2:titleList[job2], job3:titleList[job3], job4:titleList[job4]}
             #display 4 jobs in an embed
             embed = await self.create_embed(titleList)
