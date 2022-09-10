@@ -36,21 +36,21 @@ class occupations(commands.Cog):
 
     async def jobChooser(self, ctx: commands.Context, emoji, mess: discord.Message, jobs: dict):
         jobDict = jobs.keys()
-        jobList = list(jobDict)[:10]
+        jobList = list(jobDict)[:4]
         jobName = ""
         jobSalary = ""
         if emoji == "1️⃣":
             jobName = jobList[0]
             jobSalary = jobList[jobList[0]]
         elif emoji == "2️⃣":
-            jobName = jobList[0]
-            jobSalary = jobList[jobList[0]]
+            jobName = jobList[1]
+            jobSalary = jobList[jobList[1]]
         elif emoji == "3️⃣":
-            jobName = jobList[0]
-            jobSalary = jobList[jobList[0]]
+            jobName = jobList[2]
+            jobSalary = jobList[jobList[2]]
         elif emoji == "4️⃣":
-            jobName = jobList[0]
-            jobSalary = jobList[jobList[0]]
+            jobName = jobList[3]
+            jobSalary = jobDict[jobList[3]]
         #Add chance of failing to get job perentage based on salary
 
         #Write Chosen job to config
