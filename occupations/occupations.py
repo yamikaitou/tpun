@@ -123,7 +123,7 @@ class occupations(commands.Cog):
         app_id = "1cf735c8"
         api_key = "07f06d440a5df3423f00659899be7bf5"
         #use api to get random jobs, if not possible use List
-        response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(app_id, api_key, search))
+        response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(app_id, api_key))
         jobs = response.json()
         jobResults: list = jobs["results"]
         titleList: dict = {}
@@ -188,7 +188,7 @@ class occupations(commands.Cog):
         chanceScalar = await self.config.guild(ctx.guild).chancescalar()
         message = "The max salary was set to `{0}`".format(salary)
         for wage in wages:
-            message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, 1 - ((wage / salary) * chanceScalar))
+            message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, 100 * (1 - ((wage / salary) * chanceScalar)))
         await ctx.reply(message)
 
     @job.command(name="chancescalar")
@@ -203,5 +203,5 @@ class occupations(commands.Cog):
         maxsalary = await self.config.guild(ctx.guild).maxsalary()
         message = "The chance scalar was set to `{0}`".format(scalar)
         for wage in wages:
-            message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, 1 - ((wage / maxsalary) * scalar))
-        await ctx.reply(message)
+            message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, 100 * (1 - ((wage / maxsalary) * scalar)))
+            await ctx.reply(message)
