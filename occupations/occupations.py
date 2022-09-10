@@ -86,10 +86,7 @@ class occupations(commands.Cog):
             emoji = str(result[0])
             await self.jobChooser(ctx, emoji, mess, titleList)
         except asyncio.TimeoutError:
-            await ctx.channel.send('This request timed out.')
-            await mess.delete()
-        except 404:
-            await ctx.channel.send("This request timed out")
+            await ctx.send('This request timed out.')
             await mess.delete()
         else:
             pass
