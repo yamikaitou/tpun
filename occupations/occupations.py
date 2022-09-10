@@ -50,4 +50,6 @@ class occupations(commands.Cog):
         #display 4 jobs in an embed
 
         #wait for user to emoji react to choose one
+        ranNum :int = random.randrange(0, 9)
+        jobDict = titleList.keys()
         #set that occupation to users job

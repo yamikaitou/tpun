@@ -8,7 +8,7 @@
         "Nado"
     ],
     "required_cogs": {},
-    "requirements": [],
+    "requirements": ["inflect>=6.0.0"],
     "tags": [
         "job",
         "work",
