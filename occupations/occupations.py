@@ -141,7 +141,7 @@ class occupations(commands.Cog):
             job3 = random.randint(0, 250)
             job4 = random.randint(0, 250)
             jobList = list(titleList)
-            len(jobList)
+            self.log.info(len(jobList))
             job1 = jobList[job1]
             job2 = jobList[job1]
             job3 = jobList[job1]
