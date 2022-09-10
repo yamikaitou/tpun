@@ -26,7 +26,7 @@ class occupations(commands.Cog):
             iteration = iteration + 1
             message = "Title: " + title + " " + " ⌇ " + " Salary: " + salary
             embed.add_field(name=":{0}:".format(p.number_to_words(iteration)), value=message, inline=True)
-            
+        return embed
 
     @commands.command(name="jobboard")
     async def jobboard(self, ctx: commands.Context, *, search: str = ""):
@@ -43,7 +43,8 @@ class occupations(commands.Cog):
             titleList: dict = {}
             for job in jobResults:
                 titleList.update({job["title"]:job["salary_max"]})
-            await self.create_embed(titleList)
+            embed = await self.create_embed(titleList)
+            await ctx.send(embed=embed)
         else:
             #response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=20&what={2}&full_time=1&content-type=application/json".format(app_id, api_key, search))
             await ctx.send("Please include search terms")
