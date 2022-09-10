@@ -23,9 +23,9 @@ class occupations(commands.Cog):
         iteration = 1
         p = inflect.engine()
         for title, salary in jobs.items():
-            iteration = iteration + 1
             message = "Title: " + title + " " + " ⌇ " + " Salary: " + str(salary)
             embed.add_field(name=":{0}:".format(p.number_to_words(iteration)), value=message, inline=True)
+            iteration = iteration + 1
         return embed
 
     @commands.command(name="jobboard")
@@ -48,7 +48,7 @@ class occupations(commands.Cog):
         else:
             #response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=20&what={2}&full_time=1&content-type=application/json".format(app_id, api_key, search))
             await ctx.send("Please include search terms")
-        #display 10 jobs in an embed
+        #display 4 jobs in an embed
 
         #wait for user to emoji react to choose one
         ranNum :int = random.randrange(0, 9)
