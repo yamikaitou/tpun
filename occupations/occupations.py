@@ -182,8 +182,14 @@ class occupations(commands.Cog):
         """
         Command for setting the max salary
         """
+        
         await self.config.guild(ctx.guild).maxsalary.set(salary)
-        await ctx.reply("The max salary was set to {0}".format(salary))
+        wages = [20000, 40000, 75000, 100000, 125000, 150000]
+        chanceScalar = self.config.guild(ctx.guild).chancescalar()
+        message = "The max salary was set to {0}".format(salary)
+        for wage in wages:
+            message = message + "\nThe current chance to get a {0} salary job is {1}%".format(wage, 1 - ((wage / salary) * chanceScalar))
+        await ctx.reply(message)
 
     @job.command(name="chancescalar")
     async def chancescalar(self, ctx: commands.Context, scalar: float = 1.0):
@@ -193,4 +199,9 @@ class occupations(commands.Cog):
         The closer to 0 the more likely, the higher than 1 the less likely
         """
         await self.config.guild(ctx.guild).chancescalar.set(scalar)
-        await ctx.reply("The chance scalar was set to {0}".format(scalar))
+        wages = [20000, 40000, 75000, 100000, 125000, 150000]
+        maxsalary = self.config.guild(ctx.guild).maxsalary()
+        message = "The chance scalar was set to {0}".format(scalar)
+        for wage in wages:
+            message = message + "\nThe current chance to get a {0} salary job is {1}%".format(wage, 1 - ((wage / maxsalary) * scalar))
+        await ctx.reply(message)
