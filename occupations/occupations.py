@@ -36,7 +36,7 @@ class occupations(commands.Cog):
             "cooldown": ""
         }
         default_guild = {
-            "maxsalary": 0,
+            "maxsalary": 100000,
             "chancescalar": 1.0,
             "timediff": 3600.0
         }
@@ -228,7 +228,7 @@ class occupations(commands.Cog):
             if chance < 0:
                 chance = 0
             message = message + "\nThe current chance to get a `{0}` salary job is `{1}%`".format(wage, chance)
-            await ctx.reply(message)
+        await ctx.reply(message)
 
     @commands.guildowner_or_permissions()
     @job.command(name="cooldown")
@@ -238,3 +238,19 @@ class occupations(commands.Cog):
         """
         await self.config.guild(ctx.guild).timediff.set(seconds)
         await ctx.reply("The job search cooldown was set to `{0}` seconds.".format(seconds))
+
+    @commands.guildowner_or_permissions()
+    @job.command(name="settings")
+    async def settings(self, ctx: commands.Context):
+        """
+        Displays current settings for occupations cog
+        """
+        maxsalary = await self.config.guild(ctx.guild).maxsalary()
+        cooldown = await self.config.guild(ctx.guild).timediff()
+        chanceScalar = await self.config.guild(ctx.guild).chancescalar()
+        message = "The current settings in this guild are:\n Max salary: {0}\nCooldown: {1}\nChance Scalar: {2}"
+        embed = discord.Embed(title="Job Settings", description="The current settings in this guild are:", color=0xc72327)
+        embed.add_field(name="Max salary:", value=maxsalary, inline=False)
+        embed.add_field(name="Cooldown:", value=cooldown, inline=False)
+        embed.add_field(name="Chance Scalar:", value=chanceScalar, inline=False)
+        mess = await ctx.send(embed=embed)
