@@ -16,7 +16,7 @@
 
 <div id="workflow" align="center">
 
-[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg?branch=beta-testing)](https://github.com/batman202012/tpun/actions/workflows/main.yml) [![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg?branch=beta-testing)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)[![Requirements Status](https://requires.io/github/batman202012/tpun/requirements.svg?branch=beta-testing)](https://requires.io/github/batman202012/tpun/requirements/?branch=beta-testing)[![Maintainability](https://api.codeclimate.com/v1/badges/ccf09712a5af256e1fc6/maintainability)](https://codeclimate.com/github/batman202012/tpun/maintainability)
+[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/batman202012/tpun/actions/workflows/main.yml) [![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)[![Requirements Status](https://requires.io/github/batman202012/tpun/requirements.svg?branch=master)](https://requires.io/github/batman202012/tpun/requirements/?branch=master)[![Maintainability](https://api.codeclimate.com/v1/badges/ccf09712a5af256e1fc6/maintainability)](https://codeclimate.com/github/batman202012/tpun/maintainability)
 
 </div>
 
@@ -89,6 +89,10 @@
 <br />
 
 - [ServerHud](#serverhud)
+
+<br />
+
+- [Occupations](#occupations)
 
 <br />
 <br />
@@ -543,6 +547,93 @@
 `
 
 ##### Tests the serverhud for various events 'join' and 'leave'
+
+<br />
+<br />
+
+
+<div id="occupations" align="center">
+
+## Occupations
+
+<br />
+
+### A Cog for giving your server members jobs, depending on the salary of their job the make money for time spend in vc
+
+</div>
+
+#### The amount made for timespend in vc is
+
+##### pay = (timespent[in seconds] / 2,592,000[on month in seconds]) * salary[Members Salary] * 100 * 0.27
+
+<div align="right">
+
+[top](#coglist)
+
+</div>
+
+<br /> 
+
+- `
+[p]job board
+`
+
+##### Displays the job board that gives the user 4 random jobs top choose from
+
+<br />
+<br />
+
+- `
+[p]job current
+`
+
+##### Displays the user's current job
+
+<br />
+<br />
+
+- `
+[p]job quit
+`
+
+##### User quits their job
+
+<br />
+<br />
+
+- `
+[p]job maxsalary <salary>
+`
+
+##### Sets the max salary for the guild to `salary`
+
+<br />
+<br />
+
+- `
+[p]job chancescalar <scalar>
+`
+
+##### Sets the chance scalar for the guild to `scalar`
+##### The closer to 0 the more likely, the higher than 1 the less likely
+
+<br />
+<br />
+
+- `
+[p]job cooldown <cooldown in seconds>
+`
+
+##### Sets the cooldown for `[p]job board` for the guild to `cooldown`
+
+<br />
+<br />
+
+- `
+[p]job settings
+`
+
+##### Displays current guild settings
 
 <br />
 <br />
