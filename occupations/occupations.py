@@ -19,7 +19,16 @@ class occupations(commands.Cog):
 
     def __init__(self, bot: Red) -> None:
         self.bot = bot
-        self
+        self.log = logging.getLogger('red.tpun.occupations')
+        self.config = Config.get_conf(
+            self,
+            identifier=365398642334498816
+        )
+        default_global = {
+            "title": "",
+            "salary": 0.0
+        }
+        self.config.register_global(**default_global)
 
     async def create_embed(self, jobs: dict):
         embed = discord.Embed(title="Job Board", description="A list of avalaible jobs below", color=0xc72327)
@@ -53,8 +62,9 @@ class occupations(commands.Cog):
             jobSalary = jobs[jobList[3]]
         #Add chance of failing to get job perentage based on salary
 
-        #Write Chosen job to config
-
+        #set that occupation to users job
+        await self.config.member(ctx.author).title.set(jobName)
+        await self.config.member(ctx.author).salary.set(jobSalary)
         await mess.reply("You chose {0} as your job, your new salary is {1}".format(jobName, jobSalary))
 
     @commands.command(name="jobboard")
@@ -90,4 +100,12 @@ class occupations(commands.Cog):
             await mess.delete()
         else:
             pass
-        #set that occupation to users job
+
+    @commands.command(name="currentjob")
+    async def currentjob(self, ctx: commands.Context):
+        """
+        Displays the user's current job
+        """
+        title = await self.config.member(ctx.author).title()
+        salary = await self.config.member(ctx.author).salary()
+        await ctx.send("Your current job is {0} and your salary is {1}".format(title, str(salary)))
