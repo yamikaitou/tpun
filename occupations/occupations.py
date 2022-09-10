@@ -72,8 +72,8 @@ class occupations(commands.Cog):
             jobName = jobList[3]
             jobSalary = jobs[jobList[3]]
         #Add chance of failing to get job perentage based on salary
-        maxsalary = self.config.guild(ctx.guild).maxsalary()
-        chanceScalar = self.config.guild(ctx.guild).chancescalar()
+        maxsalary = await self.config.guild(ctx.guild).maxsalary()
+        chanceScalar = await self.config.guild(ctx.guild).chancescalar()
         jobChance = 1 - ((jobSalary / maxsalary) * chanceScalar)
         roll = random.random()
         if roll <= jobChance: 
