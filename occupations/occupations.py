@@ -170,7 +170,7 @@ class occupations(commands.Cog):
             else:
                 pass
         else:
-            await ctx.send("Sorry you're job search is on hold, this can take up to 5 minutes")
+            await ctx.send("Sorry your job search is on hold, this can take up to 5 minutes")
 
     @job.command(name="current")
     async def currentjob(self, ctx: commands.Context):
