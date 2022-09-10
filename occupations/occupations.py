@@ -145,6 +145,7 @@ class occupations(commands.Cog):
             job2 = jobList[job2]
             job3 = jobList[job3]
             job4 = jobList[job4]
+            titleList = {job1:titleList[job1], job2:titleList[job2], job3:titleList[job3], job4:titleList[job4]}
         #display 4 jobs in an embed
         embed = await self.create_embed(titleList)
         mess = await ctx.send(embed=embed)
