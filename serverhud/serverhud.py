@@ -166,6 +166,7 @@ class serverhud(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
+        await asyncio.sleep(30)
         if before.guild.premium_subscriber_role not in before.roles and after.guild.premium_subscriber_role in after.roles:
             await self.boosters(before.guild)
         elif before.guild.premium_subscriber_role in before.roles and after.guild.premium_subscriber_role not in after.roles:

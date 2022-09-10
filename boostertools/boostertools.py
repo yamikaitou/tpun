@@ -25,9 +25,7 @@ class boostertools(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
-        booster_colors = [910997914782941184, 910276949677596682, 910276481748467792, 929802924958285884, 910276819855474808,
-        910276723768164352, 910276627131420674, 910277030682181723, 929803239019413636, 929803325061341204, 929803369491628083,
-         929803423669424228, 929803473753616404, 929803513096192130]
+        booster_colors = self.config.guild(before.guild).boosterroles()
         if before.guild.premium_subscriber_role in before.roles and after.guild.premium_subscriber_role not in after.roles:
             for role in after.roles:
                 if role.id in booster_colors:
