@@ -31,9 +31,14 @@ class occupations(commands.Cog):
         default_global = {
             "title": "",
             "salary": 0.0,
-            "vcstarttime": ""
+            "vcstarttime": "",
+        }
+        default_guild = {
+            "maxsalary": 0,
+            "chancescalar": 1.0
         }
         self.config.register_global(**default_global)
+        self.config.register_guild(**default_guild)
 
     async def create_embed(self, jobs: dict):
         embed = discord.Embed(title="Job Board", description="A list of avalaible jobs below", color=0xc72327)
@@ -66,7 +71,9 @@ class occupations(commands.Cog):
             jobName = jobList[3]
             jobSalary = jobs[jobList[3]]
         #Add chance of failing to get job perentage based on salary
-        jobChance = 1 - (jobSalary / 210000.0)
+        maxsalary = self.config.guild(ctx.guild).maxsalary()
+        chanceScalar = self.config.guild(ctx.guild).chancescalar()
+        jobChance = 1 - ((jobSalary / maxsalary) * chanceScalar)
         roll = random.random()
         if roll <= jobChance: 
             #set that occupation to users job
@@ -161,3 +168,21 @@ class occupations(commands.Cog):
         await self.config.member(ctx.author).title.set(None)
         await self.config.member(ctx.author).salary.set(None)
         await ctx.reply("You quit your job. Better search for a new one soon...")
+
+    @job.command(name="maxsalary")
+    async def maxsalary(self, ctx: commands.Context, salary: int = 10000):
+        """
+        Command for setting the max salary
+        """
+        await self.config.guild(ctx.guild).maxsalary.set(salary)
+        await ctx.reply("The max salary was set to {0}".format(salary))
+
+    @job.command(name="chancescalar")
+    async def chancescalar(self, ctx: commands.Context, scalar: float = 1.0):
+        """
+        Command for setting the scalar for chances of getting a job
+
+        The closer to 0 the more likely, the higher than 1 the less likely
+        """
+        await self.config.guild(ctx.guild).chancescalar.set(scalar)
+        await ctx.reply("The chance scalar was set to {0}".format(scalar))
