@@ -1,0 +1,23 @@
+{
+    "name": "occupations",
+    "short": "Occupations",
+    "description": "Team Punistic red cog that adds Occupations that server members can choose from a job board. Members earn money based on their job by spending time in vc",
+    "end_user_data_statement": "This cog does not persistently store data or meta-data about users.",
+    "install_msg": "Congrats",
+    "author": [
+        "Nado"
+    ],
+    "required_cogs": {},
+    "requirements": [],
+    "tags": [
+        "job",
+        "work",
+        "occupations",
+        "economy",
+        "Tpun"
+    ],
+    "min_bot_version": "3.3.10",
+    "hidden": false,
+    "disabled": false,
+    "type": "COG"
+}
