@@ -4,12 +4,16 @@ from redbot.core.bot import Red
 from redbot.core.config import Config
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
+from redbot.core import bank
 import discord
 import requests
 import logging
 import random
 import inflect
 import asyncio
+from datetime import datetime
+from dateutil import tz, parser
+import time
 
 
 class occupations(commands.Cog):
@@ -26,7 +30,8 @@ class occupations(commands.Cog):
         )
         default_global = {
             "title": "",
-            "salary": 0.0
+            "salary": 0.0,
+            "vcstarttime": ""
         }
         self.config.register_global(**default_global)
 
@@ -70,6 +75,30 @@ class occupations(commands.Cog):
             await mess.reply("Congrats you got the job as {0}, your new salary is {1}".format(jobName, jobSalary))
         else:
             await mess.reply("I'm sorry but you didn't qualify for the job. Guess it's back to searching.")
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+        time_format = '%Y %m %d %H:%M:%S %z'
+        utc_zone = tz.gettz('UTC')
+        if before.channel is None and after.channel is not None:
+            #start a timer for how long user is in vc
+            time = datetime.utcnow()
+            starttimestr = time.strftime(time_format)
+            await self.config.member(member).vcstarttime.set(starttimestr)
+        elif before.channel is not None and after.channel is None:
+            #end the time for how long the user was in vc
+            endtime = datetime.utcnow()
+            starttimestr = await self.config.member(member).vcstarttime()
+            starttime = parser.parse(starttimestr)
+            secondsInVc = (endtime - starttime).total_seconds()
+            #pay user based on how long they were in vc
+            salary = await self.config.member(member).salary()
+            pay = int(((secondsInVc / (60*60*24*30)) * int(salary) * 100) * 0.27)
+            self.log.info(member.display_name + "was paid " + str(pay))
+            await bank.deposit_credits(member, pay)
+        else:
+            self.log.warn("Something went wrong in on_voice_update")
+
 
     @commands.group(name="job")
     async def job(self, ctx: commands.Context):
