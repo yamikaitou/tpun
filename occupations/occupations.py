@@ -116,37 +116,30 @@ class occupations(commands.Cog):
         pass
 
     @job.command(name="board")
-    async def jobboard(self, ctx: commands.Context, *, search: str = ""):
+    async def jobboard(self, ctx: commands.Context):
         """
         Displays the job board with a list of jobs
         """
         app_id = "1cf735c8"
         api_key = "07f06d440a5df3423f00659899be7bf5"
         #use api to get random jobs, if not possible use List
-        if search != "":
-            response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=4&what={2}&full_time=1&content-type=application/json".format(app_id, api_key, search))
-            jobs = response.json()
-            jobResults: list = jobs["results"]
-            titleList: dict = {}
-            for job in jobResults:
-                titleList.update({job["title"]:job["salary_max"]})
-        else:
-            response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(app_id, api_key, search))
-            jobs = response.json()
-            jobResults: list = jobs["results"]
-            titleList: dict = {}
-            for job in jobResults:
-                titleList.update({job["title"]:job["salary_max"]})
-            jobList = list(titleList)
-            job1 = random.randint(0, (len(jobList)-1))
-            job2 = random.randint(0, (len(jobList)-1))
-            job3 = random.randint(0, (len(jobList)-1))
-            job4 = random.randint(0, (len(jobList)-1))
-            job1 = jobList[job1]
-            job2 = jobList[job2]
-            job3 = jobList[job3]
-            job4 = jobList[job4]
-            titleList = {job1:titleList[job1], job2:titleList[job2], job3:titleList[job3], job4:titleList[job4]}
+        response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(app_id, api_key, search))
+        jobs = response.json()
+        jobResults: list = jobs["results"]
+        titleList: dict = {}
+        for job in jobResults:
+            titleList.update({job["title"]:job["salary_max"]})
+        jobList = list(titleList)
+        #choose 4 jobs from the list we get back at random
+        job1 = random.randint(0, (len(jobList)-1))
+        job2 = random.randint(0, (len(jobList)-1))
+        job3 = random.randint(0, (len(jobList)-1))
+        job4 = random.randint(0, (len(jobList)-1))
+        job1 = jobList[job1]
+        job2 = jobList[job2]
+        job3 = jobList[job3]
+        job4 = jobList[job4]
+        titleList = {job1:titleList[job1], job2:titleList[job2], job3:titleList[job3], job4:titleList[job4]}
         #display 4 jobs in an embed
         embed = await self.create_embed(titleList)
         mess = await ctx.send(embed=embed)
