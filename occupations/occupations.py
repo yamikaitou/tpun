@@ -33,12 +33,3 @@ class occupations(commands.Cog):
         #display 4 jobs in an embed
         #wait for user to emoji react to choose one
         #set that occupation to users job
-
-    @commands.admin_or_permissions()
-    @commands.command(name="pinghere")
-    async def pinghere(self, ctx: commands.Context):
-        """
-        This command just pings here
-        """
-        allowed_mentions = discord.AllowedMentions(everyone = True)
-        await ctx.send(content="@here", allowed_mentions=allowed_mentions)
