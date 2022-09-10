@@ -61,11 +61,15 @@ class occupations(commands.Cog):
             jobName = jobList[3]
             jobSalary = jobs[jobList[3]]
         #Add chance of failing to get job perentage based on salary
-
-        #set that occupation to users job
-        await self.config.member(ctx.author).title.set(jobName)
-        await self.config.member(ctx.author).salary.set(jobSalary)
-        await mess.reply("You chose {0} as your job, your new salary is {1}".format(jobName, jobSalary))
+        jobChance = 1 - (jobSalary / 210000.0)
+        roll = random.random()
+        if roll <= jobChance: 
+            #set that occupation to users job
+            await self.config.member(ctx.author).title.set(jobName)
+            await self.config.member(ctx.author).salary.set(jobSalary)
+            await mess.reply("Congrats you got the job as {0}, your new salary is {1}".format(jobName, jobSalary))
+        else:
+            await mess.reply("I'm sorry but you didn't qualify for the job. Guess it's back to searching.")
 
     @commands.command(name="jobboard")
     async def jobboard(self, ctx: commands.Context, *, search: str = ""):
