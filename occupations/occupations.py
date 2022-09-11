@@ -168,6 +168,10 @@ class occupations(commands.Cog):
             except asyncio.TimeoutError:
                 await ctx.send('This request timed out.')
                 await mess.delete()
+                time_format = '%Y %m %d %H:%M:%S %z'
+                utc_zone = tz.gettz('UTC')
+                time = datetime.utcnow()
+                await self.config.member(ctx.author).cooldown.set(time.strftime(time_format))
             else:
                 pass
         else:
