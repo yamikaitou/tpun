@@ -115,6 +115,8 @@ class occupations(commands.Cog):
                 pay = int(((secondsInVc / (60*60*24*30)) * int(salary) * salaryScalar) * 0.27)
                 self.log.info("{0} was paid {1} currency for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
                 await bank.deposit_credits(member, pay)
+            elif before.channel is not None and after.channel is not None:
+                pass
             else:
                 self.log.warning("Something went wrong in on_voice_update")
 
