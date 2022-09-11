@@ -166,8 +166,7 @@ class occupations(commands.Cog):
                 emoji = str(result[0])
                 await self.jobChooser(ctx, emoji, mess, titleList)
             except asyncio.TimeoutError:
-                await ctx.send('This request timed out.')
-                await mess.delete()
+                await ctx.send("You didn't go to any of your interviews. All your possible employers have found other workers. Back to applying.")
                 time_format = '%Y %m %d %H:%M:%S %z'
                 utc_zone = tz.gettz('UTC')
                 time = datetime.utcnow()
@@ -175,7 +174,7 @@ class occupations(commands.Cog):
             else:
                 pass
         else:
-            await ctx.send("Sorry your job search is on hold until <f:{0}:R>".format(int(time.mktime(datetime(cooldown).timetuple())) + timediff))
+            await ctx.send("None of the jobs you've applied to have replied yet. Try again <f:{0}:R>".format(int(time.mktime(datetime(cooldown).timetuple())) + timediff))
 
     async def random_generator(self, jobList):
         return random.randint(0, (len(jobList)-1))
