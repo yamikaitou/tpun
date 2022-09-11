@@ -173,7 +173,7 @@ class occupations(commands.Cog):
             else:
                 pass
         else:
-            await ctx.send("None of the jobs you've applied to have replied yet. Try again <f:{0}:R>".format(int(time.time() + timediff)))
+            await ctx.send("None of the jobs you've applied to have replied yet. Try again <t:{0}:R>".format(int(time.time() + timediff)))
 
     async def random_generator(self, jobList):
         return random.randint(0, (len(jobList)-1))
