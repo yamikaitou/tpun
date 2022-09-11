@@ -95,28 +95,28 @@ class occupations(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
-        time_format = '%Y %m %d %H:%M:%S %z'
-        utc_zone = tz.gettz('UTC')
-        salaryScalar = await self.config.guild(member.guild).salaryscalar()
-        if before.channel is None and after.channel is not None:
-            #start a timer for how long user is in vc
-            time = datetime.utcnow()
-            starttimestr = time.strftime(time_format)
-            await self.config.member(member).vcstarttime.set(starttimestr)
-        elif before.channel is not None and after.channel is None:
-            #end the time for how long the user was in vc
-            endtime = datetime.utcnow()
-            starttimestr = await self.config.member(member).vcstarttime()
-            starttime = parser.parse(starttimestr)
-            secondsInVc = (endtime - starttime).total_seconds()
-            #pay user based on how long they were in vc
-            salary = await self.config.member(member).salary()
-            if salary is not None:
+        salary = await self.config.member(member).salary()
+        if salary is not None:
+            time_format = '%Y %m %d %H:%M:%S %z'
+            utc_zone = tz.gettz('UTC')
+            salaryScalar = await self.config.guild(member.guild).salaryscalar()
+            if before.channel is None and after.channel is not None:
+                #start a timer for how long user is in vc
+                time = datetime.utcnow()
+                starttimestr = time.strftime(time_format)
+                await self.config.member(member).vcstarttime.set(starttimestr)
+            elif before.channel is not None and after.channel is None:
+                #end the time for how long the user was in vc
+                endtime = datetime.utcnow()
+                starttimestr = await self.config.member(member).vcstarttime()
+                starttime = parser.parse(starttimestr)
+                secondsInVc = (endtime - starttime).total_seconds()
+                #pay user based on how long they were in vc
                 pay = int(((secondsInVc / (60*60*24*30)) * int(salary) * salaryScalar) * 0.27)
                 self.log.info("{0} was paid {1} currency for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
                 await bank.deposit_credits(member, pay)
-        else:
-            self.log.warning("Something went wrong in on_voice_update")
+            else:
+                self.log.warning("Something went wrong in on_voice_update")
 
 
     @commands.group(name="job")
