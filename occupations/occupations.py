@@ -38,7 +38,8 @@ class occupations(commands.Cog):
         default_guild = {
             "maxsalary": 100000,
             "chancescalar": 1.0,
-            "timediff": 3600.0
+            "timediff": 3600.0,
+            "salaryscalar": 1.0
         }
         self.config.register_global(**default_global)
         self.config.register_guild(**default_guild)
@@ -83,7 +84,7 @@ class occupations(commands.Cog):
             #set that occupation to users job
             await self.config.member(ctx.author).title.set(jobName)
             await self.config.member(ctx.author).salary.set(jobSalary)
-            await mess.reply("Congrats you got the job as {0}, your new salary is {1}".format(jobName, jobSalary))
+            await mess.reply("Congrats you got the job as `{0}`, your new salary is `{1}`".format(jobName, jobSalary))
         else:
             await mess.reply("I'm sorry but you didn't qualify for the job. Guess it's back to searching.")
         #start cooldown for job searching
@@ -96,6 +97,7 @@ class occupations(commands.Cog):
     async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         time_format = '%Y %m %d %H:%M:%S %z'
         utc_zone = tz.gettz('UTC')
+        salaryScalar = await self.config.guild(member.guild).salaryscalar()
         if before.channel is None and after.channel is not None:
             #start a timer for how long user is in vc
             time = datetime.utcnow()
@@ -109,9 +111,10 @@ class occupations(commands.Cog):
             secondsInVc = (endtime - starttime).total_seconds()
             #pay user based on how long they were in vc
             salary = await self.config.member(member).salary()
-            pay = int(((secondsInVc / (60*60*24*30)) * int(salary) * 100) * 0.27)
-            self.log.info("{0} was paid {1} currency for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
-            await bank.deposit_credits(member, pay)
+            if salary is not None:
+                pay = int(((secondsInVc / (60*60*24*30)) * int(salary) * salaryScalar) * 0.27)
+                self.log.info("{0} was paid {1} currency for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
+                await bank.deposit_credits(member, pay)
         else:
             self.log.warn("Something went wrong in on_voice_update")
 
@@ -181,7 +184,7 @@ class occupations(commands.Cog):
         title = await self.config.member(ctx.author).title()
         salary = await self.config.member(ctx.author).salary()
         if title != None:
-            await ctx.reply("Your current job is {0} and your salary is {1}".format(title, str(salary)))
+            await ctx.reply("Your current job is `{0}` and your salary is `{1}`".format(title, str(salary)))
         else:
             await ctx.reply("You do not have a job yet.")
 
@@ -240,6 +243,23 @@ class occupations(commands.Cog):
         await ctx.reply("The job search cooldown was set to `{0}` seconds.".format(seconds))
 
     @commands.guildowner_or_permissions()
+    @job.command(name="salaryscalar")
+    async def salaryscalar(self, ctx: commands.Context, scalar: float = 1.0):
+        """
+        Command for setting the salary scalar
+
+        This multiplies the pay by a number
+        """
+        await self.config.guild(ctx.guild).salaryscalar.set(scalar)
+        wages = [20000, 40000, 75000, 100000, 125000, 150000]
+        maxsalary = await self.config.guild(ctx.guild).maxsalary()
+        message = "The salary scalar was set to `{0}`".format(scalar)
+        for wage in wages:
+            salary = int(((3600 / (60*60*24*30)) * int(wage) * scalar) * 0.27)
+            message = message + "\nThe hourly pay of a {0} salary job is `{0}` salary job is `{1}`".format(wage, salary)
+        await ctx.reply(message)
+
+    @commands.guildowner_or_permissions()
     @job.command(name="settings")
     async def settings(self, ctx: commands.Context):
         """
@@ -248,9 +268,11 @@ class occupations(commands.Cog):
         maxsalary = await self.config.guild(ctx.guild).maxsalary()
         cooldown = await self.config.guild(ctx.guild).timediff()
         chanceScalar = await self.config.guild(ctx.guild).chancescalar()
-        message = "The current settings in this guild are:\n Max salary: {0}\nCooldown: {1}\nChance Scalar: {2}"
+        salaryScalar = await self.config.guild(ctx.guild).salaryscalar()
+        message = "The current settings in this guild are:\n Max salary: {0}\nCooldown: {1}\nChance Scalar: {2}\nSalary Scalar: {3}"
         embed = discord.Embed(title="Job Settings", description="The current settings in this guild are:", color=0xc72327)
         embed.add_field(name="Max salary:", value=maxsalary, inline=False)
         embed.add_field(name="Cooldown:", value=cooldown, inline=False)
         embed.add_field(name="Chance Scalar:", value=chanceScalar, inline=False)
+        embed.add_field(name="Salary Scalar:", value=salaryScalar, inline=False)
         mess = await ctx.send(embed=embed)
