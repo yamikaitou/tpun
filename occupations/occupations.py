@@ -111,9 +111,10 @@ class occupations(commands.Cog):
             secondsInVc = (endtime - starttime).total_seconds()
             #pay user based on how long they were in vc
             salary = await self.config.member(member).salary()
-            pay = int(((secondsInVc / (60*60*24*30)) * int(salary) * 100) * 0.27)
-            self.log.info("{0} was paid {1} currency for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
-            await bank.deposit_credits(member, pay)
+            if salary is not None:
+                pay = int(((secondsInVc / (60*60*24*30)) * int(salary) * salaryScalar) * 0.27)
+                self.log.info("{0} was paid {1} currency for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
+                await bank.deposit_credits(member, pay)
         else:
             self.log.warn("Something went wrong in on_voice_update")
 
