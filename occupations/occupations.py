@@ -171,7 +171,7 @@ class occupations(commands.Cog):
             else:
                 pass
         else:
-            await ctx.send("Sorry your job search is on hold, this can take up to 1 hour")
+            await ctx.send("Sorry your job search is on hold until <f:{0}:R>".format(int(cooldown.timestamp() + timediff)))
 
     async def random_generator(self, jobList):
         return random.randint(0, (len(jobList)-1))
