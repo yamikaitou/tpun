@@ -84,7 +84,7 @@ class occupations(commands.Cog):
             #set that occupation to users job
             await self.config.member(ctx.author).title.set(jobName)
             await self.config.member(ctx.author).salary.set(jobSalary)
-            await mess.reply("Congrats you got the job as {0}, your new salary is {1}".format(jobName, jobSalary))
+            await mess.reply("Congrats you got the job as `{0}`, your new salary is `{1}`".format(jobName, jobSalary))
         else:
             await mess.reply("I'm sorry but you didn't qualify for the job. Guess it's back to searching.")
         #start cooldown for job searching
