@@ -5,15 +5,14 @@ from redbot.core.config import Config
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
 from redbot.core import bank
+from datetime import datetime
+from dateutil import tz, parser
 import discord
 import requests
 import logging
 import random
 import inflect
 import asyncio
-from datetime import datetime
-import time
-from dateutil import tz, parser
 import time
 
 
@@ -166,12 +165,15 @@ class occupations(commands.Cog):
                 emoji = str(result[0])
                 await self.jobChooser(ctx, emoji, mess, titleList)
             except asyncio.TimeoutError:
-                await ctx.send('This request timed out.')
-                await mess.delete()
+                await ctx.send("You didn't go to any of your interviews. All your possible employers have found other workers. Back to applying.")
+                time_format = '%Y %m %d %H:%M:%S %z'
+                utc_zone = tz.gettz('UTC')
+                timeNow = datetime.utcnow()
+                await self.config.member(ctx.author).cooldown.set(timeNow.strftime(time_format))
             else:
                 pass
         else:
-            await ctx.send("Sorry your job search is on hold until <f:{0}:R>".format(int(cooldown.timestamp() + timediff)))
+            await ctx.send("None of the jobs you've applied to have replied yet. Try again <f:{0}:R>".format(int(time.mktime(cooldown.timetuple()) + timediff)))
 
     async def random_generator(self, jobList):
         return random.randint(0, (len(jobList)-1))
