@@ -116,7 +116,7 @@ class occupations(commands.Cog):
                 self.log.info("{0} was paid {1} currency for being in vc for {2} minutes".format(member.display_name, str(pay), (secondsInVc/60)))
                 await bank.deposit_credits(member, pay)
         else:
-            self.log.warn("Something went wrong in on_voice_update")
+            self.log.warning("Something went wrong in on_voice_update")
 
 
     @commands.group(name="job")
