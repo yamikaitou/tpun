@@ -5,15 +5,14 @@ from redbot.core.config import Config
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
 from redbot.core import bank
+from datetime import datetime
+from dateutil import tz, parser
 import discord
 import requests
 import logging
 import random
 import inflect
 import asyncio
-from datetime import datetime
-import time
-from dateutil import tz, parser
 import time
 
 
@@ -169,8 +168,8 @@ class occupations(commands.Cog):
                 await ctx.send("You didn't go to any of your interviews. All your possible employers have found other workers. Back to applying.")
                 time_format = '%Y %m %d %H:%M:%S %z'
                 utc_zone = tz.gettz('UTC')
-                time = datetime.utcnow()
-                await self.config.member(ctx.author).cooldown.set(time.strftime(time_format))
+                timeNow = datetime.utcnow()
+                await self.config.member(ctx.author).cooldown.set(timeNow.strftime(time_format))
             else:
                 pass
         else:
