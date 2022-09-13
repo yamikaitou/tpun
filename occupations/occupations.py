@@ -136,6 +136,7 @@ class occupations(commands.Cog):
         #check cooldown for job searching
         cooldown = await self.config.member(ctx.author).cooldown()
         timediff = await self.config.guild(ctx.guild).timediff()
+        max_salary = await self.config.guild(ctx.guild).maxsalary()
         if cooldown is None:
             cooldown = datetime.utcfromtimestamp(1302872043.0)
         else:
@@ -147,7 +148,7 @@ class occupations(commands.Cog):
             else:
                 pass
             #use api to get random jobs, if not possible use List
-            response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(adzuna_keys.get("app_id"), adzuna_keys.get("api_key")))
+            response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=50&full_time=1&&salary_max={2}content-type=application/json".format(adzuna_keys.get("app_id"), adzuna_keys.get("api_key"), max_salary))
             jobs = response.json()
             jobResults: list = jobs["results"]
             titleList: dict = {}
