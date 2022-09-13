@@ -141,10 +141,13 @@ class occupations(commands.Cog):
         else:
             cooldown = parser.parse(cooldown)
         if cooldown.timestamp() + timediff < datetime.utcnow().timestamp():
-            app_id = "1cf735c8"
-            api_key = "07f06d440a5df3423f00659899be7bf5"
+            adzuna_keys = await self.bot.get_shared_api_tokens("adzuna")
+            if adzuna_keys.get("app_id") is None or adzuna_keys.get("api_key") is None:
+                return await ctx.send("The bot owner still needs to set the adzuna app id and secret using using `[p]set api adzuna app_id,<app id> api_key,<api key>`")
+            else:
+                pass
             #use api to get random jobs, if not possible use List
-            response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(app_id, api_key))
+            response = requests.get("http://api.adzuna.com/v1/api/jobs/gb/search/1?app_id={0}&app_key={1}&results_per_page=250&full_time=1&content-type=application/json".format(adzuna_keys.get("app_id"), adzuna_keys.get("api_key")))
             jobs = response.json()
             jobResults: list = jobs["results"]
             titleList: dict = {}
