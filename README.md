@@ -559,7 +559,7 @@
 <br />
 
 ### A Cog for giving your server members jobs, depending on the salary of their job the make money for time spend in vc
-#### Adzuna.com app id and api key is required and can be set using `[p]set api adzuna_id <app_id>` and `[p]set api <api_key>`
+#### Adzuna.com app id and api key is required and can be set using [p]set api adzuna app_id,<app id> api_key,<api key>
 
 </div>
 
