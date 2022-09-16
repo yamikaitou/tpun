@@ -98,12 +98,11 @@ class pvc(commands.Cog):
         vcChannel = await self.getVoiceChannel(ctx)
         if ctx.message.channel.id == dsChannel.id:
             category = ctx.channel.category
-            run: bool = True
             if vcName == "":
                 await ctx.send("{0} You need to type a voice channel name {1}vc create <Name>".format(ctx.author.name, ctx.prefix))
             else:
                 pass
-            if vcChannel is not None:
+            if vcChannel is None:
                 channel = await guild.create_voice_channel(vcName, category=category)
                 await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                 for role in roleList:
@@ -116,6 +115,8 @@ class pvc(commands.Cog):
                 empty = asyncio.Future()
                 pvc.futureList[str(vcId)] = empty
                 asyncio.ensure_future(self.checks(vcId, empty, ctx))
+            else:
+                await ctx.reply("You already have a voice channel")
         else:
             await ctx.send("This command only works in the custom vc {0} channel.".format(dsChannel.mention))
 
