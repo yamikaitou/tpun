@@ -168,6 +168,7 @@ class pvc(commands.Cog):
         i = await self.config.all_members(guild=guild)
         print(i)
         for vcOwner in i.items():
+            print(vcOwner)
             vcId = vcOwner['channel_id']
             voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
             name: discord.Member = await guild.fetch_member(vcOwner)
