@@ -181,10 +181,9 @@ class pvc(commands.Cog):
                     if value == 0 or value is None:
                         pass
                     else:
-                        vcId = value
-                        voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
+                        voiceChannel: discord.VoiceChannel = self.bot.get_channel(value)
                         name: discord.Member = await guild.fetch_member(vcOwner)
-                        message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
+                        message = "<#" + str(value) + ">" + " ⌇ " + name.mention
                         embed.add_field(name="🔊", value=message, inline=True)
                 else:
                     pass
