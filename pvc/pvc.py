@@ -167,14 +167,14 @@ class pvc(commands.Cog):
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
         i = await self.config.all_members(guild=guild)
         print(i)
-        for vcOwner in i.items():
-            print(vcOwner)
-            vcId = vcOwner.index
-            print(vcId)
-            voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
-            name: discord.Member = await guild.fetch_member(vcOwner)
-            message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
-            embed.add_field(name="🔊", value=message, inline=True)
+        for vcOwner, ownDict in i.items():
+            for key, value in ownDict.items():
+                if key == "channel_id":
+                    vcId = value
+                voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
+                name: discord.Member = await guild.fetch_member(vcOwner)
+                message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
+                embed.add_field(name="🔊", value=message, inline=True)
         await ctx.send(embed=embed)
 
     @vc.command(name="rename")
