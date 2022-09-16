@@ -1,4 +1,5 @@
 from ast import Dict
+from re import X
 from typing import Literal
 from redbot.core.utils.predicates import ReactionPredicate
 from redbot.core.utils.menus import start_adding_reactions
@@ -26,21 +27,9 @@ class pvc(commands.Cog):
         )
         default_guild = {
             "channel": 0,
-            "owners": {},
+            "channel_id": 0,
             "roles": []
         }
-        self.config.register_guild(**default_guild)
-    futureList: Dict = {}
-
-    async def getVcList(self, guild):
-        x = await self.config.guild(guild).owners()
-        return x
-
-    async def vcOwnerRead(self, guild, owner):
-        i = await self.config.guild(guild).owners()
-        for vcOwner, vcId in i.items():
-            if vcOwner == str(owner):
-                return self.bot.get_channel(int(vcId))
 
     async def vcChannelRead(self, ctx: commands.Context):
         channel = await self.config.guild(ctx.guild).channel()
@@ -48,6 +37,11 @@ class pvc(commands.Cog):
 
     async def vcRoleRead(self, ctx: commands.Context):
         return await self.config.guild(ctx.guild).roles()
+
+    async def getVoiceChannel(self, ctx: commands.Context):
+        vcId = await self.config.member(ctx.author).channel_id()
+        voiceChannel = await self.bot.get_channel(vcId)
+        return voiceChannel
 
     async def checks(self, id, empty, ctx: commands.Context):
         channel = self.bot.get_channel(id)
@@ -65,7 +59,8 @@ class pvc(commands.Cog):
 
     async def emojiRequest(self, ctx: commands.Context, emoji, mess1, user: discord.Member):
         if emoji == "✅":
-            voiceChannel = await self.vcOwnerRead(ctx.guild, user.id)
+            vcId = await self.config.member(ctx.author).channel_id()
+            voiceChannel = await self.bot.get_channel(vcId)
             if voiceChannel is not None:
                 await voiceChannel.set_permissions(ctx.author, read_messages=True, send_messages=True, read_message_history=True, view_channel=True, use_voice_activation=True, stream=True, connect=True, speak=True, reason="{0} accepted {1}'s request to join their vc: {2}".format(user.name, ctx.author.name, voiceChannel.name))
                 if ctx.author.voice is not None:
@@ -97,22 +92,15 @@ class pvc(commands.Cog):
         dsChannel = await self.vcChannelRead(ctx)
         roleList = await self.vcRoleRead(ctx)
         guild = ctx.guild
-        owners = await self.config.guild(guild).owners()
+        vcChannel = await self.getVoiceChannel(self, ctx)
         if ctx.message.channel.id == dsChannel.id:
             category = ctx.channel.category
             run: bool = True
             if vcName == "":
                 await ctx.send("{0} You need to type a voice channel name {1}vc create <Name>".format(ctx.author.name, ctx.prefix))
             else:
-                owner = ctx.author.id
-                if vcName == "no activity":
-                    await ctx.send("You can't create a game vc if you're not playing a game.")
-                    run = False
-            vc = await self.vcOwnerRead(guild, ctx.author.id)
-            if vc:
-                await ctx.send("{0} You already have a vc created named {1}".format(ctx.author.name, str(vc.name)))
-                run = False
-            if run:
+                pass
+            if vcChannel is not None:
                 channel = await guild.create_voice_channel(vcName, category=category)
                 await channel.set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
                 for role in roleList:
@@ -120,9 +108,7 @@ class pvc(commands.Cog):
                 if ctx.author.voice is not None and ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
                     await ctx.author.move_to(channel)
                 vcId = channel.id
-                nC = {owner: vcId}
-                owners.update(nC)
-                await self.config.guild(guild).owners.set(owners)
+                await self.config.member(ctx.author).owners.set(vcId)
                 await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
                 empty = asyncio.Future()
                 pvc.futureList[str(vcId)] = empty
@@ -138,12 +124,10 @@ class pvc(commands.Cog):
         The reason is optional
         """
         owner = ctx.author.id
-        x = await self.config.guild(ctx.guild).owners()
-        vc = await self.vcOwnerRead(ctx.guild, ctx.author.id)
-        if vc:
-            vcId = vc.id
+        vcId = await self.config.member(ctx.author).channel_id()
+        if vcId is not None and vcId != 0:
             for id, futa in pvc.futureList.items():
-                if int(id) == vcId and futa.done() is not True:
+                if futa.done() is not True:
                     futa.set_result(reason)
                     pvc.futureList.pop(str(vcId), None)
                     break
@@ -154,8 +138,7 @@ class pvc(commands.Cog):
                 reason = "user deleted their own channel"
             vcName = str(channel.name)
             await channel.delete()
-            x.pop(str(owner), None)
-            await self.config.guild(ctx.guild).owners.set(x)
+            await self.config.member(ctx.author).owners.set(0)
             await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
         else:
             await ctx.send("{0} You can't delete a VC if you don't have one.".format(ctx.author.name))
@@ -165,7 +148,7 @@ class pvc(commands.Cog):
         """
         Returns the name of your vc
         """
-        voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+        voiceChannel = await self.getVoiceChannel(self, ctx)
         if voiceChannel is not None:
             await ctx.send("{0} Your personal vc is named {1}.".format(ctx.author.name, voiceChannel.mention))
         else:
@@ -178,7 +161,7 @@ class pvc(commands.Cog):
         """
         guild: discord.Guild = ctx.guild
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
-        i = await self.getVcList(guild)
+        i = await self.config.all_members(guild=guild).channel_id()
         for vcOwner, vcId in i.items():
             voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
             name: discord.Member = await guild.fetch_member(vcOwner)
@@ -194,7 +177,7 @@ class pvc(commands.Cog):
         if rename is None:
             await ctx.send("{0} Please enter a new name for your vc.".format(ctx.author.name))
         else:
-            voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+            voiceChannel = await self.getVoiceChannel(self, ctx)
             if voiceChannel is not None:
                 await voiceChannel.edit(name=rename)
                 await ctx.send("{0} Your channel's name was changed to {1}".format(ctx.author.name, voiceChannel.mention))
@@ -230,7 +213,7 @@ class pvc(commands.Cog):
         """
         region1 = self.getRegion(region)
         message = region1
-        voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+        voiceChannel = await self.getVoiceChannel(self, ctx)
         if voiceChannel is not None:
             if region1 is None:
                 region1 = None
@@ -248,7 +231,7 @@ class pvc(commands.Cog):
         Members can join use `[p]vc invite <@user>` to invite someone or [p]vc request <@user to request to join
         """
         roleList = await self.vcRoleRead(ctx)
-        voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+        voiceChannel = await self.getVoiceChannel(self, ctx)
         if voiceChannel is not None:
             for role in roleList:
                 await voiceChannel.set_permissions(ctx.guild.get_role(role), view_channel=True, read_messages=True, send_messages=False, read_message_history=True, use_voice_activation=True, speak=True, connect=False, reason="{0} locked their vc: {1}".format(ctx.author.name, voiceChannel.name))
@@ -263,7 +246,7 @@ class pvc(commands.Cog):
         """
         owner = ctx.author.id
         roleList = await self.vcRoleRead(ctx)
-        voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+        voiceChannel = await self.getVoiceChannel(self, ctx)
         if voiceChannel is not None:
             for role in roleList:
                 await voiceChannel.set_permissions(ctx.guild.get_role(role), view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, speak=True, connect=True, reason="{0} unlocked their vc: {1}".format(owner, voiceChannel.name))
@@ -281,7 +264,7 @@ class pvc(commands.Cog):
         if user is None:
             await ctx.send("Please mention a user to invite.")
         else:
-            voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+            voiceChannel = await self.getVoiceChannel(self, ctx)
             if voiceChannel is not None:
                 await voiceChannel.set_permissions(user, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, speak=True, connect=True, reason="{0} invited {1} to their vc: {2}".format(user.name, ctx.author.name, voiceChannel.name))
                 await ctx.send("{0} {1} invited you to their vc: {2}".format(user.mention, ctx.author.name, voiceChannel.mention))
@@ -293,7 +276,7 @@ class pvc(commands.Cog):
         """
         Sets the limit for how many spots are in vc, use 0 to remove limit
         """
-        voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+        voiceChannel = await self.getVoiceChannel(self, ctx)
         if voiceChannel is not None:
             await voiceChannel.edit(user_limit=limit)
             await ctx.send("{2} The user limit in your vc {0} was changed to {1}".format(voiceChannel.mention, limit, ctx.author.name))
@@ -340,7 +323,7 @@ class pvc(commands.Cog):
         if user is None:
             await ctx.send("{0} Please mention a user to kick.".format(ctx.author.name))
         else:
-            voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+            voiceChannel = await self.getVoiceChannel(self, ctx)
             if voiceChannel is not None:
                 await voiceChannel.set_permissions(user, view_channel=True, read_messages=True, send_messages=False, read_message_history=True, stream=False, use_voice_activation=True, speak=False, connect=False, reason="{0} kicked {1} from their vc: {2}".format(ctx.author.name, user.name, voiceChannel.name))
                 if user.voice is not None:
@@ -358,7 +341,7 @@ class pvc(commands.Cog):
         if user is None:
             await ctx.send("{0} Please mention a user to mute.".format(ctx.author.name))
         else:
-            voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+            voiceChannel = await self.getVoiceChannel(self, ctx)
             if voiceChannel is not None and user.voice is not None:
                 await voiceChannel.set_permissions(user, view_channel=True, read_messages=True, send_messages=False, read_message_history=True, use_voice_activation=True, stream=False, connect=True, speak=False, reason="{0} muted {1} in their vc: {2}".format(ctx.author.name, user.name, voiceChannel.name))
                 if user.voice.channel.id == voiceChannel.id:
@@ -377,7 +360,7 @@ class pvc(commands.Cog):
         if user is None:
             await ctx.send("{0} Please mention a user to unmute.".format(ctx.author.name))
         else:
-            voiceChannel = await self.vcOwnerRead(ctx.guild, ctx.author.id)
+            voiceChannel = await self.getVoiceChannel(self, ctx)
             if voiceChannel is not None:
                 await voiceChannel.set_permissions(user, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, stream=True, use_voice_activation=True, connect=True, speak=True, reason="{0} unmuted {1} in their vc: {2}".format(ctx.author.name, user.name, voiceChannel.name))
                 if user.voice.channel.id == voiceChannel.id:
@@ -394,10 +377,9 @@ class pvc(commands.Cog):
         owner: int = 0
         newOwner = str(ctx.author.id)
         channelid = ctx.author.voice.channel.id
-        newWrite = {newOwner: channelid}
         guild = ctx.guild
         if channelid is not None:
-            x = await self.config.guild(guild).owners()
+            x = await self.config.all_members(guild=ctx.guild)
             for vcOwnList, vcNameList in x.items():
                 if int(vcNameList) == int(channelid):
                     owner = int(vcOwnList)
@@ -405,12 +387,11 @@ class pvc(commands.Cog):
                     if ownerObj.voice is None or ownerObj.voice.channel.id != channelid:
                         await ctx.send("{0} has claimed {1}".format(ctx.author.mention, self.bot.get_channel(vcNameList).mention))
                         await self.bot.get_channel(vcNameList).set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                        x.pop(str(owner), None)
-                        x.update(newWrite)
+                        self.config.member(owner).channel_id.set(0)
                         break
                     else:
                         await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
-            await self.config.guild(guild).owners.set(x)
+            await self.config.member(ctx.author).channel_id.set(channelid)
 
     @vc.command(name="transfer")
     async def transfer(self, ctx: commands.Context, newOwner: discord.Member):
@@ -420,24 +401,22 @@ class pvc(commands.Cog):
         owner = str(ctx.author.id)
         if ctx.author.voice is not None:
             channelid = ctx.author.voice.channel.id
-            newWrite = {str(newOwner.id): int(channelid)}
             guild = ctx.guild
             if channelid is not None:
-                x = await self.config.guild(guild).owners()
-                vcObj = await self.vcOwnerRead(guild, ctx.author.id)
+                x = await self.config.all_members(guild=guild).channel_id()
+                vcObj = await self.getVoiceChannel(self, ctx)
                 ownerObj = await self.bot.get_or_fetch_member(guild, ctx.author.id)
                 if vcObj is not None and vcObj.id == channelid:
                     if ownerObj.voice.channel.id == channelid and str(newOwner.id) not in x.keys():
                         await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
-                        x.pop(str(owner), None)
-                        x.update(newWrite)
+                        self.config.member(ctx.author).channel_id.set(0)
                     elif str(newOwner.id) in x.keys():
                         await ctx.send("{0} already owns a vc".format(newOwner.display_name))
                     else:
                         await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
                 else:
                     await ctx.send("You don't own this voice channel.")
-                await self.config.guild(guild).owners.set(x)
+                await self.config.member(newOwner).channel_id.set(channelid)
         else:
             await ctx.send("You can only run this command while you are in your voice channel.")
 
