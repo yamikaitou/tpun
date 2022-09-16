@@ -59,7 +59,7 @@ class pvc(commands.Cog):
                 for vcOwner, ownDict in x.items():
                     for key, channelId in ownDict.items():
                         if channelId == id:
-                            owner = self.bot.get_user(vcOwner)
+                            owner = self.bot.get_user(int(vcOwner))
                 await self.config.member(owner).channel_id.set(0)
                 await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, owner.name))
                 pvc.futureList.pop(str(id), None)
@@ -181,7 +181,6 @@ class pvc(commands.Cog):
                     if value == 0 or value is None:
                         pass
                     else:
-                        voiceChannel: discord.VoiceChannel = self.bot.get_channel(value)
                         name: discord.Member = await guild.fetch_member(vcOwner)
                         message = "<#" + str(value) + ">" + " ⌇ " + name.mention
                         embed.add_field(name="🔊", value=message, inline=True)
