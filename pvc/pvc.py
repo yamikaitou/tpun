@@ -40,7 +40,10 @@ class pvc(commands.Cog):
 
     async def getVoiceChannel(self, ctx: commands.Context):
         vcId = await self.config.member(ctx.author).channel_id()
-        voiceChannel = await self.bot.get_channel(vcId)
+        if vcId is None or vcId == 0:
+            voiceChannel = None
+        else:
+            voiceChannel = await self.bot.get_channel(vcId)
         return voiceChannel
 
     async def checks(self, id, empty, ctx: commands.Context):
@@ -125,7 +128,7 @@ class pvc(commands.Cog):
         """
         owner = ctx.author.id
         vcChannel = await self.getVoiceChannel(ctx)
-        if vcChannel.id is not None and vcChannel.id != 0:
+        if vcChannel is not None:
             for id, futa in pvc.futureList.items():
                 if futa.done() is not True:
                     futa.set_result(reason)
