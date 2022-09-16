@@ -398,7 +398,7 @@ class pvc(commands.Cog):
                             if ownerObj.voice is None or ownerObj.voice.channel.id != channelid:
                                 await ctx.send("{0} has claimed {1}".format(ctx.author.mention, self.bot.get_channel(vcId).mention))
                                 await self.bot.get_channel(vcId).set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                                await self.config.member(owner).channel_id.set(0)
+                                await self.config.member(ownerObj).channel_id.set(0)
                                 await self.config.member(ctx.author).channel_id.set(channelid)
                                 break
                             else:
