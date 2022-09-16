@@ -178,10 +178,10 @@ class pvc(commands.Cog):
         for vcOwner, ownDict in i.items():
             for key, value in ownDict.items():
                 if key == "channel_id":
-                    vcId = value
                     if value == 0 or value is None:
                         pass
                     else:
+                        vcId = value
                         voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
                         name: discord.Member = await guild.fetch_member(vcOwner)
                         message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
