@@ -111,7 +111,7 @@ class pvc(commands.Cog):
                 if ctx.author.voice is not None and ctx.author.voice.channel.id != channel.id and ctx.author.voice.channel is not None:
                     await ctx.author.move_to(channel)
                 vcId = channel.id
-                await self.config.member(ctx.author).owners.set(vcId)
+                await self.config.member(ctx.author).channel_id.set(vcId)
                 await ctx.send("{0} was created by {1}".format(channel.mention, ctx.author.name))
                 empty = asyncio.Future()
                 pvc.futureList[str(vcId)] = empty
@@ -142,7 +142,7 @@ class pvc(commands.Cog):
                 reason = "user deleted their own channel"
             vcName = str(vcChannel.name)
             await vcChannel.delete()
-            await self.config.member(ctx.author).owners.set(0)
+            await self.config.member(ctx.author).channel_id.set(0)
             await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, ctx.author.name))
         else:
             await ctx.send("{0} You can't delete a VC if you don't have one.".format(ctx.author.name))
@@ -165,7 +165,7 @@ class pvc(commands.Cog):
         """
         guild: discord.Guild = ctx.guild
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
-        i = await self.config.all_members(guild=guild).channel_id()
+        i = await self.config.all_members(guild=guild)
         for vcOwner, vcId in i.items():
             voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
             name: discord.Member = await guild.fetch_member(vcOwner)
