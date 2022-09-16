@@ -30,6 +30,7 @@ class pvc(commands.Cog):
             "channel_id": 0,
             "roles": []
         }
+    futureList: Dict = {}
 
     async def vcChannelRead(self, ctx: commands.Context):
         channel = await self.config.guild(ctx.guild).channel()
