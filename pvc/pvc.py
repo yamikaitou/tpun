@@ -468,5 +468,5 @@ class pvc(commands.Cog):
 
     @commands.is_owner()
     @vc.command(name="clearconfig")
-    async def clear_config(self, ctx: commands.Context):
+    async def clearconfig(self, ctx: commands.Context):
         await self.config.clear_all_members(guild=ctx.guild)
