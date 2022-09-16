@@ -465,3 +465,8 @@ class pvc(commands.Cog):
         await asyncio.sleep(30)
         await mess0.delete()
         await mess2.delete()
+
+    @commands.is_owner()
+    @vc.command(name="clearconfig")
+    async def clear_config(self, ctx: commands.Context):
+        await self.config.clear_all_members(guild=ctx.guild)
