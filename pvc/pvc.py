@@ -169,7 +169,8 @@ class pvc(commands.Cog):
         print(i)
         for vcOwner in i.items():
             print(vcOwner)
-            vcId = vcOwner['channel_id']
+            vcId = vcOwner.index['channel_id']
+            print(vcId)
             voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
             name: discord.Member = await guild.fetch_member(vcOwner)
             message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
