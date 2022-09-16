@@ -44,7 +44,7 @@ class pvc(commands.Cog):
         if vcId is None or vcId == 0:
             voiceChannel = None
         else:
-            voiceChannel = await self.bot.get_channel(vcId)
+            voiceChannel = self.bot.get_channel(vcId)
         return voiceChannel
 
     async def checks(self, id, empty, ctx: commands.Context):
@@ -166,6 +166,7 @@ class pvc(commands.Cog):
         guild: discord.Guild = ctx.guild
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
         i = await self.config.all_members(guild=guild)
+        print(i)
         for vcOwner, vcId in i.items():
             voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
             name: discord.Member = await guild.fetch_member(vcOwner)
