@@ -427,13 +427,13 @@ class pvc(commands.Cog):
                     if ownerObj.voice.channel.id == channelid and alreadyOwns == False:
                         await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
                         await self.config.member(ctx.author).channel_id.set(0)
+                        await self.config.member(newOwner).channel_id.set(channelid)
                     elif alreadyOwns:
                         await ctx.send("{0} already owns a vc".format(newOwner.display_name))
                     else:
                         await ctx.send("<@{0}> you must be in your vc to run this command".format(ctx.author.id))
                 else:
                     await ctx.send("You don't own this voice channel.")
-                await self.config.member(newOwner).channel_id.set(channelid)
         else:
             await ctx.send("You can only run this command while you are in your voice channel.")
 
