@@ -389,18 +389,20 @@ class pvc(commands.Cog):
         guild = ctx.guild
         if channelid is not None:
             x = await self.config.all_members(guild=ctx.guild)
-            for vcOwnList, vcNameList in x.items():
-                if int(vcNameList) == int(channelid):
-                    owner = int(vcOwnList)
-                    ownerObj = await self.bot.get_or_fetch_member(guild, owner)
-                    if ownerObj.voice is None or ownerObj.voice.channel.id != channelid:
-                        await ctx.send("{0} has claimed {1}".format(ctx.author.mention, self.bot.get_channel(vcNameList).mention))
-                        await self.bot.get_channel(vcNameList).set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
-                        self.config.member(owner).channel_id.set(0)
-                        break
-                    else:
-                        await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
-            await self.config.member(ctx.author).channel_id.set(channelid)
+            for vcOwnList, ownDict in x.items():
+                for key, vcId in ownDict:
+                    if key == "channel_id":
+                        if int(vcId) == int(channelid):
+                            owner = int(vcOwnList)
+                            ownerObj = await self.bot.get_or_fetch_member(guild, owner)
+                            if ownerObj.voice is None or ownerObj.voice.channel.id != channelid:
+                                await ctx.send("{0} has claimed {1}".format(ctx.author.mention, self.bot.get_channel(vcId).mention))
+                                await self.bot.get_channel(vcId).set_permissions(ctx.author, view_channel=True, read_messages=True, send_messages=True, read_message_history=True, use_voice_activation=True, stream=True, speak=True, connect=True)
+                                await self.config.member(owner).channel_id.set(0)
+                                await self.config.member(ctx.author).channel_id.set(channelid)
+                                break
+                            else:
+                                await ctx.send("<@{0}> is still in their vc you can only run this when they have left".format(owner))
 
     @vc.command(name="transfer")
     async def transfer(self, ctx: commands.Context, newOwner: discord.Member):
@@ -424,7 +426,7 @@ class pvc(commands.Cog):
                 if vcObj is not None and vcObj.id == channelid:
                     if ownerObj.voice.channel.id == channelid and alreadyOwns == False:
                         await ctx.send("{0} has transfered vc ownership to {1}".format(ctx.author.mention, vcObj.mention))
-                        self.config.member(ctx.author).channel_id.set(0)
+                        await self.config.member(ctx.author).channel_id.set(0)
                     elif alreadyOwns:
                         await ctx.send("{0} already owns a vc".format(newOwner.display_name))
                     else:
