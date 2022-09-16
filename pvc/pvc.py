@@ -169,7 +169,7 @@ class pvc(commands.Cog):
         print(i)
         for vcOwner in i.items():
             print(vcOwner)
-            vcId = vcOwner.index['channel_id']
+            vcId = vcOwner.index
             print(vcId)
             voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
             name: discord.Member = await guild.fetch_member(vcOwner)
