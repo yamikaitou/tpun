@@ -54,14 +54,14 @@ class pvc(commands.Cog):
             if len(channel.members) == 0:
                 reason = "channel is empty"
                 vcName = str(channel.name)
-                await channel.delete()
                 x = await self.config.all_members(guild=ctx.guild)
                 for vcOwner, ownDict in x.items():
                     for key, channelId in ownDict.items():
                         if channelId == id:
-                            owner = self.bot.get_user(int(vcOwner))
+                            owner = ctx.guild.get_member(int(vcOwner))
                 await self.config.member(owner).channel_id.set(0)
                 await ctx.send("Succesfully deleted {2}'s voice channel: {0} because {1}".format(vcName, reason, owner.name))
+                await channel.delete()
                 pvc.futureList.pop(str(id), None)
                 break
             else:
