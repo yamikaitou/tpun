@@ -170,10 +170,13 @@ class pvc(commands.Cog):
             for key, value in ownDict.items():
                 if key == "channel_id":
                     vcId = value
-                    voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
-                    name: discord.Member = await guild.fetch_member(vcOwner)
-                    message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
-                    embed.add_field(name="🔊", value=message, inline=True)
+                    if value == 0 or value is None:
+                        pass
+                    else:
+                        voiceChannel: discord.VoiceChannel = self.bot.get_channel(int(vcId))
+                        name: discord.Member = await guild.fetch_member(vcOwner)
+                        message = "<#" + str(voiceChannel.id) + ">" + " ⌇ " + name.mention
+                        embed.add_field(name="🔊", value=message, inline=True)
                 else:
                     pass
         await ctx.send(embed=embed)
