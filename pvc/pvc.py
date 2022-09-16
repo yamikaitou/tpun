@@ -390,7 +390,7 @@ class pvc(commands.Cog):
         if channelid is not None:
             x = await self.config.all_members(guild=ctx.guild)
             for vcOwnList, ownDict in x.items():
-                for key, vcId in ownDict:
+                for key, vcId in ownDict.items():
                     if key == "channel_id":
                         if int(vcId) == int(channelid):
                             owner = int(vcOwnList)
