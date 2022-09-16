@@ -166,7 +166,6 @@ class pvc(commands.Cog):
         guild: discord.Guild = ctx.guild
         embed = discord.Embed(title="VC Owners", description="All of the owners of private voice channels in the server are listed below", color=0xc72327)
         i = await self.config.all_members(guild=guild)
-        print(i)
         for vcOwner, ownDict in i.items():
             for key, value in ownDict.items():
                 if key == "channel_id":
