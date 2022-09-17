@@ -168,7 +168,7 @@ class occupations(commands.Cog):
             iteration = 1
             emojis = []
             p = inflect.engine()
-            for x in len(titleList):
+            for job in titleList:
                 emojis.append(f":{p.number_to_words(iteration)}:")
                 iteration = iteration + 1
             start_adding_reactions(mess, emojis)
