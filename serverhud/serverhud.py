@@ -279,7 +279,7 @@ class serverhud(commands.Cog):
 
     @commands.guildowner_or_permissions()
     @serverhud.command(name="test")
-    async def test(self, ctx, event):
+    async def test(self, ctx: commands.Context, event):
         """
         Test the cog to insure functionality
 
@@ -290,8 +290,8 @@ class serverhud(commands.Cog):
             memberList = ctx.guild.members
             await self.config.guild(ctx.guild).truememcount.set(len([m for m in memberList if not m.bot]))
             await self.config.guild(ctx.guild).newmemcount.set(len([m for m in memberList if m.joined_at > datetime.today() - timedelta(days=1)]))
-            await self.members(ctx.guild)
-            await self.boosters(ctx.guild)
+            await listeners.members(ctx.guild)
+            await listeners.boosters(ctx.guild)
             await ctx.send("Test of the member join/leave event.")
         else:
             await ctx.send("That is not a valid event do [p]help serverhud test for a list of events")
