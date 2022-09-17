@@ -165,7 +165,12 @@ class occupations(commands.Cog):
             embed = await self.create_embed(titleList)
             mess = await ctx.send(embed=embed)
             #wait for user to emoji react to choose one
-            emojis = ["1️⃣", "2️⃣", "3️⃣", "4️⃣"]
+            iteration = 1
+            emojis = []
+            p = inflect.engine()
+            for x in len(jobList):
+                emojis.append(f":{p.number_to_words(iteration)}:")
+                iteration = iteration + 1
             start_adding_reactions(mess, emojis)
             try:
                 result = await ctx.bot.wait_for("reaction_add", timeout=300.0, check=self.pred(emojis, mess, ctx.author))
