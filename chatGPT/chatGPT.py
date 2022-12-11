@@ -75,9 +75,9 @@ class chatGPT(commands.Cog):
     query = message.content
     ctx = await self.bot.get_context(message)
     if whitelistedChannels is not None:
-        if message.channel.id in whitelistedChannels:
+        if message.channel.id in whitelistedChannels and message.author.id != self.bot.user.id:
             await self.send_chat(ctx, query)
-    if replyRespond and message.reference is not None:
+    if replyRespond and message.reference is not None and message.author.id != self.bot.user.id:
         if message.reference.cached_message is None:
             # Fetching the message
             channel = await self.bot.get_channel(message.reference.channel_id)
