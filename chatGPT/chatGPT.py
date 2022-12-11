@@ -77,11 +77,10 @@ class chatGPT(commands.Cog):
   async def on_message(self, message: discord.Message):
     whitelistedChannels: list = await self.config.guild(message.guild).channels()
     replyRespond: bool = await self.config.guild(message.guild).replyRespond()
-    model: str = await self.config.model()
     query = message.content
     ctx = await self.bot.get_context(message)
     if message.channel.id in whitelistedChannels:
-        await self.send_chat(ctx, query, model)
+        await self.send_chat(ctx, query)
     elif replyRespond and message.reference is not None:
         if message.reference.cached_message is None:
             # Fetching the message
@@ -93,7 +92,7 @@ class chatGPT(commands.Cog):
             msg = message.reference.cached_message
             context: commands.Context = await self.bot.get_context(msg)
         if context.author.id == self.bot.user.id:
-            await self.send_chat(ctx, query, model)
+            await self.send_chat(ctx, query)
 
   @commands.group(name="chatgpt")
   async def chatgpt(self, ctx: commands.Context):
