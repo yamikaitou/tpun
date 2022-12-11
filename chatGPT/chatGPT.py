@@ -3,7 +3,6 @@ from redbot.core import commands
 from redbot.core.bot import Red
 from redbot.core.config import Config
 import discord
-import requests
 import logging
 import asyncio
 import openai
