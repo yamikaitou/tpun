@@ -7,7 +7,7 @@ import logging
 import asyncio
 import openai
 
-class ChatGPT(commands.Cog):
+class chatGPT(commands.Cog):
   def __init__(self, bot: Red) -> None:
     self.prompt = ""
     self.response = ""
