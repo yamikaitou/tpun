@@ -144,7 +144,7 @@ class occupations(commands.Cog):
         if cooldown.timestamp() + timediff < datetime.utcnow().timestamp():
             adzuna_keys = await self.bot.get_shared_api_tokens("adzuna")
             if adzuna_keys.get("app_id") is None or adzuna_keys.get("api_key") is None:
-                return await ctx.send("The bot owner still needs to set the adzuna app id and secret using using `[p]set api adzuna app_id,<app id> api_key,<api key>`")
+                return await ctx.send("The bot owner still needs to set the adzuna app id and secret using `[p]set api adzuna app_id,<app id> api_key,<api key>`")
             else:
                 pass
             #use api to get random jobs, if not possible use List
