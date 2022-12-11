@@ -45,4 +45,10 @@ class chatGPT(commands.Cog):
         return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`")
       openai.api_key = chatGPTKey.get("api_key")
       response : str = self.send_message(ctx.author.id, query)
-      await ctx.reply(response)
+      if response.length < 2000:
+        await ctx.reply(response)
+      else:
+        with open(str(ctx.author.id) + '.txt', 'w') as f:
+            f.write(response)
+        with open(str(ctx.author.id) + '.txt', 'r') as f:
+            await ctx.send(file=discord.File(f))
