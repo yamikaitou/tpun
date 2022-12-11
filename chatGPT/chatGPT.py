@@ -69,7 +69,7 @@ class chatGPT(commands.Cog):
             await ctx.reply("I'm sorry, for some reason chatGPT's response contained nothing, please try sending your query again.")
 
   @commands.Cog.listener()
-  async def on_message(self, message: discord.Message):
+  async def on_message_without_command(self, message: discord.Message):
     whitelistedChannels: list = await self.config.guild(message.guild).channels()
     replyRespond: bool = await self.config.guild(message.guild).replyRespond()
     query = message.content
