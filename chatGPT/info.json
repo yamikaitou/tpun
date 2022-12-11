@@ -2,7 +2,7 @@
     "name": "chatGPT",
     "short": "chatGPT",
     "description": "Team Punistic red cog that allows a user to communicate with chatGPT",
-    "end_user_data_statement": "This cog does not persistently store data or meta-data about users.",
+    "end_user_data_statement": "This cog does persistently store data or meta-data about users. This is required to keep continuity between users and the bot, it is also used in storing responses >2000 characters to send to the user.",
     "install_msg": "Congrats",
     "author": [
         "Nado"

@@ -6,6 +6,7 @@ import discord
 import logging
 import asyncio
 import openai
+import os
 
 class chatGPT(commands.Cog):
   def __init__(self, bot: Red) -> None:
@@ -39,9 +40,20 @@ class chatGPT(commands.Cog):
     """
     Asks chatgpt a query
     """
-    chatGPTKey = await self.bot.get_shared_api_tokens("openai")
-    if chatGPTKey.get("api_key") is None:
+    async with ctx.typing():
+      chatGPTKey = await self.bot.get_shared_api_tokens("openai")
+      if chatGPTKey.get("api_key") is None:
         return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`")
-    openai.api_key = chatGPTKey.get("api_key")
-    response : str = self.send_message(ctx.author.id, query)
-    await ctx.reply(response)
+      openai.api_key = chatGPTKey.get("api_key")
+      response : str = self.send_message(ctx.author.id, query)
+      if len(response) < 2000:
+        await ctx.reply(response)
+      else:
+        with open(str(ctx.author.id) + '.txt', 'r') as f:
+            if len(f.read()) > 0:
+                os.remove(f)
+        with open(str(ctx.author.id) + '.txt', 'w') as f:
+            f.write(response)
+        with open(str(ctx.author.id) + '.txt', 'r') as f:
+            await ctx.send(file=discord.File(f))
+            os.remove(f)
