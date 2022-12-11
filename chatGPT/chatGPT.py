@@ -7,6 +7,7 @@ import logging
 import asyncio
 import openai
 import os
+import threading
 
 class chatGPT(commands.Cog):
   def __init__(self, bot: Red) -> None:
@@ -34,6 +35,10 @@ class chatGPT(commands.Cog):
     )
     self.user_threads[user_id] = response["choices"][0]["text"]
     return self.user_threads[user_id]
+    
+  def run_send_message_in_thread(self, user_id, message):
+    thread = threading.Thread(target=self.send_message, args=(user_id, message))
+    thread.start()
 
   @commands.command(name="chatgpt")
   async def chatgpt(self, ctx: commands.Context, *, query: str):
@@ -48,7 +53,9 @@ class chatGPT(commands.Cog):
         return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>. It can be created at: https://beta.openai.com/account/api-keys`")
       openai.api_key = chatGPTKey.get("api_key")
       response : str = self.send_message(ctx.author.id, query)
-      if len(response) < 2000:
+      if len(response) == 0:
+        await ctx.reply("I'm sorry, for some reason chatGPT's response contained nothing, please try sending your query again.")
+      elif len(response) > 0 and len(response) < 2000:
         self.log.info("Response is under 2000 characters and is: `" + response + "`.")
         await ctx.reply(response)
       else:
