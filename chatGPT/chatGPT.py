@@ -6,6 +6,7 @@ import discord
 import logging
 import asyncio
 import openai
+import os
 
 class chatGPT(commands.Cog):
   def __init__(self, bot: Red) -> None:
@@ -48,7 +49,11 @@ class chatGPT(commands.Cog):
       if len(response) < 2000:
         await ctx.reply(response)
       else:
-        with open(str(ctx.author.id) + '.txt', 'r+') as f:
+        with open(str(ctx.author.id) + '.txt', 'r') as f:
+            if len(f.read()) > 0:
+                os.remove(f)
+        with open(str(ctx.author.id) + '.txt', 'w') as f:
             f.write(response)
+        with open(str(ctx.author.id) + '.txt', 'r') as f:
             await ctx.send(file=discord.File(f))
-            f.close()
+            os.remove(f)
