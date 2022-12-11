@@ -48,7 +48,7 @@ class chatGPT(commands.Cog):
       if len(response) < 2000:
         await ctx.reply(response)
       else:
-        with open(str(ctx.author.id) + '.txt', 'w') as f:
+        with open(str(ctx.author.id) + '.txt', 'r+') as f:
             f.write(response)
-        with open(str(ctx.author.id) + '.txt', 'r') as f:
             await ctx.send(file=discord.File(f))
+            f.close()
