@@ -26,7 +26,7 @@ class chatGPT(commands.Cog):
       self.user_threads[user_id] = ""
     self.prompt = self.user_threads[user_id]
     response = openai.Completion.create(
-      engine="text-davinci-002",
+      engine="text-davinci-002-render",
       prompt=self.prompt + message,
       max_tokens=1024,
       n=1,
