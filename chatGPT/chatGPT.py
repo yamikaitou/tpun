@@ -8,7 +8,6 @@ import logging
 import asyncio
 import openai
 import os
-import threading
 
 class chatGPT(commands.Cog):
   def __init__(self, bot: Red) -> None:
@@ -46,10 +45,6 @@ class chatGPT(commands.Cog):
     self.user_threads[user_id] = response["choices"][0]["text"]
     return self.user_threads[user_id]
 
-  def run_send_message_in_thread(self, user_id, message, model):
-    thread = threading.Thread(target=self.send_message, args=(user_id, message, model))
-    thread.start()
-
   async def send_chat(self, ctx: commands.Context, query: str):
     async with ctx.typing():
         model = await self.config.model()
@@ -59,11 +54,11 @@ class chatGPT(commands.Cog):
             self.log.error("No api key set.")
             return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>. It can be created at: https://beta.openai.com/account/api-keys`")
         openai.api_key = chatGPTKey.get("api_key")
-        response: str = self.run_send_message_in_thread(ctx.author.id, query, model)
+        response: str = self.send_message(ctx.author.id, query, model)
         if len(response) > 0 and len(response) < 2000:
             self.log.info("Response is under 2000 characters and is: `" + response + "`.")
             await ctx.reply(response)
-        elif len(reponse) > 2000:
+        elif len(response) > 2000:
             self.log.info("Response is over 2000 characters sending as file attachment. Response is: `" + response + "`.")
             with open(str(ctx.author.id) + '.txt', 'w') as f:
                 f.write(response)
