@@ -49,9 +49,6 @@ class chatGPT(commands.Cog):
       if len(response) < 2000:
         await ctx.reply(response)
       else:
-        with open(str(ctx.author.id) + '.txt', 'r') as f:
-            if len(f.read()) > 0:
-                os.remove(f)
         with open(str(ctx.author.id) + '.txt', 'w') as f:
             f.write(response)
         with open(str(ctx.author.id) + '.txt', 'r') as f:
