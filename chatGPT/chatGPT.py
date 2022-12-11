@@ -52,8 +52,8 @@ class chatGPT(commands.Cog):
 
   async def send_chat(self, ctx: commands.Context, query: str):
     async with ctx.typing():
-        model: str = await self.config.model()
-        self.log.info("Sending query: `" + query + "` to chatGPT.")
+        model = await self.config.model()
+        self.log.info("Sending query: `" + query + "` to chatGPT. With model: " + model)
         chatGPTKey = await self.bot.get_shared_api_tokens("openai")
         if chatGPTKey.get("api_key") is None:
             self.log.error("No api key set.")
