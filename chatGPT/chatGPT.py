@@ -44,12 +44,8 @@ class chatGPT(commands.Cog):
       self.log.info("Sending query: `" + query + "` to chatGPT.")
       chatGPTKey = await self.bot.get_shared_api_tokens("openai")
       if chatGPTKey.get("api_key") is None:
-<<<<<<< Updated upstream
-        return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>. It can be created at: https://beta.openai.com/account/api-keys`")
-=======
         self.log.error("No api key set.")
-        return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`")
->>>>>>> Stashed changes
+        return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>. It can be created at: https://beta.openai.com/account/api-keys`")
       openai.api_key = chatGPTKey.get("api_key")
       response : str = self.send_message(ctx.author.id, query)
       if len(response) < 2000:
