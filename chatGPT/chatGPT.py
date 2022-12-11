@@ -17,8 +17,12 @@ class chatGPT(commands.Cog):
         self,
         identifier=365398642334498816
     )
+    self.user_threads = {}
     
-  def send_message(self, message):
+  def send_message(self, user_id, message):
+    if user_id not in self.user_threads:
+      self.user_threads[user_id] = ""
+    self.prompt = self.user_threads[user_id]
     response = openai.Completion.create(
       engine="text-davinci-002",
       prompt=self.prompt + message,
@@ -27,8 +31,8 @@ class chatGPT(commands.Cog):
       stop=None,
       temperature=0.5
     )
-    self.response = response["choices"][0]["text"]
-    return self.response
+    self.user_threads[user_id] = response["choices"][0]["text"]
+    return self.user_threads[user_id]
 
   @commands.command(name="chatgpt")
   async def chatgpt(self, ctx: commands.Context, *, query: str):
@@ -39,5 +43,5 @@ class chatGPT(commands.Cog):
     if chatGPTKey.get("api_key") is None:
         return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`")
     openai.api_key = chatGPTKey.get("api_key")
-    response : str = self.send_message(query)
+    response : str = self.send_message(ctx.author.id, query)
     await ctx.reply(response)
