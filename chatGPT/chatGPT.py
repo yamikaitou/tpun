@@ -52,7 +52,7 @@ class chatGPT(commands.Cog):
         self.log.error("No api key set.")
         return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>. It can be created at: https://beta.openai.com/account/api-keys`")
       openai.api_key = chatGPTKey.get("api_key")
-      response : str = self.send_message(ctx.author.id, query)
+      response : str = self.run_send_message_in_thread(ctx.author.id, query)
       if len(response) == 0:
         await ctx.reply("I'm sorry, for some reason chatGPT's response contained nothing, please try sending your query again.")
       elif len(response) > 0 and len(response) < 2000:
