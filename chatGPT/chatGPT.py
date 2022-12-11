@@ -80,7 +80,7 @@ class chatGPT(commands.Cog):
     if replyRespond and message.reference is not None and message.author.id != self.bot.user.id:
         if message.reference.cached_message is None:
             # Fetching the message
-            channel = await self.bot.get_channel(message.reference.channel_id)
+            channel = self.bot.get_channel(message.reference.channel_id)
             msg = await channel.fetch_message(message.reference.message_id)
             context: commands.Context = await self.bot.get_context(msg)
 
