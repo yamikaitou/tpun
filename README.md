@@ -16,7 +16,7 @@
 
 <div id="workflow" align="center">
 
-[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/batman202012/tpun/actions/workflows/main.yml) [![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)[![Requirements Status](https://requires.io/github/batman202012/tpun/requirements.svg?branch=master)](https://requires.io/github/batman202012/tpun/requirements/?branch=master)[![Maintainability](https://api.codeclimate.com/v1/badges/ccf09712a5af256e1fc6/maintainability?branch=master)](https://codeclimate.com/github/batman202012/tpun/maintainability)
+[![Python application](https://github.com/batman202012/tpun/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/batman202012/tpun/actions/workflows/main.yml) [![CodeQL](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml/badge.svg?branch=master)](https://github.com/batman202012/tpun/actions/workflows/codeql-analysis.yml)[![Maintainability](https://api.codeclimate.com/v1/badges/ccf09712a5af256e1fc6/maintainability?branch=master)](https://codeclimate.com/github/batman202012/tpun/maintainability)
 
 </div>
 
@@ -93,6 +93,10 @@
 <br />
 
 - [Occupations](#occupations)
+
+<br />
+
+- [ChatGPT](#chatgpt)
 
 <br />
 <br />
@@ -635,6 +639,34 @@
 `
 
 ##### Displays current guild settings
+
+<br />
+<br />
+
+<div id="chatgpt" align="center">
+
+## ChatGPT
+
+<br />
+
+### A cog to allow users to communicate with openAI's ChatGPT bot through discord
+#### This cog uses an OpenAI api key which can be obtained from: https://beta.openai.com/account/api-keys and set using `[p]set api openai api_key,<api key>`
+
+</div>
+
+<div align="right">
+
+[top](#coglist)
+
+</div>
+
+<br /> 
+
+- `
+[p]chatGPT <query>
+`
+
+##### Sends text input to chatGPT
 
 <br />
 <br />
