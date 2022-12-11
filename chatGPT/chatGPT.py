@@ -124,10 +124,17 @@ class chatGPT(commands.Cog):
             currentChannels: list = await self.config.guild(ctx.guild).channels()
             if currentChannels is None:
                 newChannels: list = [channelId]
+                await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
+                await self.config.guild(ctx.guild).channels.set(newChannels)
             else:
-                newChannels: list = currentChannels.append(channelId)
-            await self.config.guild(ctx.guild).channels.set(newChannels)
-            await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
+                if channelId not in currentChannels:
+                    newChannels: list = currentChannels.append(channelId)
+                    await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
+                    await self.config.guild(ctx.guild).channels.set(newChannels)
+                else:
+                    await ctx.reply("<#" + str(channelId) + "> was already whitelisted.")
+            
+            
 
     elif setting == "channelremove":
         currentChannels: list = await self.config.guild(ctx.guild).channels()
