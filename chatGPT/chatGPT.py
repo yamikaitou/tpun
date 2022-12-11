@@ -74,7 +74,7 @@ class chatGPT(commands.Cog):
     replyRespond: bool = await self.config.guild(message.guild).replyRespond()
     query = message.content
     ctx = await self.bot.get_context(message)
-    if message.channel.id in whitelistedChannels:
+    if whitelistedChannels is not None and message.channel.id in whitelistedChannels:
         await self.send_chat(ctx, query)
     elif replyRespond and message.reference is not None:
         if message.reference.cached_message is None:
@@ -121,16 +121,19 @@ class chatGPT(commands.Cog):
             ctx.reply("That channel isn't in this server...")
         else:
             currentChannels: list = await self.config.guild(ctx.guild).channels()
-            newChannels: list = currentChannels.append(channelId)
+            if currentChannels is None:
+                newChannels: list = [channelId]
+            else:
+                newChannels: list = currentChannels.append(channelId)
             await self.config.guild(ctx.guild).channels.set(newChannels)
-            await ctx.reply("<#" + channelId + "> is now whitelisted.")
+            await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
 
     elif setting == "channelremove":
         currentChannels: list = await self.config.guild(ctx.guild).channels()
         try:
             newChannels = currentChannels.remove(value)
             await self.config.guild(ctx.guild).channels.set(newChannels)
-            await ctx.reply("<#" + channelId + "> is no longer whitelisted.")
+            await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
         except ValueError:
             newChannels = currentChannels
             ctx.reply("That channel was already not in channel list.")
