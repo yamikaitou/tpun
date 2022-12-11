@@ -117,9 +117,9 @@ class chatGPT(commands.Cog):
         channelId = int(value)
         channel = self.bot.get_channel(channelId)
         if channel == None:
-            ctx.reply("That channel does not exist or the bot can not see it.")
+            await ctx.reply("That channel does not exist or the bot can not see it.")
         elif channel.guild != ctx.guild:
-            ctx.reply("That channel isn't in this server...")
+            await ctx.reply("That channel isn't in this server...")
         else:
             currentChannels: list = await self.config.guild(ctx.guild).channels()
             if currentChannels is None:
@@ -144,7 +144,7 @@ class chatGPT(commands.Cog):
             await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
         except ValueError:
             newChannels = currentChannels
-            ctx.reply("That channel was already not in channel list.")
+            await ctx.reply("That channel was already not in channel list.")
 
     elif setting == "replyRespond":
         if value == "true" or value == "True" or value == "1":
@@ -158,7 +158,7 @@ class chatGPT(commands.Cog):
   @chatgpt.command(name="model")
   async def model(self, ctx: commands.Context, model: str):
     """
-    Allows the changing of model chatbot is running options are: 0-`text-ada-001` 1-`text-babbage-001` 2-`text-curie-001` 3-`text-davinci-002` 4-`text-davinci-002-render` 5-`text-davinci-003` current-`shows current model`
+    Allows the changing of model chatbot is running. Options are: 0-`text-ada-001` 1-`text-babbage-001` 2-`text-curie-001` 3-`text-davinci-002` 4-`text-davinci-002-render` 5-`text-davinci-003` current-`shows current model`
 
     For more information on what this means please check out: https://beta.openai.com/docs/models/gpt-3
     """
