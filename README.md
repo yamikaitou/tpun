@@ -663,10 +663,30 @@
 <br /> 
 
 - `
-[p]chatGPT <query>
+[p]chatgpt chat <query>
 `
 
 ##### Sends text input to chatGPT
+
+<br /> 
+
+- `
+[p]chatgpt set <setting> <value>
+`
+
+##### Changes settings for chatgpt cog, valid settings are channeladd (adds a channel to whitelist that the bot will respond to every message in), channelremove (removes a channel from the whitelist), and replyRespond (toggles the bot responding in any channel regardless of whitelist status where it is mentioned).
+
+##### For channeladd/channelremove the value must be the id of the channel. For replyRespond you may use "true" and "false" or 1 and 0
+
+<br /> 
+
+- `
+[p]chatGPT model <value>
+`
+
+##### Changes the model the bot is using. Available values are 0-`text-ada-001` 1-`text-babbage-001` 2-`text-curie-001` 3-`text-davinci-002` 4-`text-davinci-002-render` 5-`text-davinci-003` current-`shows current model`
+
+##### For more information on what this means please check out: https://beta.openai.com/docs/models/gpt-3
 
 <br />
 <br />
