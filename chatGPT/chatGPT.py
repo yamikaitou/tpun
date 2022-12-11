@@ -35,6 +35,9 @@ class chatGPT(commands.Cog):
     """
     Asks chatgpt a query
     """
-    openai.api_key = await self.bot.get_shared_api_tokens("openai")
+    chatGPTKey = await self.bot.get_shared_api_tokens("openai")
+    if chatGPTKey.get("api_key") is None:
+        return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`")
+    openai.api_key = chatGPTKey.get("api_key")
     response : str = self.send_message(query)
     ctx.reply(response)
