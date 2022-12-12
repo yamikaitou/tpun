@@ -206,7 +206,7 @@ class chatGPT(commands.Cog):
     model = await self.config.model()
     if model == "text-ada-001" or model == "text-babbage-001" or model == "text-curie-001" and tokenLimit <= 2048 and tokenLimit > 0:
         await self.config.tokenlimit.set(tokenLimit)
-        await ctx.reply("Token limit is now set to " + tokenLimit)
+        await ctx.reply("Token limit is now set to " + str(tokenLimit))
     elif model == "text-davinci-002" or model == "text-davinci-002-render" or model == "text-davinci-003" and tokenLimit <= 4000 and tokenLimit > 0:
         await self.config.tokenlimit.set(tokenLimit)
-        await ctx.reply("Token limit is now set to " + tokenLimit)
+        await ctx.reply("Token limit is now set to " + str(tokenLimit))
