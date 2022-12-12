@@ -688,5 +688,16 @@
 
 ##### For more information on what this means please check out: https://beta.openai.com/docs/models/gpt-3
 
+<br /> 
+
+- `
+[p]chatGPT tokenlimit <value>
+`
+
+##### Changes the  max amount of tokens used in one query, default is 1000. Token cost is counted as query + response. Every model has a max cost of 2048 with the exception of the davinci models which have a max of 4000
+
+##### For more information on tokens check out: https://beta.openai.com/docs/models/gpt-3
+##### For token prices also see: https://openai.com/api/pricing/
+
 <br />
 <br />
