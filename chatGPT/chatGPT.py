@@ -56,7 +56,7 @@ class chatGPT(commands.Cog):
         chatGPTKey = await self.bot.get_shared_api_tokens("openai")
         if chatGPTKey.get("api_key") is None:
             self.log.error("No api key set.")
-            return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>. It can be created at: https://beta.openai.com/account/api-keys`")
+            return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`. It can be created at: https://beta.openai.com/account/api-keys")
         openai.api_key = chatGPTKey.get("api_key")
         response: str = self.send_message(ctx.author.id, query, model, tokenLimit)
         if len(response) > 0 and len(response) < 2000:
@@ -114,8 +114,8 @@ class chatGPT(commands.Cog):
     """
     Changes settings for bot to use
 
-    Use [p]chatgpt set channeladd <channel_id> or [p]chatgpt set channelremove <channel_id> to set up channel whitelist where the bot will respond.
-    Use [p]chatgpt set replyRespond <True or False> to enable or disable the bot responding to replies regardless of channel
+    Use `[p]chatgpt set channeladd <channel_id>` or `[p]chatgpt set channelremove <channel_id>` to set up channel whitelist where the bot will respond.\n\n
+    Use `[p]chatgpt set replyRespond <True or False>` to enable or disable the bot responding to replies regardless of channel
     """
     if setting == "channeladd":
         channelId = int(value)
@@ -162,7 +162,7 @@ class chatGPT(commands.Cog):
   @chatgpt.command(name="model")
   async def model(self, ctx: commands.Context, model: str):
     """
-    Allows the changing of model chatbot is running. Options are: 0-`text-ada-001` 1-`text-babbage-001` 2-`text-curie-001` 3-`text-davinci-002` 4-`text-davinci-002-render` 5-`text-davinci-003` current-`shows current model`
+    Allows the changing of model chatbot is running. Options are: 0-`text-ada-001` 1-`text-babbage-001` 2-`text-curie-001` 3-`text-davinci-002` 4-`text-davinci-002-render` 5-`text-davinci-003` current-`shows current model`\n\n
 
     For more information on what this means please check out: https://beta.openai.com/docs/models/gpt-3
     """
@@ -198,8 +198,8 @@ class chatGPT(commands.Cog):
   @chatgpt.command(name="tokenlimit")
   async def tokenlimit(self, ctx: commands.Context, tokenLimit: int):
     """
-    Allows for changing the max amount of tokens used in one query, default is 1000. Token cost is counted as query + response. Every model has a max cost of 2048 with the exception of the davinci models which have a max of 4000
-
+    Allows for changing the max amount of tokens used in one query, default is 1000. Token cost is counted as query + response. Every model has a max cost of 2048 with the exception of the davinci models which have a max of 4000\n\n
+    
     For more information on tokens check out: https://beta.openai.com/docs/models/gpt-3
     For token prices also see: https://openai.com/api/pricing/
     """
