@@ -166,33 +166,16 @@ class chatGPT(commands.Cog):
 
     For more information on what this means please check out: https://beta.openai.com/docs/models/gpt-3
     """
-    if model == "0" or model == "text-ada-001":
-        await self.config.model.set("text-ada-001")
-        await ctx.reply("The chatbot model is now set to: `text-ada-001`")
+    model_map = {
+        "0": "text-ada-001",
+        "1": "text-babbage-001",
+        "text-ada-001": "text-ada-001",
+        "text-babbage-001": "text-babbage-001"
+    }
 
-    elif model == "1" or model == "text-babbage-001":
-        await self.config.model.set("text-babbage-001")
-        await ctx.reply("The chatbot model is now set to: `text-babbage-001`")
-
-    elif model == "2" or model == "text-curie-001":
-        await self.config.model.set("text-curie-001")
-        await ctx.reply("The chatbot model is now set to: `text-curie-001`")
-
-    elif model == "3" or model == "text-davinci-002":
-        await self.config.model.set("text-davinci-002")
-        await ctx.reply("The chatbot model is now set to: `text-davinci-002`")
-
-    elif model == "4" or model == "text-davinci-002-render":
-        await self.config.model.set("text-davinci-002-render")
-        await ctx.reply("The chatbot model is now set to: `text-davinci-002-render`")
-
-    elif model == "5" or model == "text-davinci-003":
-        await self.config.model.set("text-davinci-003")
-        await ctx.reply("The chatbot model is now set to: `text-davinci-003`")
-
-    elif model == "current":
-        currentModel = await self.config.model()
-        await ctx.reply("The chatbot model is currently set to: " + currentModel)
+    if model in model_map:
+        await self.config.model.set(model_map[model])
+        await ctx.reply("The chatbot model is now set to: `" + model_map[model] + "`")
 
   @checks.is_owner()
   @chatgpt.command(name="tokenlimit")
@@ -205,15 +188,14 @@ class chatGPT(commands.Cog):
     """
     model = await self.config.model()
     model_limits = {
-    "text-ada-001": (0, 2048),
-    "text-babbage-001": (0, 2048),
-    "text-curie-001": (0, 2048),
-    "text-davinci-002": (0, 4000),
-    "text-davinci-002-render": (0, 4000),
-    "text-davinci-003": (0, 4000)
-}
+        "text-ada-001": (0, 2048),
+        "text-babbage-001": (0, 2048),
+        "text-curie-001": (0, 2048),
+        "text-davinci-002": (0, 4000),
+        "text-davinci-002-render": (0, 4000),
+        "text-davinci-003": (0, 4000)
+    }
 
     if model in model_limits and model_limits[model][0] < tokenLimit <= model_limits[model][1]:
         await self.config.tokenlimit.set(tokenLimit)
         await ctx.reply("Token limit is now set to " + str(tokenLimit))
-
