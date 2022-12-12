@@ -204,9 +204,16 @@ class chatGPT(commands.Cog):
     For token prices also see: https://openai.com/api/pricing/
     """
     model = await self.config.model()
-    if model == "text-ada-001" or model == "text-babbage-001" or model == "text-curie-001" and tokenLimit <= 2048 and tokenLimit > 0:
+    model_limits = {
+    "text-ada-001": (0, 2048),
+    "text-babbage-001": (0, 2048),
+    "text-curie-001": (0, 2048),
+    "text-davinci-002": (0, 4000),
+    "text-davinci-002-render": (0, 4000),
+    "text-davinci-003": (0, 4000)
+}
+
+    if model in model_limits and model_limits[model][0] < tokenLimit <= model_limits[model][1]:
         await self.config.tokenlimit.set(tokenLimit)
         await ctx.reply("Token limit is now set to " + str(tokenLimit))
-    elif model == "text-davinci-002" or model == "text-davinci-002-render" or model == "text-davinci-003" and tokenLimit <= 4000 and tokenLimit > 0:
-        await self.config.tokenlimit.set(tokenLimit)
-        await ctx.reply("Token limit is now set to " + str(tokenLimit))
+
