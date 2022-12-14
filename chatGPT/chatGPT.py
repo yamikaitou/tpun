@@ -50,27 +50,30 @@ class chatGPT(commands.Cog):
 
   async def send_chat(self, ctx: commands.Context, query: str):
     async with ctx.typing():
-        model = await self.config.model()
-        tokenLimit = await self.config.tokenLimit()
-        self.log.info("Sending query: `" + query + "` to chatGPT. With model: " + model)
-        chatGPTKey = await self.bot.get_shared_api_tokens("openai")
-        if chatGPTKey.get("api_key") is None:
-            self.log.error("No api key set.")
-            return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`. It can be created at: https://beta.openai.com/account/api-keys")
-        openai.api_key = chatGPTKey.get("api_key")
-        response: str = self.send_message(ctx.author.id, query, model, tokenLimit)
-        if len(response) > 0 and len(response) < 2000:
-            self.log.info("Response is under 2000 characters and is: `" + response + "`.")
-            await ctx.reply(response)
-        elif len(response) > 2000:
-            self.log.info("Response is over 2000 characters sending as file attachment. Response is: `" + response + "`.")
-            with open(str(ctx.author.id) + '.txt', 'w') as f:
-                f.write(response)
-            with open(str(ctx.author.id) + '.txt', 'r') as f:
-                await ctx.send(file=discord.File(f))
-                os.remove(f)
-        else:
-            await ctx.reply("I'm sorry, for some reason chatGPT's response contained nothing, please try sending your query again.")
+        try:
+            model = await self.config.model()
+            tokenLimit = await self.config.tokenLimit()
+            self.log.info("Sending query: `" + query + "` to chatGPT. With model: " + model)
+            chatGPTKey = await self.bot.get_shared_api_tokens("openai")
+            if chatGPTKey.get("api_key") is None:
+                self.log.error("No api key set.")
+                return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`. It can be created at: https://beta.openai.com/account/api-keys")
+            openai.api_key = chatGPTKey.get("api_key")
+            response: str = self.send_message(ctx.author.id, query, model, tokenLimit)
+            if len(response) > 0 and len(response) < 2000:
+                self.log.info("Response is under 2000 characters and is: `" + response + "`.")
+                await ctx.reply(response)
+            elif len(response) > 2000:
+                self.log.info("Response is over 2000 characters sending as file attachment. Response is: `" + response + "`.")
+                with open(str(ctx.author.id) + '.txt', 'w') as f:
+                    f.write(response)
+                with open(str(ctx.author.id) + '.txt', 'r') as f:
+                    await ctx.send(file=discord.File(f))
+                    os.remove(f)
+            else:
+                await ctx.reply("I'm sorry, for some reason chatGPT's response contained nothing, please try sending your query again.")
+        except openai.error.InvalidRequestError as err:
+            await ctx.send(err)
 
   @commands.Cog.listener()
   async def on_message_without_command(self, message: discord.Message):
