@@ -82,11 +82,14 @@ class chatGPT(commands.Cog):
     if whitelistedChannels is not None and message.channel.id in whitelistedChannels and message.author.id != self.bot.user.id:
         if message.attachments:
             # Get the file
+            self.log.info("Message has a file, is it valid?")
             file = message.attachments[0]
             for filetype in validFileTypes:
                 if file.filename.endswith(filetype):
+                    self.log.info("It is valid.")
                     fileContents = await file.read()
                     query = query + "\n" + fileContents
+                    self.log.info("Final query: " + query)
                     break
         await self.send_chat(ctx, query)
     if replyRespond and message.reference is not None and message.author.id != self.bot.user.id:
