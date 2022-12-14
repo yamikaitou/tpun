@@ -78,21 +78,15 @@ class chatGPT(commands.Cog):
     replyRespond: bool = await self.config.guild(message.guild).replyRespond()
     query = message.content
     ctx = await self.bot.get_context(message)
-    if whitelistedChannels is not None:
-        if message.channel.id in whitelistedChannels and message.author.id != self.bot.user.id:
-            await self.send_chat(ctx, query)
+    if whitelistedChannels is not None and message.channel.id in whitelistedChannels and message.author.id != self.bot.user.id:
+        await self.send_chat(ctx, query)
     if replyRespond and message.reference is not None and message.author.id != self.bot.user.id:
-        if message.reference.cached_message is None:
-            # Fetching the message
-            channel = self.bot.get_channel(message.reference.channel_id)
-            msg = await channel.fetch_message(message.reference.message_id)
-            context: commands.Context = await self.bot.get_context(msg)
-
-        else:
-            msg = message.reference.cached_message
-            context: commands.Context = await self.bot.get_context(msg)
-        if context.author.id == self.bot.user.id:
-            await self.send_chat(ctx, query)
+        # Fetching the message
+        channel = self.bot.get_channel(message.reference.channel_id)
+        msg = await channel.fetch_message(message.reference.message_id)
+        context: commands.Context = await self.bot.get_context(msg)
+    if context.author.id == self.bot.user.id:
+        await self.send_chat(ctx, query)
 
   @commands.group(name="chatgpt")
   async def chatgpt(self, ctx: commands.Context):
@@ -122,21 +116,22 @@ class chatGPT(commands.Cog):
         channel = self.bot.get_channel(channelId)
         if channel == None:
             await ctx.reply("That channel does not exist or the bot can not see it.")
+            return
         elif channel.guild != ctx.guild:
             await ctx.reply("That channel isn't in this server...")
-        else:
-            currentChannels: list = await self.config.guild(ctx.guild).channels()
-            if currentChannels is None:
-                newChannels: list = [channelId]
-                await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
-                await self.config.guild(ctx.guild).channels.set(newChannels)
-            else:
-                if channelId not in currentChannels:
-                    newChannels: list = currentChannels.append(channelId)
-                    await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
-                    await self.config.guild(ctx.guild).channels.set(newChannels)
-                else:
-                    await ctx.reply("<#" + str(channelId) + "> was already whitelisted.")
+            return
+        currentChannels: list = await self.config.guild(ctx.guild).channels()
+        if currentChannels is None:
+            newChannels: list = [channelId]
+            await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
+            await self.config.guild(ctx.guild).channels.set(newChannels)
+            return
+        if channelId not in currentChannels:
+            newChannels: list = currentChannels.append(channelId)
+            await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
+            await self.config.guild(ctx.guild).channels.set(newChannels)
+            return
+        await ctx.reply("<#" + str(channelId) + "> was already whitelisted.")
             
             
 
@@ -162,37 +157,24 @@ class chatGPT(commands.Cog):
   @chatgpt.command(name="model")
   async def model(self, ctx: commands.Context, model: str):
     """
-    Allows the changing of model chatbot is running. Options are: 0-`text-ada-001` 1-`text-babbage-001` 2-`text-curie-001` 3-`text-davinci-002` 4-`text-davinci-002-render` 5-`text-davinci-003` current-`shows current model`\n\n
+    Allows the changing of model chatbot is running. Options are: 0-`text-ada-001` 1-`text-babbage-001` 2-`text-curie-001` 3-`text-davinci-002` 4-`text-davinci-003` current-`shows current model`\n\n
 
     For more information on what this means please check out: https://beta.openai.com/docs/models/gpt-3
     """
-    if model == "0" or model == "text-ada-001":
-        await self.config.model.set("text-ada-001")
-        await ctx.reply("The chatbot model is now set to: `text-ada-001`")
+    model_map = {
+        "0": "text-ada-001",
+        "1": "text-babbage-001",
+        "2": "text-curie-001",
+        "3": "text-davinci-002",
+        "4": "text-davinci-003",
+        "text-ada-001": "text-ada-001",
+        "text-babbage-001": "text-babbage-001",
+        "text-curie-001": "text-curie-001",
+        "text-davinci-002": "text-davinci-002",
+        "text-davinci-003": "text-davinci-003"
+    }
 
-    elif model == "1" or model == "text-babbage-001":
-        await self.config.model.set("text-babbage-001")
-        await ctx.reply("The chatbot model is now set to: `text-babbage-001`")
-
-    elif model == "2" or model == "text-curie-001":
-        await self.config.model.set("text-curie-001")
-        await ctx.reply("The chatbot model is now set to: `text-curie-001`")
-
-    elif model == "3" or model == "text-davinci-002":
-        await self.config.model.set("text-davinci-002")
-        await ctx.reply("The chatbot model is now set to: `text-davinci-002`")
-
-    elif model == "4" or model == "text-davinci-002-render":
-        await self.config.model.set("text-davinci-002-render")
-        await ctx.reply("The chatbot model is now set to: `text-davinci-002-render`")
-
-    elif model == "5" or model == "text-davinci-003":
-        await self.config.model.set("text-davinci-003")
-        await ctx.reply("The chatbot model is now set to: `text-davinci-003`")
-
-    elif model == "current":
-        currentModel = await self.config.model()
-        await ctx.reply("The chatbot model is currently set to: " + currentModel)
+    
 
   @checks.is_owner()
   @chatgpt.command(name="tokenlimit")
@@ -205,13 +187,12 @@ class chatGPT(commands.Cog):
     """
     model = await self.config.model()
     model_limits = {
-    "text-ada-001": (0, 2048),
-    "text-babbage-001": (0, 2048),
-    "text-curie-001": (0, 2048),
-    "text-davinci-002": (0, 4000),
-    "text-davinci-002-render": (0, 4000),
-    "text-davinci-003": (0, 4000)
-}
+        "text-ada-001": (0, 2048),
+        "text-babbage-001": (0, 2048),
+        "text-curie-001": (0, 2048),
+        "text-davinci-002": (0, 4000),
+        "text-davinci-003": (0, 4000)
+    }
 
     if model in model_limits and model_limits[model][0] < tokenLimit <= model_limits[model][1]:
         await self.config.tokenlimit.set(tokenLimit)
