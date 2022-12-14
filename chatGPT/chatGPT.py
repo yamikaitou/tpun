@@ -92,8 +92,8 @@ class chatGPT(commands.Cog):
         channel = self.bot.get_channel(message.reference.channel_id)
         msg = await channel.fetch_message(message.reference.message_id)
         context: commands.Context = await self.bot.get_context(msg)
-    if context.author.id == self.bot.user.id:
-        await self.send_chat(ctx, query)
+        if context.author.id == self.bot.user.id:
+            await self.send_chat(ctx, query)
 
   @commands.group(name="chatgpt")
   async def chatgpt(self, ctx: commands.Context):
