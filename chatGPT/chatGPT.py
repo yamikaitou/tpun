@@ -180,8 +180,14 @@ class chatGPT(commands.Cog):
         "text-davinci-002": "text-davinci-002",
         "text-davinci-003": "text-davinci-003"
     }
-
-    
+    if model in model_map:
+        await self.config.model.set(model_map[model])
+        await ctx.reply("The chatbot model is now set to: `" + model_map[model] + "`")
+    elif model == "current":
+        currentModel = await self.config.model()
+        await ctx.reply("The chatbot model is currently set to: " + currentModel)
+    else:
+        await ctx.reply("That is not a valid model please use `[p]chatgpt model` to see valid models")
 
   @checks.is_owner()
   @chatgpt.command(name="tokenlimit")
