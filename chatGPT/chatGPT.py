@@ -88,8 +88,9 @@ class chatGPT(commands.Cog):
             for filetype in validFileTypes:
                 if file.filename.endswith(filetype):
                     self.log.info("It is valid.")
-                    fileContents = await file.read()
-                    query = query + "\n" + fileContents
+                    fileContents = open(file)
+                    fileString = fileContents.read()
+                    query = query + "\n" + fileString
                     self.log.info("Final query: " + query)
                     validFile = True
             if not validFile:
