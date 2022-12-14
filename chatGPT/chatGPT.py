@@ -171,12 +171,14 @@ class chatGPT(commands.Cog):
     model_map = {
         "0": "text-ada-001",
         "1": "text-babbage-001",
+        "2": "text-curie-001",
         "3": "text-davinci-002",
         "4": "text-davinci-003",
         "text-ada-001": "text-ada-001",
         "text-babbage-001": "text-babbage-001",
         "text-curie-001": "text-curie-001",
         "text-davinci-002": "text-davinci-002",
+        "text-davinci-003": "text-davinci-003"
     }
     if model in model_map:
         await self.config.model.set(model_map[model])
@@ -202,7 +204,6 @@ class chatGPT(commands.Cog):
         "text-babbage-001": (0, 2048),
         "text-curie-001": (0, 2048),
         "text-davinci-002": (0, 4000),
-        "text-davinci-002-render": (0, 4000),
         "text-davinci-003": (0, 4000)
     }
 
