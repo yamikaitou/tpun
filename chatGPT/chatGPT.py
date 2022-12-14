@@ -77,6 +77,7 @@ class chatGPT(commands.Cog):
     whitelistedChannels: list = await self.config.guild(message.guild).channels()
     replyRespond: bool = await self.config.guild(message.guild).replyRespond()
     query = message.content
+    validFile: bool = False
     validFileTypes = ['.py', '.js', '.txt', '.yaml', '.html', '.xml', '.c', '.java', '.cs', '.php', '.css']
     ctx = await self.bot.get_context(message)
     if whitelistedChannels is not None and message.channel.id in whitelistedChannels and message.author.id != self.bot.user.id:
@@ -90,9 +91,9 @@ class chatGPT(commands.Cog):
                     fileContents = await file.read()
                     query = query + "\n" + fileContents
                     self.log.info("Final query: " + query)
-                else:
-                    ctx.reply("Sorry but that isn't a valid filetype.")
-                    return
+                    validFile = True
+            if not validFile:
+                await ctx.reply("Sorry but that isn't a valid filetype.")
         await self.send_chat(ctx, query)
     if replyRespond and message.reference is not None and message.author.id != self.bot.user.id:
         # Fetching the message
