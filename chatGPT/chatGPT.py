@@ -83,9 +83,11 @@ class chatGPT(commands.Cog):
         if message.attachments:
             # Get the file
             file = message.attachments[0]
-            if file.filename.endswith(validFileTypes):
-                fileContents = await file.read()
-                query = query + "\n" + fileContents
+            for filetype in validFileTypes:
+                if file.filename.endswith(filetype):
+                    fileContents = await file.read()
+                    query = query + "\n" + fileContents
+                    break
         await self.send_chat(ctx, query)
     if replyRespond and message.reference is not None and message.author.id != self.bot.user.id:
         # Fetching the message
