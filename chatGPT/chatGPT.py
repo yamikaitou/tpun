@@ -20,16 +20,16 @@ class chatGPT(commands.Cog):
         identifier=365398642334498816
     )
     self.user_threads = {}
-    default_global = {
+    defaultGlobalConfig = {
         "model": "text-ada-001",
         "tokenLimit": 1000
     }
-    default_guild = {
+    defaultGuildConfig = {
         "channels": [],
         "replyRespond": True
     }
-    self.config.register_global(**default_global)
-    self.config.register_guild(**default_guild)
+    self.config.register_global(**defaultGlobalConfig)
+    self.config.register_guild(**defaultGuildConfig)
 
   def send_message(self, user_id, message, model, tokenLimit):
     if user_id not in self.user_threads:
