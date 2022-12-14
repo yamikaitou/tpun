@@ -53,7 +53,7 @@ class chatGPT(commands.Cog):
         try:
             model = await self.config.model()
             tokenLimit = await self.config.tokenLimit()
-            self.log.info("Sending query: `" + query + "` to chatGPT. With model: " + model)
+            self.log.debug("Sending query: `" + query + "` to chatGPT. With model: " + model)
             chatGPTKey = await self.bot.get_shared_api_tokens("openai")
             if chatGPTKey.get("api_key") is None:
                 self.log.error("No api key set.")
@@ -61,10 +61,10 @@ class chatGPT(commands.Cog):
             openai.api_key = chatGPTKey.get("api_key")
             response: str = self.send_message(ctx.author.id, query, model, tokenLimit)
             if len(response) > 0 and len(response) < 2000:
-                self.log.info("Response is under 2000 characters and is: `" + response + "`.")
+                self.log.debug("Response is under 2000 characters and is: `" + response + "`.")
                 await ctx.reply(response)
             elif len(response) > 2000:
-                self.log.info("Response is over 2000 characters sending as file attachment. Response is: `" + response + "`.")
+                self.log.debug("Response is over 2000 characters sending as file attachment. Response is: `" + response + "`.")
                 with open(str(ctx.author.id) + '.txt', 'w') as f:
                     f.write(response)
                 with open(str(ctx.author.id) + '.txt', 'r') as f:
@@ -86,14 +86,14 @@ class chatGPT(commands.Cog):
     if whitelistedChannels is not None and message.channel.id in whitelistedChannels and message.author.id != self.bot.user.id:
         if message.attachments:
             # Get the file
-            self.log.info("Message has a file, is it valid?")
+            self.log.debug("Message has a file, is it valid?")
             file: discord.Attachment = message.attachments[0]
             for filetype in validFileTypes:
                 if file.filename.endswith(filetype):
-                    self.log.info("It is valid.")
+                    self.log.debug("It is valid.")
                     fileContents = await file.read()
                     query = query + "\n" + str(fileContents)
-                    self.log.info("Final query: " + query)
+                    self.log.debug("Final query: " + query)
                     validFile = True
             if not validFile:
                 await ctx.reply("Sorry but that isn't a valid filetype.")
