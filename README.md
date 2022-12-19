@@ -677,11 +677,18 @@
 #### Changes settings for chatgpt cog, valid settings are:
 ##### *`channeladd` (adds a channel to whitelist that the bot will respond to every message in)
 ##### *`channelremove` (removes a channel from the whitelist)
-##### *`channellist` (list current channels in the whitelist)
 ##### *`replyRespond` (toggles the bot responding in any channel regardless of whitelist status where it is mentioned)
 
 ##### For channeladd/channelremove the value must be the id of the channel. 
 ##### For replyRespond you may use "true" and "false" or 1 and 0
+
+<br />
+ 
+- `
+[p]chatgpt channellist
+`
+
+##### Lists the channels currently in the whitelist
 
 <br /> 
 
