@@ -122,7 +122,7 @@ class chatGPT(commands.Cog):
 
   @checks.guildowner()
   @chatgpt.command(name="channellist")
-  async def set(self, ctx: commands.Context):
+  async def channellist(self, ctx: commands.Context):
     """
     Lists the channels currently in the whitelist
     """
