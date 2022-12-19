@@ -53,7 +53,7 @@ class chatGPT(commands.Cog):
         try:
             model = await self.config.model()
             tokenLimit = await self.config.tokenLimit()
-            self.log.debug("Sending query: `" + query + "` to chatGPT. With model: " + model)
+            self.log.info("Sending query: `" + query + "` to chatGPT. With model: " + model)
             chatGPTKey = await self.bot.get_shared_api_tokens("openai")
             if chatGPTKey.get("api_key") is None:
                 self.log.error("No api key set.")
@@ -61,10 +61,10 @@ class chatGPT(commands.Cog):
             openai.api_key = chatGPTKey.get("api_key")
             response: str = self.send_message(ctx.author.id, query, model, tokenLimit)
             if len(response) > 0 and len(response) < 2000:
-                self.log.debug("Response is under 2000 characters and is: `" + response + "`.")
+                self.log.info("Response is under 2000 characters and is: `" + response + "`.")
                 await ctx.reply(response)
             elif len(response) > 2000:
-                self.log.debug("Response is over 2000 characters sending as file attachment. Response is: `" + response + "`.")
+                self.log.info("Response is over 2000 characters sending as file attachment. Response is: `" + response + "`.")
                 with open(str(ctx.author.id) + '.txt', 'w') as f:
                     f.write(response)
                 with open(str(ctx.author.id) + '.txt', 'r') as f:
