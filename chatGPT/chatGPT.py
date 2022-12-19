@@ -121,6 +121,22 @@ class chatGPT(commands.Cog):
     await self.send_chat(ctx, query)
 
   @checks.guildowner()
+  @chatgpt.command(name="channellist")
+  async def set(self, ctx: commands.Context):
+    """
+    Lists the channels currently in the whitelist
+    """
+    currentChannels: list = await self.config.guild(ctx.guild).channels()
+    if currentChannels is not None:
+      message = "The current channels are:/n"
+      for channelId in currentChannels:
+        message = message + "<#" + channelId + ">"
+      await ctx.reply(message)
+    else:
+      await ctx.reply("There are currently no channels whitelisted for chatGPT.")
+
+
+  @checks.guildowner()
   @chatgpt.command(name="set")
   async def set(self, ctx: commands.Context, setting: str, value: str):
     """
@@ -150,16 +166,6 @@ class chatGPT(commands.Cog):
             await self.config.guild(ctx.guild).channels.set(newChannels)
             return
         await ctx.reply("<#" + str(channelId) + "> was already whitelisted.")
-            
-    elif setting == "channellist":
-        currentChannels: list = await self.config.guild(ctx.guild).channels()
-        if currentChannels is not None:
-          message = "The current channels are:/n"
-          for channelId in currentChannels:
-            message = message + "<#" + channelId + ">"
-          await ctx.reply(message)
-        else:
-          await ctx.reply("There are currently no channels whitelisted for chatGPT.")
 
     elif setting == "channelremove":
         currentChannels: list = await self.config.guild(ctx.guild).channels()
