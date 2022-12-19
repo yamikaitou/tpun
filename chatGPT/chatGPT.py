@@ -34,15 +34,15 @@ class chatGPT(commands.Cog):
   def send_message(self, user_id, message, model, tokenLimit):
     if user_id not in self.user_threads:
       self.user_threads[user_id] = ""
-    self.prompt = self.user_threads[user_id]
-    response = openai.Completion.create(
-      engine=model,
-      prompt=self.prompt + message,
-      max_tokens=tokenLimit,
-      n=1,
-      stop=None,
-      temperature=0.5
-    )
+      self.prompt = self.user_threads[user_id]
+      response = openai.Completion.create(
+        engine=model,
+        prompt=self.prompt + message,
+        max_tokens=tokenLimit,
+        n=1,
+        stop=None,
+        temperature=0.5
+      )
     self.user_threads[user_id] = response["choices"][0]["text"]
     return self.user_threads[user_id]
 
@@ -151,7 +151,15 @@ class chatGPT(commands.Cog):
             return
         await ctx.reply("<#" + str(channelId) + "> was already whitelisted.")
             
-            
+    elif setting == "channellist":
+        currentChannels: list = await self.config.guild(ctx.guild).channels()
+        if currentChannels is not None:
+          message = "The current channels are:/n"
+          for channelId in currentChannels:
+            message = message + "<#" + channelId + ">"
+          await ctx.reply(message)
+        else:
+          await ctx.reply("There are currently no channels whitelisted for chatGPT.")
 
     elif setting == "channelremove":
         currentChannels: list = await self.config.guild(ctx.guild).channels()
