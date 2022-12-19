@@ -128,9 +128,9 @@ class chatGPT(commands.Cog):
     """
     currentChannels: list = await self.config.guild(ctx.guild).channels()
     if currentChannels is not None:
-      message = "The current channels are:/n"
+      message = "The current channels are:\n"
       for channelId in currentChannels:
-        message = message + "<#" + str(channelId) + ">"
+        message = message + "<#" + str(channelId) + ">\n"
       await ctx.reply(message)
     else:
       await ctx.reply("There are currently no channels whitelisted for chatGPT.")
