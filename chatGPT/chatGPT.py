@@ -164,8 +164,8 @@ class chatGPT(commands.Cog):
             return
         if channelId not in currentChannels:
             self.log.info("Channel is not in list so we add it.")
-            newChannels: list = currentChannels.append(channelId)
-            self.log.info("new channel list is: " + newChannels)
+            newChannels = currentChannels.append(channelId)
+            self.log.info(newChannels)
             await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
             await self.config.guild(ctx.guild).channels.set(newChannels)
             return
