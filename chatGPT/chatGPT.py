@@ -167,7 +167,7 @@ class chatGPT(commands.Cog):
             currentChannels.append(channelId)
             self.log.info(currentChannels)
             await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
-            await self.config.guild(ctx.guild).channels.set(newChannels)
+            await self.config.guild(ctx.guild).channels.set(currentChannels)
             return
         await ctx.reply("<#" + str(channelId) + "> was already whitelisted.")
 
