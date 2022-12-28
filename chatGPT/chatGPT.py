@@ -174,7 +174,7 @@ class chatGPT(commands.Cog):
     elif setting == "channelremove":
         currentChannels: list = await self.config.guild(ctx.guild).channels()
         try:
-            newChannels = currentChannels.remove(value)
+            currentChannels.remove(value)
             await self.config.guild(ctx.guild).channels.set(newChannels)
             await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
         except ValueError:
