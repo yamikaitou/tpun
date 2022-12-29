@@ -180,11 +180,9 @@ class chatGPT(commands.Cog):
         pass
       currentChannels: list = await self.config.guild(ctx.guild).channels()
       try:
-          self.log.info(currentChannels)
           currentChannels.remove(int(value))
-          self.log.info(currentChannels)
           await self.config.guild(ctx.guild).channels.set(currentChannels)
-          await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
+          await ctx.reply("<#" + str(value) + "> is no longer whitelisted.")
       except ValueError:
           await ctx.reply("That channel was already not in channel list.")
 
