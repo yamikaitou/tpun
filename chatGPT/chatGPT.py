@@ -149,8 +149,6 @@ class chatGPT(commands.Cog):
       if value is discord.TextChannel:
         value: int = value.id
         pass
-      if value is str:
-        value = int(value)
       channelId = int(value)
       channel = self.bot.get_channel(channelId)
       if channel == None:
@@ -180,13 +178,10 @@ class chatGPT(commands.Cog):
       if value is discord.TextChannel:
         value: int = value.id
         pass
-      if value is str:
-        value = int(value)
-        pass
       currentChannels: list = await self.config.guild(ctx.guild).channels()
       try:
           self.log.info(currentChannels)
-          currentChannels.pop(value)
+          currentChannels.pop(int(value))
           self.log.info(currentChannels)
           await self.config.guild(ctx.guild).channels.set(currentChannels)
           await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
