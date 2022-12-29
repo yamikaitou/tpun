@@ -149,6 +149,8 @@ class chatGPT(commands.Cog):
       if value is discord.TextChannel:
         value: int = value.id
         pass
+      if value is str:
+        value = int(value)
       channelId = int(value)
       channel = self.bot.get_channel(channelId)
       if channel == None:
@@ -177,6 +179,9 @@ class chatGPT(commands.Cog):
     elif setting == "channelremove":
       if value is discord.TextChannel:
         value: int = value.id
+        pass
+      if value is str:
+        value = int(value)
         pass
       currentChannels: list = await self.config.guild(ctx.guild).channels()
       try:
