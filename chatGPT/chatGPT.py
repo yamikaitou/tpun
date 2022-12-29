@@ -138,7 +138,7 @@ class chatGPT(commands.Cog):
 
   @checks.guildowner()
   @chatgpt.command(name="set")
-  async def set(self, ctx: commands.Context, setting: str, value: str):
+  async def set(self, ctx: commands.Context, setting: str, value):
     """
     Changes settings for bot to use
 
@@ -146,48 +146,70 @@ class chatGPT(commands.Cog):
     Use `[p]chatgpt set replyRespond <True or False>` to enable or disable the bot responding to replies regardless of channel
     """
     if setting == "channeladd":
-        channelId = int(value)
-        channel = self.bot.get_channel(channelId)
-        if channel == None:
-            await ctx.reply("That channel does not exist or the bot can not see it.")
-            return
-        elif channel.guild != ctx.guild:
-            await ctx.reply("That channel isn't in this server...")
-            return
-        currentChannels: list = await self.config.guild(ctx.guild).channels()
-        self.log.info(currentChannels)
-        if currentChannels is None:
-            self.log.info("Current channel list is empty adding the new channel.")
-            newChannels: list = [channelId]
-            await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
-            await self.config.guild(ctx.guild).channels.set(newChannels)
-            return
-        if channelId not in currentChannels:
-            self.log.info("Channel is not in list so we add it.")
-            currentChannels.append(channelId)
-            self.log.info(currentChannels)
-            await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
-            await self.config.guild(ctx.guild).channels.set(currentChannels)
-            return
-        await ctx.reply("<#" + str(channelId) + "> was already whitelisted.")
+      if value is discord.TextChannel:
+        value: int = value.id
+        pass
+      elif value is int:
+        pass
+      elif value is str:
+        value = int(value)
+      else:
+        await ctx.reply("Sorry only discord text channel mentions or ids are valid.")
+      channelId = int(value)
+      channel = self.bot.get_channel(channelId)
+      if channel == None:
+          await ctx.reply("That channel does not exist or the bot can not see it.")
+          return
+      elif channel.guild != ctx.guild:
+          await ctx.reply("That channel isn't in this server...")
+          return
+      currentChannels: list = await self.config.guild(ctx.guild).channels()
+      self.log.info(currentChannels)
+      if currentChannels is None:
+          self.log.info("Current channel list is empty adding the new channel.")
+          newChannels: list = [channelId]
+          await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
+          await self.config.guild(ctx.guild).channels.set(newChannels)
+          return
+      if channelId not in currentChannels:
+          self.log.info("Channel is not in list so we add it.")
+          currentChannels.append(channelId)
+          self.log.info(currentChannels)
+          await ctx.reply("<#" + str(channelId) + "> is now whitelisted.")
+          await self.config.guild(ctx.guild).channels.set(currentChannels)
+          return
+      await ctx.reply("<#" + str(channelId) + "> was already whitelisted.")
 
     elif setting == "channelremove":
-        currentChannels: list = await self.config.guild(ctx.guild).channels()
-        try:
-            currentChannels.remove(value)
-            await self.config.guild(ctx.guild).channels.set(newChannels)
-            await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
-        except ValueError:
-            newChannels = currentChannels
-            await ctx.reply("That channel was already not in channel list.")
+      if value is discord.TextChannel:
+        value: int = value.id
+        pass
+      elif value is int:
+        pass
+      elif value is str:
+        value = int(value)
+      else:
+        await ctx.reply("Sorry only discord text channel mentions or ids are valid.")
+      currentChannels: list = await self.config.guild(ctx.guild).channels()
+      try:
+          currentChannels.remove(value)
+          await self.config.guild(ctx.guild).channels.set(newChannels)
+          await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
+      except ValueError:
+          newChannels = currentChannels
+          await ctx.reply("That channel was already not in channel list.")
 
     elif setting == "replyRespond":
-        if value == "true" or value == "True" or value == "1":
+        if value is str:
+          value = value.lower()
+        if value == "true" or value == "1":
             await self.config.guild(ctx.guild).replyRespond.set(True)
             await ctx.reply("replyRespond is now set to True")
-        elif value == "false" or value == "False" or value == "0":
+        elif value == "false" or value == "0":
             await self.config.guild(ctx.guild).replyRespond.set(False)
             await ctx.reply("replyRespond is now set to False")
+        else:
+          await ctx.reply("This command only accepts `true` or `false`.")
 
   @checks.is_owner()
   @chatgpt.command(name="model")

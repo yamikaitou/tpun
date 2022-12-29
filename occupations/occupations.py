@@ -120,7 +120,6 @@ class occupations(commands.Cog):
             else:
                 self.log.warning("Something went wrong in on_voice_update")
 
-
     @commands.group(name="job")
     async def job(self, ctx: commands.Context):
         """
