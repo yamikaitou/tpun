@@ -149,12 +149,6 @@ class chatGPT(commands.Cog):
       if value is discord.TextChannel:
         value: int = value.id
         pass
-      elif value is int:
-        pass
-      elif value is str:
-        value = int(value)
-      else:
-        await ctx.reply("Sorry only discord text channel mentions or ids are valid.")
       channelId = int(value)
       channel = self.bot.get_channel(channelId)
       if channel == None:
@@ -184,19 +178,14 @@ class chatGPT(commands.Cog):
       if value is discord.TextChannel:
         value: int = value.id
         pass
-      elif value is int:
-        pass
-      elif value is str:
-        value = int(value)
-      else:
-        await ctx.reply("Sorry only discord text channel mentions or ids are valid.")
       currentChannels: list = await self.config.guild(ctx.guild).channels()
       try:
+          self.log(currentChannels)
           currentChannels.remove(value)
-          await self.config.guild(ctx.guild).channels.set(newChannels)
+          self.log(currentChannels)
+          await self.config.guild(ctx.guild).channels.set(currentChannels)
           await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
       except ValueError:
-          newChannels = currentChannels
           await ctx.reply("That channel was already not in channel list.")
 
     elif setting == "replyRespond":
