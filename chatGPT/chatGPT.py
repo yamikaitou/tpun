@@ -179,14 +179,14 @@ class chatGPT(commands.Cog):
         value: int = value.id
         pass
       currentChannels: list = await self.config.guild(ctx.guild).channels()
-#      try:
-      self.log.info(currentChannels)
-      currentChannels.remove(value)
-      self.log.info(currentChannels)
-      await self.config.guild(ctx.guild).channels.set(currentChannels)
-      await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
-#      except ValueError:
-#          await ctx.reply("That channel was already not in channel list.")
+      try:
+          self.log.info(currentChannels)
+          currentChannels.pop(value)
+          self.log.info(currentChannels)
+          await self.config.guild(ctx.guild).channels.set(currentChannels)
+          await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
+      except ValueError:
+          await ctx.reply("That channel was already not in channel list.")
 
     elif setting == "replyRespond":
         if value is str:
