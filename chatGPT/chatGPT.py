@@ -181,7 +181,7 @@ class chatGPT(commands.Cog):
       currentChannels: list = await self.config.guild(ctx.guild).channels()
       try:
           self.log.info(currentChannels)
-          currentChannels.pop(int(value))
+          currentChannels.remove(int(value))
           self.log.info(currentChannels)
           await self.config.guild(ctx.guild).channels.set(currentChannels)
           await ctx.reply("<#" + str(channelId) + "> is no longer whitelisted.")
