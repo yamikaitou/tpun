@@ -31,7 +31,7 @@ class chatGPT(commands.Cog):
     self.config.register_global(**defaultGlobalConfig)
     self.config.register_guild(**defaultGuildConfig)
 
-  def send_message(self, user_id, message, model, tokenLimit):
+  async def send_message(self, user_id, message, model, tokenLimit):
     if user_id not in self.user_threads:
       self.user_threads[user_id] = ""
     self.prompt = self.user_threads[user_id]
@@ -59,7 +59,7 @@ class chatGPT(commands.Cog):
                 self.log.error("No api key set.")
                 return await ctx.send("The bot owner still needs to set the openai api key using `[p]set api openai  api_key,<api key>`. It can be created at: https://beta.openai.com/account/api-keys")
             openai.api_key = chatGPTKey.get("api_key")
-            response: str = self.send_message(ctx.author.id, query, model, tokenLimit)
+            response: str = await self.send_message(ctx.author.id, query, model, tokenLimit)
             if len(response) > 0 and len(response) < 2000:
                 self.log.info("Response is under 2000 characters and is: `" + response + "`.")
                 await ctx.reply(response)
