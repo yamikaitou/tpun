@@ -8,7 +8,7 @@
         "Nado"
     ],
     "required_cogs": {},
-    "requirements": ["inflect==6.0.0", "requests", "numpy", "openai==0.23.0"],
+    "requirements": ["inflect==6.0.0", "requests", "numpy", "openai>=0.26.4"],
     "tags": [
         "job",
         "work",
